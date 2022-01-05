@@ -110,7 +110,7 @@ public class MakeContentActivity extends AppCompatActivity {
                                                                 public void OnCallback(Object object) {
                                                                     if(numberingMachine.getNumber() == adapter.getCount()){
                                                                         Message message = Message.obtain();
-                                                                        message.obj = "씨발";
+                                                                        message.obj = "ContentMakingDone";
                                                                         LoadingActivity.LoadingHandler handler = ((LoadingActivity)LoadingActivity.LoadingContext).handler;
                                                                         handler.sendMessage(message);
                                                                         //Intent intent = new Intent(MakeContentActivity.this, ContentsActivity.class);
