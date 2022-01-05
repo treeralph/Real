@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LoginActivity"
+    android:background="@color/black">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="350dp"
+            android:layout_height="130dp"
+            android:layout_marginTop="130dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text=" SignUp"
+            android:textAlignment="center"
+            android:textSize="80dp"
+            android:fontFamily="@font/delight"
+            android:textColor="@color/white"
+            android:background="@drawable/brush_stroke"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/GoogleLoginBtn"
+        android:layout_width="400dp"
+        android:layout_height="53dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginBottom="100dp"
+        android:layout_alignParentBottom="true"
+        android:textColor="@color/black"
+        android:background="@drawable/googleloginbtn"/>
+
+</RelativeLayout>

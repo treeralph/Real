@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ContentsActivity"
+    android:background="@color/black">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            android:gravity="right"
+            android:background="@color/black">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="10dp"
+                android:layout_gravity="center"
+                android:src="@drawable/search_img_white"/>
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="10dp"
+                android:layout_gravity="center"
+                android:src="@drawable/alarm_img_white"/>
+            <ImageView
+                android:id="@+id/ContentsSettingPopupImg"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/option_img_white"/>
+
+        </LinearLayout>
+        <include
+            layout="@layout/contents_main" />
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/ContentsMakeContentBtn"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/make_button_img"/>
+    <ImageView
+        android:id="@+id/ContentsActivityChatRoomBtn"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:src="@drawable/send"
+        android:layout_alignParentBottom="true"/>
+</RelativeLayout>
