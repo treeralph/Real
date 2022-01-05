@@ -21,7 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class LoadingActivity extends Activity {
 
-    // 박강혁 바보
+    // 박강혁 바보 멍청이
     public static Context LoadingContext;
     LoadingHandler handler;
     LottieAnimationView lottie;
