@@ -1,9 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
     tools:context=".UserhistoryActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+        <!-- ㅄ색기의 상세정보-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:orientation="horizontal">
+            <ImageView
+                android:id="@+id/UserhistoryProfileimg"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="15dp"/>
+            <TextView
+                android:id="@+id/UserhistoryUserNickname"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="10dp"/>
+        </LinearLayout>
+
+        <!-- 컨텐츠 / 댓글 구분 버튼-->
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Button
+                    android:layout_marginLeft="10dp"
+                    android:id="@+id/UserhistoryBtnContents"
+                    android:text="콩텐츠"
+                    android:textColor="@color/colorPrimary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@android:drawable/editbox_background_normal"
+                    />
+
+                <Button
+                    android:layout_marginLeft="10dp"
+                    android:id="@+id/UserhistoryBtnAuctionContents"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@android:drawable/editbox_background_normal"
+                    android:text="옥션"
+                    android:textColor="@color/colorPrimary"/>
+                <Button
+                    android:layout_marginLeft="10dp"
+                    android:id="@+id/UserhistoryBtnComments"
+                    android:text="댓글"
+                    android:textColor="@color/colorPrimary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@android:drawable/editbox_background_normal"/>
+
+                <Button
+                    android:layout_marginLeft="10dp"
+                    android:id="@+id/UserhistoryBtnSCRRRRR"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@android:drawable/editbox_background_normal"
+                    android:text="필요없는데 스크롤이 되는걸 보여주기 위한 버튼"
+                    android:textColor="@color/colorPrimary"/>
+
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <!-- ㅄ색기가 쳐싸지른 글들-->
+        <TextView
+            android:text="니가 쳐 싸지른 컨텐츠들"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/UserhistoryRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
