@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -39,6 +40,8 @@ public class MakeAuctionContentActivity extends AppCompatActivity {
     NumberingMachine numberingMachine;
 
     private final int IMGSELECTINTENTREQUESTCODE = 0;
+
+    Thread thread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,41 +86,46 @@ public class MakeAuctionContentActivity extends AppCompatActivity {
                         editTextAuctionPrice.getText().toString(),
                         editTextAuctionDuration.getText().toString());
 
-                firestoreManagerForContent.write(auctionContent, "Content", new Callback() {
+                // If u want catch exception, write on upper side of thread.
+                thread = new Thread(new Runnable() {
                     @Override
-                    public void OnCallback(Object object) {
-                        String contentId = (String)object;
-                        String contentType = auctionContent.getContentType(); //
-                        Contents contents = new Contents(contentId, contentType);
-                        firestoreManagerForContents.write(contents, "Contents", auctionContent.getTime(), new Callback() {
+                    public void run() {
+                        firestoreManagerForContent.write(auctionContent, "Content", new Callback() {
                             @Override
                             public void OnCallback(Object object) {
-                                // image
-                                for(int i=0; i<adapter.getCount(); i++){
-                                    int j = i;
-                                    numberingMachine.add();
-                                    ImgViewFromGalleryFragment TempFregment = (ImgViewFromGalleryFragment)adapter.getItem(i);
-                                    Bitmap TempImg = TempFregment.getBitmap();
-                                    storageManager.upload("image/" + contentId + "/2000/" + String.valueOf(j), TempImg, 2000, new Callback() {
-                                        @Override
-                                        public void OnCallback(Object object) {
-                                            storageManager.upload("image/" + contentId + "/1000/" + String.valueOf(j), TempImg, 1000, new Callback() {
+                                String contentId = (String)object;
+                                String contentType = auctionContent.getContentType(); //
+                                Contents contents = new Contents(contentId, contentType);
+                                firestoreManagerForContents.write(contents, "Contents", auctionContent.getTime(), new Callback() {
+                                    @Override
+                                    public void OnCallback(Object object) {
+                                        // image
+                                        for(int i=0; i<adapter.getCount(); i++){
+                                            int j = i;
+                                            numberingMachine.add();
+                                            ImgViewFromGalleryFragment TempFregment = (ImgViewFromGalleryFragment)adapter.getItem(i);
+                                            Bitmap TempImg = TempFregment.getBitmap();
+                                            storageManager.upload("image/" + contentId + "/2000/" + String.valueOf(j), TempImg, 2000, new Callback() {
                                                 @Override
                                                 public void OnCallback(Object object) {
-                                                    storageManager.upload("image/" + contentId + "/100/" + String.valueOf(j), TempImg, 100, new Callback() {
+                                                    storageManager.upload("image/" + contentId + "/1000/" + String.valueOf(j), TempImg, 1000, new Callback() {
                                                         @Override
                                                         public void OnCallback(Object object) {
-                                                            if(numberingMachine.getNumber() == adapter.getCount()){
-                                                                Intent intent = new Intent(MakeAuctionContentActivity.this, ContentsActivity.class);
-                                                                startActivity(intent);
-                                                                finish();
-                                                            }
+                                                            storageManager.upload("image/" + contentId + "/100/" + String.valueOf(j), TempImg, 100, new Callback() {
+                                                                @Override
+                                                                public void OnCallback(Object object) {
+                                                                    if(numberingMachine.getNumber() == adapter.getCount()){
+                                                                        Message message = Message.obtain();
+                                                                        message.obj = "AuctionContentMakingDone";
+                                                                        LoadingActivity.LoadingHandler handler = ((LoadingActivity)LoadingActivity.LoadingContext).handler;
+                                                                        handler.sendMessage(message);
+                                                                    }
+                                                                }
+                                                            });
                                                         }
                                                     });
                                                 }
                                             });
-                                        }
-                                    });
                                     /*
                                     storageManager.upload("image/" + contentId + "/" + String.valueOf(i), TempImg, new Callback() {
                                         @Override
@@ -131,11 +139,19 @@ public class MakeAuctionContentActivity extends AppCompatActivity {
                                     });
 
                                      */
-                                }
+                                        }
+                                    }
+                                });
                             }
                         });
                     }
                 });
+
+                thread.start();
+                Intent intent = new Intent(MakeAuctionContentActivity.this, LoadingActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                finish();
             }
         });
     }
