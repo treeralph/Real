@@ -4,6 +4,9 @@
     <item
         android:id="@+id/Settingpopup1"
         android:title="Set Profile"/>
+    <item
+        android:id="@+id/Settingpopup2"
+        android:title="쓰레기통"/>
 
 
 </menu>
