@@ -127,6 +127,9 @@ public class ContentsActivity extends AppCompatActivity {
                         if(item.getItemId() == R.id.Settingpopup1){
                             Intent intent = new Intent(ContentsActivity.this, SetUserProfileActivity.class);
                             startActivity(intent);
+                        }else if(item.getItemId() == R.id.Settingpopup2){
+                            Intent intent = new Intent(ContentsActivity.this, UserhistoryActivity.class);
+                            startActivity(intent);
                         }
                         return false;
                     }

@@ -14,11 +14,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
+        <activity android:name=".UserhistoryActivity"></activity>
         <activity
             android:name=".ChattingRoomActivity"
             android:exported="false" />
-        <activity android:name=".LoadingActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+        <activity
+            android:name=".LoadingActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name=".RecommentActivity"
             android:exported="false" />
