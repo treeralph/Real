@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.real.Callback;
 import com.example.real.R;
 import com.example.real.data.Message;
+import com.example.real.tool.TimeTextTool;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -36,12 +37,22 @@ public class RecyclerViewAdapterForMessages extends RecyclerView.Adapter<Recycle
     private String contentUserProfileNickName;
     private String userProfileNickName;
 
+    private Bitmap currentUserProfileImageBitmap;
+    private Bitmap anotherUserProfileImageBitmap;
+    private String currentUserProfileNickName;
+    private String anotherUserProfileNickName;
+
+    private String userUID;
+    private String contentUID;
+
     public RecyclerViewAdapterForMessages(
             Context context,
             Bitmap contentUserProfileImageBitmap,
             Bitmap userProfileImageBitmap,
             String contentUserProfileNickName,
-            String userProfileNickName) {
+            String userProfileNickName,
+            String userUID,
+            String contentUID) {
 
         this.messageList = new ArrayList<>();
         this.context = context;
@@ -50,6 +61,22 @@ public class RecyclerViewAdapterForMessages extends RecyclerView.Adapter<Recycle
         this.userProfileImageBitmap = userProfileImageBitmap;
         this.contentUserProfileNickName = contentUserProfileNickName;
         this.userProfileNickName = userProfileNickName;
+        this.userUID = userUID;
+        this.contentUID = contentUID;
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if(user.getUid().equals(userUID)){
+            currentUserProfileImageBitmap = userProfileImageBitmap;
+            currentUserProfileNickName = userProfileNickName;
+            anotherUserProfileImageBitmap = contentUserProfileImageBitmap;
+            anotherUserProfileNickName = contentUserProfileNickName;
+        }else{
+            currentUserProfileImageBitmap = contentUserProfileImageBitmap;
+            currentUserProfileNickName = contentUserProfileNickName;
+            anotherUserProfileImageBitmap = userProfileImageBitmap;
+            anotherUserProfileNickName = userProfileNickName;
+        }
     }
 
     @Override
@@ -62,32 +89,31 @@ public class RecyclerViewAdapterForMessages extends RecyclerView.Adapter<Recycle
     @Override
     public void onBindViewHolder(@NonNull  RecyclerView.ViewHolder holder, int position) {
 
-        user = FirebaseAuth.getInstance().getCurrentUser();
-
         Message tempMessage = messageList.get(position);
-        String uid = tempMessage.getToUid();
+
+        String uid = tempMessage.getFromUid();
         String message = tempMessage.getMessage();
         String time = tempMessage.getTime();
 
-        RecyclerViewAdapterForMessages.MyViewHolder myViewHolder = (RecyclerViewAdapterForMessages.MyViewHolder)holder;
-        // 이부분이 오류가 뜨는데
-        /*
-        * java.lang.ClassCastException: com.example.real.adapter.RecyclerViewAdapterForContents$MyViewHolder
-        * cannot be cast to com.example.real.adapter.RecyclerViewAdapterForMessages$MyViewHolder2
-        *
-        * */
-        if(user.getUid().equals(uid)){
-            myViewHolder.MessageLinearLayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-            myViewHolder.MessageTextView.setText(message);
-            myViewHolder.MessageTimeTextView.setText(time);
-            myViewHolder.MessageUserProfileNameTextView.setText(userProfileNickName);
-            myViewHolder.MessageUserProfileImgView.setImageBitmap(userProfileImageBitmap);
-        }else {
-            myViewHolder.MessageLinearLayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
-            myViewHolder.MessageTextView.setText(message);
-            myViewHolder.MessageTimeTextView.setText(time);
-            myViewHolder.MessageUserProfileNameTextView.setText(contentUserProfileNickName);
-            myViewHolder.MessageUserProfileImgView.setImageBitmap(contentUserProfileImageBitmap);
+        //TimeTextTool timeTextTool = new TimeTextTool(time);
+
+        if(message.isEmpty()==false && message!=null) {
+            RecyclerViewAdapterForMessages.MyViewHolder myViewHolder = (RecyclerViewAdapterForMessages.MyViewHolder) holder;
+
+            if (user.getUid().equals(uid)) {
+                myViewHolder.MessageLinearLayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+                myViewHolder.MessageTextView.setText(message);
+                myViewHolder.MessageTimeTextView.setText(time);
+                myViewHolder.MessageUserProfileNameTextView.setText(currentUserProfileNickName);
+                myViewHolder.MessageUserProfileImgView.setImageBitmap(currentUserProfileImageBitmap);
+            } else {
+                myViewHolder.MessageLinearLayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                myViewHolder.MessageTextView.setText(message);
+                myViewHolder.MessageTimeTextView.setText(time);
+                myViewHolder.MessageUserProfileNameTextView.setText(anotherUserProfileNickName);
+                myViewHolder.MessageUserProfileImgView.setImageBitmap(anotherUserProfileImageBitmap);
+            }
+
         }
     }
 

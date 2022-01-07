@@ -20,7 +20,7 @@ public class TimeTextTool {
 
     String Time;
     LocalDateTime Time2Local;
-    DateTimeFormatter formatter = new DateTimeFormatterBuilder().appendPattern("yyyyMMddHHmmss").appendValue(ChronoField.MILLI_OF_SECOND, 3).toFormatter();
+    DateTimeFormatter formatter = new DateTimeFormatterBuilder().appendPattern("yyyyMMddHHmmssSSS").appendValue(ChronoField.MILLI_OF_SECOND, 3).toFormatter();
     int period;
 
     public TimeTextTool(String time) {

@@ -36,6 +36,8 @@ public class RecyclerViewAdapterForChattingRoom extends RecyclerView.Adapter<Rec
     private FirestoreManager firestoreManagerForContent;
     private StorageManager storageManagerForContent;
 
+    private String contentUID;
+
     public RecyclerViewAdapterForChattingRoom(ArrayList<String> chattingRoomPathList, Context context) {
 
         this.chattingRoomPathList = chattingRoomPathList;
@@ -70,9 +72,10 @@ public class RecyclerViewAdapterForChattingRoom extends RecyclerView.Adapter<Rec
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, ChattingActivity.class);
+                intent.putExtra("databasePath", chattingRoomPath);
                 intent.putExtra("contentId", contentId);
-                intent.putExtra("userUID", user.getUid());
-                intent.putExtra("contentUID", clientUid);
+                intent.putExtra("userUID", clientUid);
+                intent.putExtra("contentUID", contentUID);
                 context.startActivity(intent);
             }
         });
@@ -82,6 +85,7 @@ public class RecyclerViewAdapterForChattingRoom extends RecyclerView.Adapter<Rec
             public void OnCallback(Object object) {
                 Content content = (Content) object;
                 String contentTitle = content.getTitle();
+                contentUID = content.getUid();
                 myViewHolder.chattingRoomItemContentTitleTextView.setText(contentTitle);
                 storageManagerForContent.downloadImg2View("image/" + contentId + "/100", "0", myViewHolder.chattingRoomItemContentImageView, new Callback() {
                     @Override

@@ -20,6 +20,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 public class RealTimeDatabaseManager {
 
     private final String TAG = "REALTIMEDATABASEMANAGER";
@@ -40,16 +43,21 @@ public class RealTimeDatabaseManager {
         db = FirebaseDatabase.getInstance(STORAGE_LOCATION);
     }
 
-    /*
-    public void readMessage(String path, String subPath, Callback callback){
 
-        DatabaseReference ref = db.getReference(rootPath + "/" + path + "/" + subPath);
-        ref.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+    public void readMessage(String path, Callback callback){
+
+        DatabaseReference ref = db.getReference(path);
+        ref.get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                for(DataSnapshot snapshot : task){
-
+            public void onSuccess(DataSnapshot dataSnapshot) {
+                ArrayList<Message> messageList = new ArrayList<>();
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    Log.d(TAG+"/readMessage", snapshot.toString());
+                    DataSnapshot tempSnapshot = snapshot.getChildren().iterator().next();
+                    Message tempMessage = tempSnapshot.getValue(Message.class);
+                    messageList.add(tempMessage);
                 }
+                callback.OnCallback(messageList);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -59,8 +67,43 @@ public class RealTimeDatabaseManager {
         });
     }
 
-     */
+    public void readMessageLooper(String path, Callback callback){
 
+        DatabaseReference ref = db.getReference(path);
+        ref.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                try {
+                    Log.d(TAG, snapshot.toString());
+                    DataSnapshot tempSnapshot = snapshot.getChildren().iterator().next();
+                    Message tempMessage = tempSnapshot.getValue(Message.class);
+                    callback.OnCallback(tempMessage);
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
     public void readMessageLooper(String path, String subPath, Callback callback){
 
         DatabaseReference ref = db.getReference(rootPath + "/" + path + "/" + subPath);
@@ -98,28 +141,6 @@ public class RealTimeDatabaseManager {
 
             }
         });
-
-        /*
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                try {
-                    Log.d(TAG, snapshot.toString());
-                    DataSnapshot tempSnapshot = snapshot.getChildren().iterator().next();
-                    DataSnapshot temp2Snapshot = tempSnapshot.getChildren().iterator().next();
-                    Message tempMessage = temp2Snapshot.getValue(Message.class);
-                    callback.OnCallback(tempMessage);
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-         */
     }
 
     public void writeMessage(String path, String subPath, Message message){
@@ -138,5 +159,23 @@ public class RealTimeDatabaseManager {
             }
         });
     }
+    public void writeMessage(String path, Message message){ //
+
+        DatabaseReference ref = db.getReference(path + "/" + message.getTime() + "/Message");
+        ref.setValue(message).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.d(TAG, "DATA_SETVALUE_IS_COMPLETE");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e(TAG, e.getMessage());
+                e.printStackTrace();
+            }
+        });
+    }
+
+
 
 }

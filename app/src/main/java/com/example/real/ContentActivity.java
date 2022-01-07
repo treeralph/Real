@@ -90,7 +90,11 @@ public class ContentActivity extends AppCompatActivity {
         ContentMessageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                String databasePath = "/Messages/" + contentId + "/" + userUID;
+
                 Intent intent = new Intent(ContentActivity.this, ChattingActivity.class);
+                intent.putExtra("databasePath", databasePath);
                 intent.putExtra("contentId", contentId);
                 intent.putExtra("userUID", userUID);
                 intent.putExtra("contentUID", contentUID);

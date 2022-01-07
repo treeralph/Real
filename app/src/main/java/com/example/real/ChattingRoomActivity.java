@@ -39,13 +39,9 @@ public class ChattingRoomActivity extends AppCompatActivity {
             public void OnCallback(Object object) {
                 UserProfile userProfile = (UserProfile) object;
                 ArrayList<String> chattingRoomPathList = userProfile.getChattingRoomID();
-
-                RecyclerViewAdapterForChattingRoom adapter =
-                        new RecyclerViewAdapterForChattingRoom(chattingRoomPathList, ChattingRoomActivity.this);
+                RecyclerViewAdapterForChattingRoom adapter = new RecyclerViewAdapterForChattingRoom(chattingRoomPathList, ChattingRoomActivity.this);
                 recyclerView.setAdapter(adapter);
             }
         });
-
-
     }
 }

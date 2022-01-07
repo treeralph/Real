@@ -2,9 +2,11 @@ package com.example.real;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,14 +21,18 @@ import com.example.real.databasemanager.StorageManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
+
 public class ChattingActivity extends AppCompatActivity {
 
+    ScrollView scrollView;
     RecyclerView messageRecyclerView;
     EditText messageEditText;
     Button messageSendBtn;
 
     FirebaseUser user;
 
+    String databasePath;
     String contentId;
     String userUID;
     String contentUID;
@@ -57,6 +63,8 @@ public class ChattingActivity extends AppCompatActivity {
 
         user = FirebaseAuth.getInstance().getCurrentUser();
 
+        scrollView = findViewById(R.id.ChattingActivityScrollView);
+
         messageRecyclerView = findViewById(R.id.ChattingActivityMessageRecyclerView);
         messageRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
@@ -65,8 +73,9 @@ public class ChattingActivity extends AppCompatActivity {
         messageEditText = findViewById(R.id.ChattingActivityMessageEditText);
         messageSendBtn = findViewById(R.id.ChattingActivitySendButton);
 
+        databasePath = getIntent().getStringExtra("databasePath"); // databasePath
         contentId = getIntent().getStringExtra("contentId");
-        userUID = getIntent().getStringExtra("userUID");
+        userUID = getIntent().getStringExtra("userUID"); // userUID is not current user. It's part of path.
         contentUID = getIntent().getStringExtra("contentUID");
 
         realTimeDatabaseManager = new RealTimeDatabaseManager(this, "Messages", user.getUid());
@@ -90,19 +99,21 @@ public class ChattingActivity extends AppCompatActivity {
                     toUserToken = userUIDToken;
                     toUserUid = userUID;
                 }
+
                 Message message = new Message(fromUserUid, toUserUid, msg, fromUserToken, toUserToken);
-                realTimeDatabaseManager.writeMessage(contentId, userUID, message);
+                realTimeDatabaseManager.writeMessage(databasePath, message);
                 messageEditText.setText("");
             }
         });
 
-        realTimeDatabaseManager.readMessageLooper(contentId, userUID, new Callback() {
+        realTimeDatabaseManager.readMessageLooper(databasePath, new Callback() {
             @Override
             public void OnCallback(Object object) {
                 Message tempMessage = (Message)object;
                 try {
                     adapter.addItem(tempMessage);
                     messageRecyclerView.setAdapter(adapter);
+                    messageRecyclerView.scrollToPosition(adapter.getItemCount() - 1);
                 } catch(Exception e){
                     e.printStackTrace();
                 }
@@ -129,14 +140,26 @@ public class ChattingActivity extends AppCompatActivity {
                                     @Override
                                     public void OnCallback(Object object) {
                                         contentUserProfileImageBitmap = (Bitmap) object;
-                                        adapter = new RecyclerViewAdapterForMessages(
-                                                ChattingActivity.this,
-                                                contentUserProfileImageBitmap,
-                                                userProfileImageBitmap,
-                                                contentUserProfileNickName,
-                                                userProfileNickName
-                                        );
-                                        messageRecyclerView.setAdapter(adapter);
+                                        realTimeDatabaseManager.readMessage(databasePath, new Callback() {
+                                            @Override
+                                            public void OnCallback(Object object) {
+                                                ArrayList<Message> messageList = (ArrayList<Message>) object;
+                                                adapter = new RecyclerViewAdapterForMessages(
+                                                        ChattingActivity.this,
+                                                        contentUserProfileImageBitmap,
+                                                        userProfileImageBitmap,
+                                                        contentUserProfileNickName,
+                                                        userProfileNickName,
+                                                        userUID,
+                                                        contentUID
+                                                );
+                                                for(Message message : messageList){
+                                                    adapter.addItem(message);
+                                                }
+                                                messageRecyclerView.setAdapter(adapter);
+                                                messageRecyclerView.scrollToPosition(adapter.getItemCount() - 1);
+                                            }
+                                        });
                                     }
                                 });
                             }
@@ -145,6 +168,5 @@ public class ChattingActivity extends AppCompatActivity {
                 });
             }
         });
-
     }
 }

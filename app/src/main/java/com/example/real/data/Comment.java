@@ -18,7 +18,6 @@ public class Comment extends Data{
 
         LocalDateTime dateNow = LocalDateTime.now();
         Time = dateNow.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
-
         Recomment_token ="0";
         From = from;
         To = to;

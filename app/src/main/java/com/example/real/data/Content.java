@@ -27,17 +27,9 @@ public class Content extends Data{
         // If there exists error here, erase the under and use Remark.
         LocalDateTime dateNow = LocalDateTime.now();
         Time = dateNow.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
-
-        /*
-        Date date_now = new Date(System.currentTimeMillis());
-        SimpleDateFormat date_format = new SimpleDateFormat("yyyyMMddHHmmssS");
-        Time = date_format.format(date_now);
-         */
-
         Title = title;
         Content = content;
         Uid = uid;
-
     }
 
     public Content(String title, String content, String uid, String time) {

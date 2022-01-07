@@ -22,7 +22,7 @@ public class Message extends Data{
 
     public Message(String fromUid, String toUid, String message, String fromToken, String toToken) {
         Date date_now = new Date(System.currentTimeMillis());
-        SimpleDateFormat date_format = new SimpleDateFormat("yyyyMMddHHmmssS");
+        SimpleDateFormat date_format = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 
         this.fromUid = fromUid;
         this.toUid = toUid;

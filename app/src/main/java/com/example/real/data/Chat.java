@@ -15,7 +15,7 @@ public class Chat extends Data{
     //constructor
     public Chat(String makeruid){
         Date date_now = new Date(System.currentTimeMillis());
-        SimpleDateFormat date_format = new SimpleDateFormat("yyyyMMddHHmmssS");
+        SimpleDateFormat date_format = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 
         MakerUid = makeruid;
         Time = date_format.format(date_now);

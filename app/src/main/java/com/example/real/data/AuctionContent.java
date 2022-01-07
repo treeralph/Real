@@ -34,7 +34,7 @@ public class AuctionContent extends Content implements Cloneable{
     private String AuctionEndTime;
     private String AuctionState;
 
-    DateTimeFormatter formatter = new DateTimeFormatterBuilder().appendPattern("yyyyMMddHHmmss").appendValue(ChronoField.MILLI_OF_SECOND, 3).toFormatter();
+    DateTimeFormatter formatter = new DateTimeFormatterBuilder().appendPattern("yyyyMMddHHmmssSSS").appendValue(ChronoField.MILLI_OF_SECOND, 3).toFormatter();
 
     public AuctionContent(String title, String content, String uid, String price, String auctionDuration) {
         super(title, content, uid);
