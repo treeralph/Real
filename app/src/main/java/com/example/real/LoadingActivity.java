@@ -22,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class LoadingActivity extends Activity {
 
     // 박강혁 바보 멍청이
+    // 족까
     public static Context LoadingContext;
     LoadingHandler handler;
     LottieAnimationView lottie;
@@ -38,12 +39,25 @@ public class LoadingActivity extends Activity {
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
             String tempText = (String)msg.obj;
-            Toast.makeText(getApplicationContext(), tempText, Toast.LENGTH_SHORT).show();
-            finish();
-            overridePendingTransition(R.anim.fadeout, R.anim.fadein);
-            Intent intent = new Intent(LoadingActivity.this, ContentsActivity.class);
-            startActivity(intent);
-            overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+
+            if(tempText.equals("ContentMakingDone")){
+                Toast.makeText(getApplicationContext(), tempText, Toast.LENGTH_SHORT).show();
+                finish();
+                overridePendingTransition(R.anim.fadeout, R.anim.fadein);
+                Intent intent = new Intent(LoadingActivity.this, ContentsActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+            }
+            else if (tempText.equals("AuctionContentMakingDone")){
+                Toast.makeText(getApplicationContext(), tempText, Toast.LENGTH_SHORT).show();
+                finish();
+                overridePendingTransition(R.anim.fadeout, R.anim.fadein);
+                Intent intent = new Intent(LoadingActivity.this, ContentsActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+            }
+
+
         }
     }
 }
