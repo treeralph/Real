@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:orientation="horizontal">
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/UserhistoryProfileimg"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
@@ -31,6 +31,26 @@
                 android:layout_height="30dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="10dp"/>
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/UserhistoryNumContents"
+                    android:text="쳐쓴 글 수 : "
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"/>
+                <TextView
+                    android:text="싸지른 댓글 수 : "
+                    android:id="@+id/UserhistoryNumComments"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"/>
+            </LinearLayout>
         </LinearLayout>
 
         <!-- 컨텐츠 / 댓글 구분 버튼-->
@@ -88,6 +108,7 @@
 
         <!-- ㅄ색기가 쳐싸지른 글들-->
         <TextView
+            android:id="@+id/UserhistoryToggleSection"
             android:text="니가 쳐 싸지른 컨텐츠들"
             android:textAlignment="center"
             android:gravity="center"
