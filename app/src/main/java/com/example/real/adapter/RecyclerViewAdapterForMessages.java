@@ -2,6 +2,7 @@ package com.example.real.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,10 @@ import com.example.real.tool.TimeTextTool;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 
 public class RecyclerViewAdapterForMessages extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -95,7 +100,10 @@ public class RecyclerViewAdapterForMessages extends RecyclerView.Adapter<Recycle
         String message = tempMessage.getMessage();
         String time = tempMessage.getTime();
 
-        //TimeTextTool timeTextTool = new TimeTextTool(time);
+        TimeTextTool timeTextTool = new TimeTextTool(time);
+        Log.d("MESSAGE_RECYCLERVIEW_ADAPTER/TIME", time);
+        String refinedTime = timeTextTool.Time2Text();
+        Log.d("MESSAGE_RECYCLERVIEW_ADAPTER/REFINEDTIME", refinedTime);
 
         if(message.isEmpty()==false && message!=null) {
             RecyclerViewAdapterForMessages.MyViewHolder myViewHolder = (RecyclerViewAdapterForMessages.MyViewHolder) holder;
@@ -103,13 +111,13 @@ public class RecyclerViewAdapterForMessages extends RecyclerView.Adapter<Recycle
             if (user.getUid().equals(uid)) {
                 myViewHolder.MessageLinearLayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
                 myViewHolder.MessageTextView.setText(message);
-                myViewHolder.MessageTimeTextView.setText(time);
+                myViewHolder.MessageTimeTextView.setText(refinedTime);
                 myViewHolder.MessageUserProfileNameTextView.setText(currentUserProfileNickName);
                 myViewHolder.MessageUserProfileImgView.setImageBitmap(currentUserProfileImageBitmap);
             } else {
                 myViewHolder.MessageLinearLayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
                 myViewHolder.MessageTextView.setText(message);
-                myViewHolder.MessageTimeTextView.setText(time);
+                myViewHolder.MessageTimeTextView.setText(refinedTime);
                 myViewHolder.MessageUserProfileNameTextView.setText(anotherUserProfileNickName);
                 myViewHolder.MessageUserProfileImgView.setImageBitmap(anotherUserProfileImageBitmap);
             }

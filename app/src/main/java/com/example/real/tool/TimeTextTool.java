@@ -1,5 +1,6 @@
 package com.example.real.tool;
 
+import android.util.Log;
 import android.widget.Switch;
 
 import com.google.type.DateTime;
@@ -20,11 +21,15 @@ public class TimeTextTool {
 
     String Time;
     LocalDateTime Time2Local;
-    DateTimeFormatter formatter = new DateTimeFormatterBuilder().appendPattern("yyyyMMddHHmmssSSS").appendValue(ChronoField.MILLI_OF_SECOND, 3).toFormatter();
     int period;
 
     public TimeTextTool(String time) {
+
         Time = time;
+        Log.d("TIME_CHECK", Time);
+        DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+                .appendPattern("yyyyMMddHHmmss").appendValue(ChronoField.MILLI_OF_SECOND, 3).toFormatter();
+
         Time2Local = LocalDateTime.parse(Time, formatter);
 
         LocalDateTime now = LocalDateTime.now();
