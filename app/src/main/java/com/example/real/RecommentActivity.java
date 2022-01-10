@@ -10,6 +10,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.real.data.Comment;
 import com.example.real.data.UserProfile;
 import com.example.real.databasemanager.FirestoreManager;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 public class RecommentActivity extends AppCompatActivity {
 
@@ -56,13 +59,42 @@ public class RecommentActivity extends AppCompatActivity {
                                                 public void OnCallback(Object object) {
                                                     UserProfile userprofile = (UserProfile) object;
                                                     String userlog = userprofile.getUserLog();
-                                                    firestoreManagerForUserProfile.update("UserProfile", from, "UserLog",
-                                                            userlog + "\n COMMENT WRITE : " + header + " " + temp_comment.toString(), new Callback() {
-                                                                @Override
-                                                                public void OnCallback(Object object) {
-                                                                    finish();
-                                                                }
-                                                            });
+                                                    String address = "Content/" + contentid +"/Comments/" + header + "/Recomments/" + temp_comment.getTime();
+                                                    if(userlog.equals("")){
+                                                        // Create Json Obj & JsonArray
+                                                        JsonArray frame = new JsonArray();
+                                                        JsonObject init = new JsonObject();
+                                                        init.addProperty("Type","Comment");
+                                                        init.addProperty("Address",address);
+                                                        frame.add(init);
+                                                        firestoreManagerForUserProfile.update("UserProfile", from, "UserLog",
+                                                                frame.toString(), new Callback() {
+                                                                    @Override
+                                                                    public void OnCallback(Object object) {
+
+                                                                    }
+                                                                });
+                                                    } else{
+                                                        // Parsing JsonArray
+                                                        JsonParser parser = new JsonParser();
+                                                        Object tempparsed = parser.parse(userlog);
+                                                        JsonArray templog = (JsonArray) tempparsed;
+
+                                                        // Create Json Obj
+                                                        JsonObject temp = new JsonObject();
+                                                        temp.addProperty("Type", "Comment");
+                                                        temp.addProperty("Address",address);
+
+                                                        // Add & Update
+                                                        templog.add(temp);
+                                                        firestoreManagerForUserProfile.update("UserProfile", from, "UserLog",
+                                                                templog.toString(), new Callback() {
+                                                                    @Override
+                                                                    public void OnCallback(Object object) {
+
+                                                                    }
+                                                                });
+                                                    }
                                                 }
                                             });
 

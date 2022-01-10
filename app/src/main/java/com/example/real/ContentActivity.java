@@ -31,6 +31,12 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -266,13 +272,43 @@ public class ContentActivity extends AppCompatActivity {
                                 public void OnCallback(Object object) {
                                     UserProfile userprofile = (UserProfile) object;
                                     String userlog = userprofile.getUserLog();
-                                    firestoreManagerForUserProfile.update("UserProfile", user.getUid(), "UserLog",
-                                            userlog + "\n COMMENT WRITE : " + contentUID + " " + temp_comment.toString(), new Callback() {
-                                                @Override
-                                                public void OnCallback(Object object) {
+                                    String address = "Content/" + contentId +"/Comments/" + temp_comment.getTime();
+                                    if(userlog.equals("")){
+                                        // Create Json Obj & JsonArray
+                                        JsonArray frame = new JsonArray();
+                                        JsonObject init = new JsonObject();
+                                        init.addProperty("Type","Comment");
+                                        init.addProperty("Address",address);
+                                        frame.add(init);
+                                        firestoreManagerForUserProfile.update("UserProfile", user.getUid(), "UserLog",
+                                                frame.toString(), new Callback() {
+                                                    @Override
+                                                    public void OnCallback(Object object) {
 
-                                                }
-                                            });
+                                                    }
+                                                });
+                                    } else{
+                                        // Parsing JsonArray
+                                        JsonParser parser = new JsonParser();
+                                        Object tempparsed = parser.parse(userlog);
+                                        JsonArray templog = (JsonArray) tempparsed;
+
+                                        // Create Json Obj
+                                        JsonObject temp = new JsonObject();
+                                        temp.addProperty("Type", "Comment");
+                                        temp.addProperty("Address",address);
+
+                                        // Add & Update
+                                        templog.add(temp);
+                                        firestoreManagerForUserProfile.update("UserProfile", user.getUid(), "UserLog",
+                                                templog.toString(), new Callback() {
+                                                    @Override
+                                                    public void OnCallback(Object object) {
+
+                                                    }
+                                                });
+                                    }
+
                                 }
                             });
                             data.add(new ExpandableListAdapter.Item(ExpandableListAdapter.BACHELOR, user.getUid(), contentUID, temp_comment.getTime(), temp_mention, "0"));

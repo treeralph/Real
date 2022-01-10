@@ -68,6 +68,7 @@ public class UserhistoryActivity extends AppCompatActivity {
         ContentsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ToggleSection.setText(" 작성한 컨태ㄴ츠");
                 // APPEND DATA ON DATASET
                 // ADAPTER.SET DATASET
             }
@@ -76,6 +77,7 @@ public class UserhistoryActivity extends AppCompatActivity {
         AuctionContentsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ToggleSection.setText(" 작성한 옥션 컨텐츠");
                 // APPEND DATA ON DATASET
                 // ADAPTER.SET DATASET
             }
@@ -84,6 +86,7 @@ public class UserhistoryActivity extends AppCompatActivity {
         CommentsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ToggleSection.setText(" 작성한 댁글");
                 // APPEND DATA ON DATASET
                 // ADAPTER.SET DATASET
             }

@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.real.Callback;
 import com.example.real.tool.ImageSizeTool;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -57,7 +58,7 @@ public class StorageManager {
 
     public void downloadImg2View(String path, String subPath, ImageView imageView, Callback callback){
         StorageReference cRef = ref.child(path + "/" + subPath);
-        Glide.with(Context).load(cRef).into(imageView);
+        Glide.with(Context).load(cRef).diskCacheStrategy(DiskCacheStrategy.NONE).skipMemoryCache(true).into(imageView);
         callback.OnCallback(1);
     }
 
