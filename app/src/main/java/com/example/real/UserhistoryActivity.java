@@ -10,11 +10,18 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.real.adapter.ExpandableListAdapter;
 import com.example.real.data.UserProfile;
 import com.example.real.databasemanager.FirestoreManager;
 import com.example.real.databasemanager.StorageManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -41,6 +48,11 @@ public class UserhistoryActivity extends AppCompatActivity {
 
 
         // GET CURRENT USER DATA INCLUDING USERLOG
+        // On callback DISCRIMINATING USERLOG
+
+        List<String> LIST_Contents = new ArrayList<>();
+        List<String> LIST_Auctioncontents = new ArrayList<>();
+        List<String> LIST_Comments = new ArrayList<>();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String userUID = user.getUid();
         FirestoreManager firestoreManagerForUserProfile = new FirestoreManager(
@@ -52,25 +64,51 @@ public class UserhistoryActivity extends AppCompatActivity {
             public void OnCallback(Object object) {
                 UserProfile CurrentUserProfile = (UserProfile)object;
                 String nickname = CurrentUserProfile.getNickName();
+                userprofilenickname.setText(nickname);
                 String userlog = CurrentUserProfile.getUserLog();
-                userprofilenickname.setText(nickname);}});
+                JsonParser parser = new JsonParser();
+                Object tempparsed = parser.parse(userlog);
+                JsonArray templog = (JsonArray) tempparsed;
+
+                // DISCRIMINATING USERLOG
+                int NUM_CONTENTS = 0; int NUM_COMMENTS = 0;
+                for (JsonElement shard : templog){
+                    String shardtype = shard.getAsJsonObject().get("Type").getAsString();
+                    String shardaddress = shard.getAsJsonObject().get("Address").getAsString();
+                    if (shardtype.equals("Content")){NUM_CONTENTS ++; LIST_Contents.add(shardaddress);}
+                    else if (shardtype.equals("AuctionContent")){NUM_CONTENTS ++; LIST_Auctioncontents.add(shardaddress);}
+                    else if (shardtype.equals("Comment")){NUM_COMMENTS ++; LIST_Comments.add(shardaddress);}
+                    else{}
+                }
+                NumContents.setText("싸지른 글 수 : "+ String.valueOf(NUM_CONTENTS));
+                NumComments.setText("싸지른 댁글 수 : "+ String.valueOf(NUM_COMMENTS));
+                //"Address":"Content/MfnsDaivaiyedaOpTxdp/Comments/20220110163124295"
+            }
+        });
         storageManagerForUserProfile.downloadImg2View("UserProfileImage", userUID, userprofileimg, new Callback() {
             @Override
             public void OnCallback(Object object) {
             }});
 
 
+
+
         // BACKGROUND READ
-        int NUM_CONTENTS ; int NUM_COMMENTS;
-        Thread thread = new Thread();
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        });
 
         // CLICKLISTENER
         ContentsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ToggleSection.setText(" 작성한 컨태ㄴ츠");
-                // APPEND DATA ON DATASET
-                // ADAPTER.SET DATASET
+                // LIST<ADAPTER.ITEM> LIST_CONTENTS;
+                // ADAPTER = new ADAPTER(LIST_CONTENTS,~~);
+                //recyclerView.setAdapter(ADAPTER);
             }
         });
 
