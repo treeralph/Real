@@ -5,12 +5,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.media.Image;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.real.adapter.ExpandableListAdapter;
+import com.example.real.adapter.RecyclerViewAdapterForHistory;
 import com.example.real.data.UserProfile;
 import com.example.real.databasemanager.FirestoreManager;
 import com.example.real.databasemanager.StorageManager;
@@ -53,6 +55,8 @@ public class UserhistoryActivity extends AppCompatActivity {
         List<String> LIST_Contents = new ArrayList<>();
         List<String> LIST_Auctioncontents = new ArrayList<>();
         List<String> LIST_Comments = new ArrayList<>();
+        List<String> LIST_DATASET = new ArrayList<>();
+        RecyclerViewAdapterForHistory AdapterForHistory = new RecyclerViewAdapterForHistory(LIST_DATASET, UserhistoryActivity.this);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String userUID = user.getUid();
         FirestoreManager firestoreManagerForUserProfile = new FirestoreManager(
@@ -75,9 +79,9 @@ public class UserhistoryActivity extends AppCompatActivity {
                 for (JsonElement shard : templog){
                     String shardtype = shard.getAsJsonObject().get("Type").getAsString();
                     String shardaddress = shard.getAsJsonObject().get("Address").getAsString();
-                    if (shardtype.equals("Content")){NUM_CONTENTS ++; LIST_Contents.add(shardaddress);}
-                    else if (shardtype.equals("AuctionContent")){NUM_CONTENTS ++; LIST_Auctioncontents.add(shardaddress);}
-                    else if (shardtype.equals("Comment")){NUM_COMMENTS ++; LIST_Comments.add(shardaddress);}
+                    if (shardtype.equals("Content")){NUM_CONTENTS ++; LIST_Contents.add(shardtype + "#" + shardaddress);}
+                    else if (shardtype.equals("AuctionContent")){NUM_CONTENTS ++; LIST_Auctioncontents.add(shardtype + "#" +shardaddress);}
+                    else if (shardtype.equals("Comment")){NUM_COMMENTS ++; LIST_Comments.add(shardtype + "#" +shardaddress);}
                     else{}
                 }
                 NumContents.setText("싸지른 글 수 : "+ String.valueOf(NUM_CONTENTS));
@@ -106,9 +110,12 @@ public class UserhistoryActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ToggleSection.setText(" 작성한 컨태ㄴ츠");
-                // LIST<ADAPTER.ITEM> LIST_CONTENTS;
-                // ADAPTER = new ADAPTER(LIST_CONTENTS,~~);
-                //recyclerView.setAdapter(ADAPTER);
+                LIST_DATASET.clear();
+                //LIST_DATASET.addAll(LIST_Contents);
+                AdapterForHistory.AddItem(LIST_Contents);
+                Log.d("park",LIST_DATASET.toString());
+                //AdapterForHistory.notifyDataSetChanged();
+                recyclerView.setAdapter(AdapterForHistory);
             }
         });
 
@@ -116,8 +123,10 @@ public class UserhistoryActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ToggleSection.setText(" 작성한 옥션 컨텐츠");
-                // APPEND DATA ON DATASET
-                // ADAPTER.SET DATASET
+                LIST_DATASET.clear();
+                LIST_DATASET.addAll(LIST_Auctioncontents);
+                AdapterForHistory.notifyDataSetChanged();
+                recyclerView.setAdapter(AdapterForHistory);
             }
         });
 
@@ -125,8 +134,10 @@ public class UserhistoryActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 ToggleSection.setText(" 작성한 댁글");
-                // APPEND DATA ON DATASET
-                // ADAPTER.SET DATASET
+                LIST_DATASET.clear();
+                LIST_DATASET.addAll(LIST_Comments);
+                AdapterForHistory.notifyDataSetChanged();
+                recyclerView.setAdapter(AdapterForHistory);
             }
         });
 
