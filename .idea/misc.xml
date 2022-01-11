@@ -4,11 +4,14 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/res/layout/activity_chatting.xml" value="0.22010869565217392" />
+        <entry key="app/src/main/res/layout/activity_chatting_additional_functions.xml" value="0.375" />
         <entry key="app/src/main/res/layout/activity_chatting_room.xml" value="0.2463768115942029" />
         <entry key="app/src/main/res/layout/activity_contents.xml" value="0.34396138607534965" />
         <entry key="app/src/main/res/layout/activity_loading.xml" value="0.23020833333333332" />
         <entry key="app/src/main/res/layout/chatting_room_item.xml" value="0.45" />
-        <entry key="app/src/main/res/layout/message_item.xml" value="0.75" />
+        <entry key="app/src/main/res/layout/contents_item_v2.xml" value="0.23278985507246377" />
+        <entry key="app/src/main/res/layout/message_item.xml" value="0.45" />
+        <entry key="app/src/main/res/layout/message_item_for_image.xml" value="0.45" />
       </map>
     </option>
   </component>

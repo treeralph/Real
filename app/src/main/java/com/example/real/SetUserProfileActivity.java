@@ -125,7 +125,7 @@ public class SetUserProfileActivity extends AppCompatActivity {
 
                         tempstorage = FirebaseStorage.getInstance();
                         tempref = tempstorage.getReference();
-                        StorageReference tempcref = tempref.child("UserProfileImage/"+user.getUid());
+                        StorageReference tempcref = tempref.child("UserProfileImage/" + user.getUid());
 
                         setuserprofile2userprofileimage.setDrawingCacheEnabled(true);
                         setuserprofile2userprofileimage.buildDrawingCache();
@@ -172,7 +172,6 @@ public class SetUserProfileActivity extends AppCompatActivity {
                     in.close();
 
                     setuserprofile2userprofileimage.setImageBitmap(img);
-
                 }catch(Exception e){
 
                 }

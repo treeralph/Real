@@ -61,6 +61,12 @@ public class StorageManager {
         callback.OnCallback(1);
     }
 
+    public void downloadImg2View(String path, ImageView imageView, Callback callback){
+        StorageReference cRef = ref.child(path);
+        Glide.with(Context).load(cRef).into(imageView);
+        callback.OnCallback(1);
+    }
+
 
     public void download(String path, String subPath, Callback callback){
 

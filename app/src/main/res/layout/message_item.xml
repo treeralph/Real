@@ -46,7 +46,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:gravity="left"
-                    android:hint="MESSAGE**MESSAGE**MESSAGE**MESSAGE**MESSAGE**MESSAGE**"
+                    android:hint="MESSAGE"
                     android:maxWidth="200dp" />
             </androidx.cardview.widget.CardView>
 

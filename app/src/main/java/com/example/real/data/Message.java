@@ -15,12 +15,13 @@ public class Message extends Data{
     private String time;
     private String fromToken;
     private String toToken;
+    private String imageUri;
 
     public Message(){
 
     }
 
-    public Message(String fromUid, String toUid, String message, String fromToken, String toToken) {
+    public Message(String fromUid, String toUid, String message, String fromToken, String toToken, String imageUri) {
         Date date_now = new Date(System.currentTimeMillis());
         SimpleDateFormat date_format = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 
@@ -30,21 +31,23 @@ public class Message extends Data{
         this.time = date_format.format(date_now);
         this.fromToken = fromToken;
         this.toToken = toToken;
+        this.imageUri = imageUri;
     }
 
-    public Message(String fromUid, String toUid, String message, String time, String fromToken, String toToken) {
+    public Message(String fromUid, String toUid, String message, String time, String fromToken, String toToken, String imageUri) {
         this.fromUid = fromUid;
         this.toUid = toUid;
         this.message = message;
         this.time = time;
         this.fromToken = fromToken;
         this.toToken = toToken;
+        this.imageUri = imageUri;
     }
 
     @NonNull
     @Override
     public String toString() {
-        return fromUid + "/" + toUid + "/" + message + "/" + time + "/" + fromToken + "/" + toToken;
+        return fromUid + "/" + toUid + "/" + message + "/" + time + "/" + fromToken + "/" + toToken + "/" + imageUri;
     }
 
     @Override
@@ -99,5 +102,13 @@ public class Message extends Data{
 
     public void setToToken(String toToken) {
         this.toToken = toToken;
+    }
+
+    public String getImageUri() {
+        return imageUri;
+    }
+
+    public void setImageUri(String imageUri) {
+        this.imageUri = imageUri;
     }
 }
