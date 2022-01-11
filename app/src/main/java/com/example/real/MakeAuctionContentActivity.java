@@ -17,12 +17,16 @@ import com.example.real.adapter.ViewPagerAdapter;
 import com.example.real.data.AuctionContent;
 import com.example.real.data.Content;
 import com.example.real.data.Contents;
+import com.example.real.data.UserProfile;
 import com.example.real.databasemanager.FirestoreManager;
 import com.example.real.databasemanager.StorageManager;
 import com.example.real.fragment.ImgViewFromGalleryFragment;
 import com.example.real.tool.NumberingMachine;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.io.InputStream;
 
@@ -119,6 +123,55 @@ public class MakeAuctionContentActivity extends AppCompatActivity {
                                                                         message.obj = "AuctionContentMakingDone";
                                                                         LoadingActivity.LoadingHandler handler = ((LoadingActivity)LoadingActivity.LoadingContext).handler;
                                                                         handler.sendMessage(message);
+
+                                                                        //UPLOAD USERLOG
+                                                                        FirestoreManager firestoreManagerForUserProfile = new FirestoreManager(
+                                                                                MakeAuctionContentActivity.this, "UserProfile", user.getUid());
+
+                                                                        firestoreManagerForUserProfile.read("UserProfile", user.getUid(), new Callback() {
+                                                                            @Override
+                                                                            public void OnCallback(Object object) {
+                                                                                UserProfile userprofile = (UserProfile) object;
+                                                                                String userlog = userprofile.getUserLog();
+                                                                                String address = "Content/" + contentId;
+                                                                                if(userlog.equals("")){
+                                                                                    // Create Json Obj & JsonArray
+                                                                                    JsonArray frame = new JsonArray();
+                                                                                    JsonObject init = new JsonObject();
+                                                                                    init.addProperty("Type","AuctionContent");
+                                                                                    init.addProperty("Address",address);
+                                                                                    frame.add(init);
+                                                                                    firestoreManagerForUserProfile.update("UserProfile", user.getUid(), "UserLog",
+                                                                                            frame.toString(), new Callback() {
+                                                                                                @Override
+                                                                                                public void OnCallback(Object object) {
+
+                                                                                                }
+                                                                                            });
+                                                                                } else{
+                                                                                    // Parsing JsonArray
+                                                                                    JsonParser parser = new JsonParser();
+                                                                                    Object tempparsed = parser.parse(userlog);
+                                                                                    JsonArray templog = (JsonArray) tempparsed;
+
+                                                                                    // Create Json Obj
+                                                                                    JsonObject temp = new JsonObject();
+                                                                                    temp.addProperty("Type", "AuctionContent");
+                                                                                    temp.addProperty("Address",address);
+
+                                                                                    // Add & Update
+                                                                                    templog.add(temp);
+                                                                                    firestoreManagerForUserProfile.update("UserProfile", user.getUid(), "UserLog",
+                                                                                            templog.toString(), new Callback() {
+                                                                                                @Override
+                                                                                                public void OnCallback(Object object) {
+
+                                                                                                }
+                                                                                            });
+                                                                                }
+
+                                                                            }
+                                                                        });
                                                                     }
                                                                 }
                                                             });

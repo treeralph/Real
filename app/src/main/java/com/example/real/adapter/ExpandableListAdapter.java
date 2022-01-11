@@ -324,6 +324,7 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 String asdf = new TimeTextTool(item.time).Time2Text();
                 itemController2.bachelor_time.setText(asdf);
 
+
                 itemController2.bachelor_mention.setText(item.mention);
 
                 itemController2.bachelor_linearlayout.setOnClickListener(new View.OnClickListener() {
