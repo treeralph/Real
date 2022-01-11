@@ -45,7 +45,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         super.onMessageReceived(remoteMessage);
 
         Map<String, String> payload = remoteMessage.getData();
-        //   /Messages/8zMNx86mzi6WJj0q7wRS/6z83TRGm8tM04K4Iw8aWfedyOGJ3/202201051502076/Message
         String[] messagePath = payload.get("path").split("/");
         String chatRoomPath = "/" + messagePath[1] + "/" + messagePath[2] + "/" + messagePath[3];
         String fromUid = payload.get("fromUid");
@@ -54,6 +53,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String time = payload.get("time");
         String fromToken = payload.get("fromToken");
         String toToken = payload.get("toToken");
+        String imageUri = payload.get("imageUri");
 
         firestoreManagerForUserProfile.read("UserProfile", fromUid, new Callback() {
             @Override
