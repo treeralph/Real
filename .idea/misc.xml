@@ -10,6 +10,9 @@
         <entry key="app/src/main/res/layout/activity_loading.xml" value="0.23020833333333332" />
         <entry key="app/src/main/res/layout/chatting_room_item.xml" value="0.45" />
         <entry key="app/src/main/res/layout/contents_item_v2.xml" value="0.23278985507246377" />
+        <entry key="app/src/main/res/layout/logitem_for_auctioncontent.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/logitem_for_comment.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/logitem_for_content.xml" value="0.2654320987654321" />
         <entry key="app/src/main/res/layout/message_item.xml" value="0.45" />
         <entry key="app/src/main/res/layout/message_item_for_image.xml" value="0.45" />
       </map>

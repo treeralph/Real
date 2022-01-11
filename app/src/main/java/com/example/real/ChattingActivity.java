@@ -226,23 +226,25 @@ public class ChattingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+
                 String msg = messageEditText.getText().toString();
+                if(!msg.isEmpty()) {
+                    if (user.getUid().equals(userUID)) {
+                        fromUserToken = userUIDToken;
+                        fromUserUid = userUID;
+                        toUserToken = contentUIDToken;
+                        toUserUid = contentUID;
+                    } else {
+                        fromUserToken = contentUIDToken;
+                        fromUserUid = contentUID;
+                        toUserToken = userUIDToken;
+                        toUserUid = userUID;
+                    }
 
-                if(user.getUid().equals(userUID)){
-                    fromUserToken = userUIDToken;
-                    fromUserUid = userUID;
-                    toUserToken = contentUIDToken;
-                    toUserUid = contentUID;
-                }else{
-                    fromUserToken = contentUIDToken;
-                    fromUserUid = contentUID;
-                    toUserToken = userUIDToken;
-                    toUserUid = userUID;
+                    Message message = new Message(fromUserUid, toUserUid, msg, fromUserToken, toUserToken, "");
+                    realTimeDatabaseManager.writeMessage(databasePath, message);
+                    messageEditText.setText("");
                 }
-
-                Message message = new Message(fromUserUid, toUserUid, msg, fromUserToken, toUserToken, "");
-                realTimeDatabaseManager.writeMessage(databasePath, message);
-                messageEditText.setText("");
             }
         });
 

@@ -45,7 +45,7 @@
 
         </LinearLayout>
         <TextView
-            android:id="@+id/logitemforcontent_AuctionContentTime"
+            android:id="@+id/logitemforauctioncontent_AuctionContentTime"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:text="Time"/>
