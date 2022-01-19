@@ -1,6 +1,7 @@
 package com.example.real.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +12,20 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.real.Callback;
 import com.example.real.R;
+import com.example.real.data.AuctionContent;
+import com.example.real.data.Comment;
+import com.example.real.data.Content;
+import com.example.real.databasemanager.FirestoreManager;
+import com.example.real.databasemanager.StorageManager;
+import com.example.real.tool.TimeTextTool;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import org.w3c.dom.Text;
 
+import java.sql.Time;
 import java.util.List;
 import java.util.zip.Inflater;
 
@@ -22,17 +33,28 @@ public class RecyclerViewAdapterForHistory extends RecyclerView.Adapter<Recycler
 
     private List<String> data;
     private Context context;
+    private FirebaseUser user;
+
+    private FirestoreManager firestoreManagerForContent;
+    private FirestoreManager firestoreManagerForComment;
+    private StorageManager storageManagerForContent;
 
     public RecyclerViewAdapterForHistory(List<String> data, Context context) {
         this.data = data;
         this.context = context;
+        this.user = FirebaseAuth.getInstance().getCurrentUser();
+
+        storageManagerForContent = new StorageManager(context, "Image", user.getUid());
+        firestoreManagerForComment = new FirestoreManager(context, "Comment", user.getUid());
+        firestoreManagerForContent = new FirestoreManager(context, "Content", user.getUid());
+
         // data looks like
         // [ "Content/MfnsDaivaiyedaOpTxdp/Comments/20220110163124295" , ~~~ ]
     }
 
     public void AddItem(List<String> tempString){
-        // todo: error check
         data.addAll(tempString);
+        Log.d("ERROR_CHECK_FOR_ADDALL", data.toString());
     }
 
     @Override
@@ -40,29 +62,43 @@ public class RecyclerViewAdapterForHistory extends RecyclerView.Adapter<Recycler
         String datum = data.get(position);
         String[] DatumSplit = datum.split("#");
         String Address = DatumSplit[1];
+
+        Log.d("ADDRESSADDRESS", datum);
+
         if (DatumSplit[0].equals("Content")){
             // CONTENT
-            return 0;
+            Log.d("TRACKING1", Address);
+            return 1;
         } else if (DatumSplit[0].equals("AuctionContent")){
             // AUCTIONCONTENT
-            return 1;
+            Log.d("TRACKING2", Address);
+            return 2;
         } else if (DatumSplit[0].equals("Comment")){
             // COMMENT
-            return 2;
+            Log.d("TRACKING3", Address);
+            return 3;
         } else{
             // error
-            return 3;
+            return 4;
         }
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch(viewType){
-            case 0: return new ContentViewHolder(
+            case 1:
+                Log.d("TRACKING1-1", "why");
+                return new ContentViewHolder(
                         LayoutInflater.from(parent.getContext()).inflate(R.layout.logitem_for_content, parent, false));
-            case 1: return new AuctionContentViewHolder(
+
+            case 2:
+                Log.d("TRACKING2-1", "why");
+                return new AuctionContentViewHolder(
                         LayoutInflater.from(parent.getContext()).inflate(R.layout.logitem_for_auctioncontent, parent, false));
-            case 2: return new CommentViewHolder(
+
+            case 3:
+                Log.d("TRACKING3-1", "why");
+                return new CommentViewHolder(
                         LayoutInflater.from(parent.getContext()).inflate(R.layout.logitem_for_comment, parent, false));
             default: return null;
         }
@@ -73,46 +109,93 @@ public class RecyclerViewAdapterForHistory extends RecyclerView.Adapter<Recycler
         String datum = data.get(position);
         String[] datumSplit = datum.split("#");
         String address = datumSplit[1];
+        String[] addressSplit = address.split("/");
+        String datumType = addressSplit[0];
+        String contentId = addressSplit[1];
+
+        Log.d("VIEWTYPE", String.valueOf(getItemViewType(position)));
 
         switch (getItemViewType(position)){
-            case 0: // type - Content
+            case 1: // type - Content
+                Log.d("TRACKING1-2", "why");
                 ContentViewHolder contentViewHolder = (ContentViewHolder) holder;
-                /* todo: 아래 내용을 채워주면 됨, 아마 address를 통해서.
-                contentViewHolder.logitemforcontent_ContentImg;
-                contentViewHolder.logitemforcontent_ContentTitle;
-                contentViewHolder.logitemforcontent_ContentDescription;
-                contentViewHolder.logitemforcontent_ContentTime;
 
-                 */
+                Log.d("HEREHERE", "여기 사람있어요");
 
-            case 1: // type - AuctionContent
+                String path = "image/"+ contentId + "/100/0";
+                Log.d("park",path);
+                storageManagerForContent.downloadImg2View(path, contentViewHolder.logitemforcontent_ContentImg, new Callback() {
+                    @Override
+                    public void OnCallback(Object object) {
+                        firestoreManagerForContent.read(datumType, contentId, new Callback() {
+                            @Override
+                            public void OnCallback(Object object) {
+                                Content content = (Content) object;
+                                TimeTextTool timeTextTool = new TimeTextTool(content.getTime());
+                                contentViewHolder.logitemforcontent_ContentTitle.setText(content.getTitle());
+                                contentViewHolder.logitemforcontent_ContentDescription.setText(content.getContent());
+                                contentViewHolder.logitemforcontent_ContentTime.setText(timeTextTool.Time2Text());
+                            }
+                        });
+                    }
+                });
+                break;
+
+            case 2: // type - AuctionContent
+                Log.d("TRACKING2-2", "why");
+
                 AuctionContentViewHolder auctionContentViewHolder = (AuctionContentViewHolder) holder;
-                /*
-                auctionContentViewHolder.logitemforauctioncontent_AuctionContentImg;
-                auctionContentViewHolder.logitemforauctioncontent_AuctionContentTitle;
-                auctionContentViewHolder.logitemforauctioncontent_AuctionContentDescription;
-                auctionContentViewHolder.logitemforauctioncontent_AuctionContentTime;
 
-                 */
+                storageManagerForContent.downloadImg2View("image", contentId, auctionContentViewHolder.logitemforauctioncontent_AuctionContentImg, new Callback() {
+                    @Override
+                    public void OnCallback(Object object) {
+                        firestoreManagerForContent.read(datumType, contentId, new Callback() {
+                            @Override
+                            public void OnCallback(Object object) {
+                                AuctionContent auctionContent = (AuctionContent) object;
+                                TimeTextTool timeTextTool = new TimeTextTool(auctionContent.getTime());
+                                auctionContentViewHolder.logitemforauctioncontent_AuctionContentTitle.setText(auctionContent.getTitle());
+                                auctionContentViewHolder.logitemforauctioncontent_AuctionContentDescription.setText(auctionContent.getContent());
+                                auctionContentViewHolder.logitemforauctioncontent_AuctionContentTime.setText(timeTextTool.Time2Text());
+                            }
+                        });
+                    }
+                });
+                break;
 
-            case 2: // type - Comment
+            case 3: // type - Comment
+                Log.d("TRACKING3-2", "why");
+
                 CommentViewHolder commentViewHolder = (CommentViewHolder) holder;
-                /*
-                commentViewHolder.logitemforcomment_To;
-                commentViewHolder.logitemforcomment_Mention;
-                commentViewHolder.logitemforcomment_CommentTime;
 
-                 */
+                String subPath = "";
+                for (int i = 1; i < addressSplit.length; i++) {
+                    subPath += addressSplit[i] + "/";
+                }
+
+                Log.d("ERRORHAPPEN", datumType);
+                Log.d("ERRORHAPPEN", subPath);
+
+                firestoreManagerForComment.read(datumType, subPath, new Callback() {
+                    @Override
+                    public void OnCallback(Object object) {
+                        Comment comment = (Comment) object;
+                        TimeTextTool timeTextTool = new TimeTextTool(comment.getTime());
+                        commentViewHolder.logitemforcomment_To.setText(comment.getTo());
+                        commentViewHolder.logitemforcomment_Mention.setText(comment.getMention());
+                        commentViewHolder.logitemforcomment_CommentTime.setText(timeTextTool.Time2Text());
+                    }
+                });
+
+                break;
+
             default:
-                // todo: error handling
-
+                Log.e("RECYCLERVIEWADAPTERFORHISTORY_ONBINDVIEWHOLDER", "NON_CASE_ERROR");
         }
-
     }
 
     @Override
     public int getItemCount() {
-        // todo: 이 부분이 " return 0; " 으로 되어있더라고 그래서 우리가 돌려봤을 때 아무것도 안나온 것 같아.
         return data.size();
     }
 

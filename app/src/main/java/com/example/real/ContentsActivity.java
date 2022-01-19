@@ -72,6 +72,8 @@ public class ContentsActivity extends AppCompatActivity {
 
         RecyclerView recyclerView = findViewById(R.id.minetestRecyclerView);
         recyclerView.setHasFixedSize(true);
+        // todo: make recyclerView show all items without scroll
+        recyclerView.setNestedScrollingEnabled(false);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);

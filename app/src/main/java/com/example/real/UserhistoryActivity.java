@@ -1,6 +1,7 @@
 package com.example.real;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.media.Image;
@@ -48,6 +49,10 @@ public class UserhistoryActivity extends AppCompatActivity {
         TextView ToggleSection = (TextView) findViewById(R.id.UserhistoryToggleSection);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.UserhistoryRecyclerView);
 
+        recyclerView.setHasFixedSize(true);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
 
         // GET CURRENT USER DATA INCLUDING USERLOG
         // On callback DISCRIMINATING USERLOG
@@ -56,6 +61,8 @@ public class UserhistoryActivity extends AppCompatActivity {
         List<String> LIST_Auctioncontents = new ArrayList<>();
         List<String> LIST_Comments = new ArrayList<>();
         List<String> LIST_DATASET = new ArrayList<>();
+
+
         RecyclerViewAdapterForHistory AdapterForHistory = new RecyclerViewAdapterForHistory(LIST_DATASET, UserhistoryActivity.this);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String userUID = user.getUid();

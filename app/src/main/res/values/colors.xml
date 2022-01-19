@@ -11,5 +11,8 @@
     <color name="md_blue_200">#575AF4</color>
     <color name="red">#FF0015</color>
     <color name="greyblack">#131313</color>
+    <color name="yellow">#FFD814</color>
+    <color name="grey">#707070</color>
+    <color name="grey1">#D6D6D6</color>
 
 </resources>

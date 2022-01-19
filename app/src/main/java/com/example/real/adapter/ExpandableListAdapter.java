@@ -65,14 +65,17 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 ListHeaderViewHolder header = new ListHeaderViewHolder(view);
                 return header;
             case CHILD:
-
                 LayoutInflater inflaterChild = (LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 view = inflaterChild.inflate(R.layout.comment_child_item, parent, false);
                 ListChildViewHolder child = new ListChildViewHolder(view);
                 return child;
             case BACHELOR:
                 LayoutInflater inflaterBACHELOR = (LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                view = inflaterBACHELOR.inflate(R.layout.comment_bachelor_item, parent, false);
+
+                // todo: for design test
+                //view = inflaterBACHELOR.inflate(R.layout.comment_bachelor_item, parent, false);
+                view = inflaterBACHELOR.inflate(R.layout.comment_item_design, parent, false);
+                /////////////////////
                 ListBachelorViewHolder bachelor = new ListBachelorViewHolder(view);
                 return bachelor;
             /*
@@ -493,12 +496,24 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         public ListBachelorViewHolder(View itemView) {
             super(itemView);
+
+
+            /* todo: for design test
             bachelor_linearlayout = (LinearLayout) itemView.findViewById(R.id.bachelor_linearlayout);
             bachelor_profile_image = (ImageView) itemView.findViewById(R.id.bachelor_profile_img);
             bachelor_nickname = (TextView) itemView.findViewById(R.id.bachelor_nickname);
             bachelor_time = (TextView) itemView.findViewById(R.id.bachelor_time);
             bachelor_popup = (ImageView) itemView.findViewById(R.id.bachelor_popup);
             bachelor_mention = (TextView) itemView.findViewById(R.id.bachelor_mention);
+             */
+
+            bachelor_linearlayout = (LinearLayout) itemView.findViewById(R.id.designTestCommentLinearLayout);
+            bachelor_profile_image = (ImageView) itemView.findViewById(R.id.designTestCommentUserProfileImageImageView);
+            bachelor_nickname = (TextView) itemView.findViewById(R.id.designTestCommentUserProfileNickNameTextView);
+            bachelor_time = (TextView) itemView.findViewById(R.id.designTestCommentTimeTextView);
+            bachelor_popup = (ImageView) itemView.findViewById(R.id.designTestCommentPopUpButton);
+            bachelor_mention = (TextView) itemView.findViewById(R.id.designTestCommentDescriptionTextView);
+
         }
     }
     /*

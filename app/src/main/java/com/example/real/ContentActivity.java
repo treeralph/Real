@@ -60,14 +60,17 @@ public class ContentActivity extends AppCompatActivity {
 
     EditText ContentCommentEditText;
     Button ContentCommentBtn;
+    Button srtbtn;
 
-    private RecyclerView Comments_Recyclerview;
+    RecyclerView Comments_Recyclerview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_content);
-
+        //setContentView(R.layout.activity_content);
+        // todo: for design test
+        setContentView(R.layout.activity_content_design);
+        /////////////////////////////////////////////////
 
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
@@ -85,6 +88,8 @@ public class ContentActivity extends AppCompatActivity {
         StorageManager storageManagerForUserProfile = new StorageManager(
                 ContentActivity.this, "UserProfileImage", user.getUid());
 
+        // todo: for design test
+        /* original
         ContentTitleTextView = findViewById(R.id.ContentActivityTitleTextView);
         ContentUserProfileInfoTextView = findViewById(R.id.ContentActivityProfileInfoTextView);
         ContentTimeTextView = findViewById(R.id.ContentActivityTimeTextView);
@@ -92,6 +97,28 @@ public class ContentActivity extends AppCompatActivity {
         ContentViewPager = findViewById(R.id.ContentActivityViewPager);
         ContentUserProfileImgImageView = findViewById(R.id.ContentActivityProfileImageImageView);
         ContentMessageBtn = findViewById(R.id.ContentActivityMessageBtn);
+        Comments_Recyclerview = findViewById(R.id.comments_recyclerview);
+        ContentCommentEditText = findViewById(R.id.ContentActivityCommentEditText);
+        ContentCommentBtn = findViewById(R.id.ContentActivityCommentBtn);
+        srtbtn = findViewById(R.id.ContentActivitySortingBtn);
+         */
+
+        // new one\
+        ContentTitleTextView = findViewById(R.id.designTestContentTitleTextView);
+        ContentUserProfileInfoTextView = findViewById(R.id.designTestContentUserProfileNickNameTextView);
+        ContentTimeTextView = findViewById(R.id.designTestContentTimeTextView);
+        ContentDescriptionTextView = findViewById(R.id.designTestContentDescriptionTextView);
+        ContentViewPager = findViewById(R.id.designTestContentImageViewPager); //
+        ContentUserProfileImgImageView = findViewById(R.id.designTestContentUserProfileImageImageView);
+        ContentMessageBtn = findViewById(R.id.designTestContentMessageButton);
+        Comments_Recyclerview = findViewById(R.id.designTestContentCommentRecyclerView);
+        ContentCommentEditText = findViewById(R.id.designTestCommentEditText);
+        ContentCommentBtn = findViewById(R.id.designTestContentCommentAddButton);
+        srtbtn = findViewById(R.id.designTestContentSortingButton);
+
+        //////////////////////////////////////////////////////////////////////////////////////
+
+
 
         ContentMessageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -177,9 +204,7 @@ public class ContentActivity extends AppCompatActivity {
             }
         });
 
-        Comments_Recyclerview = findViewById(R.id.comments_recyclerview);
-        ContentCommentEditText = findViewById(R.id.ContentActivityCommentEditText);
-        ContentCommentBtn = findViewById(R.id.ContentActivityCommentBtn);
+
         Comments_Recyclerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
         List<ExpandableListAdapter.Item> data = new ArrayList<>();
@@ -320,7 +345,7 @@ public class ContentActivity extends AppCompatActivity {
             }
         });
 
-        Button srtbtn = (Button) findViewById(R.id.ContentActivitySortingBtn);
+
         srtbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

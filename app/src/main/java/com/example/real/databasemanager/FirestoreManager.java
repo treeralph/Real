@@ -187,6 +187,7 @@ public class FirestoreManager {
                     }
                 });
     }
+
     public void read(String collectionPath, String documentPath, Callback callback){ // DocumentReference - only Read one
         DocumentReference ref = db.document(collectionPath + "/" + documentPath);
         ref.get()
