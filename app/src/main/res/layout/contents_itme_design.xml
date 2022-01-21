@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="5dp"
+        android:orientation="horizontal">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            app:cardCornerRadius="20dp"
+            app:contentPadding="2dp"
+            app:cardBackgroundColor="@color/black">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:cardCornerRadius="20dp">
+
+                <ImageView
+                    android:id="@+id/itemImageViewDesign"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/push_img"/>
+
+            </androidx.cardview.widget.CardView>
+        </androidx.cardview.widget.CardView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:orientation="vertical"
+            android:weightSum="1">
+
+            <TextView
+                android:id="@+id/itemTimeTextViewDesign"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="0000.00.00 - 00:00"
+                android:textSize="12dp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/simplehae"/>
+            <TextView
+                android:id="@+id/itemTitleTextViewDesign"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Content Title"
+                android:textSize="30dp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/simplehae"
+                android:textStyle="bold"
+                android:layout_weight="1"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/itemProfileImageImageViewDesign"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:src="@drawable/push_img"
+                    app:civ_border_width="1.5dp"/>
+                <TextView
+                    android:id="@+id/itemProfileInfoTextViewDesign"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="UserNickName"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/simplehae"
+                    android:textSize="16dp"
+                    android:textStyle="bold"
+                    android:layout_gravity="center"/>
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+</RelativeLayout>
