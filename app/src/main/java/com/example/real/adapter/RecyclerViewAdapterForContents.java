@@ -44,7 +44,8 @@ public class RecyclerViewAdapterForContents extends RecyclerView.Adapter<Recycle
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.contents_item_v2, parent, false);
+        //View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.contents_item_v2, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.contents_itme_design, parent, false);
         return new MyViewHolder(v);
     }
 
@@ -138,12 +139,12 @@ public class RecyclerViewAdapterForContents extends RecyclerView.Adapter<Recycle
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            ContentLinearLayout = itemView.findViewById(R.id.contentsItemLinearLayout);
-            ContentImgView = itemView.findViewById(R.id.itemImageView);
-            ContentProfileImgView = itemView.findViewById(R.id.itemProfileImageImageView);
-            ContentTitleTextView = itemView.findViewById(R.id.itemTitleTextView);
-            ContentProfileTextView = itemView.findViewById(R.id.itemProfileInfoTextView);
-            ContentTimeTextView = itemView.findViewById(R.id.itemTimeTextView);
+            ContentLinearLayout = itemView.findViewById(R.id.contentsItemLinearLayoutDesign);
+            ContentImgView = itemView.findViewById(R.id.itemImageViewDesign);
+            ContentProfileImgView = itemView.findViewById(R.id.itemProfileImageImageViewDesign);
+            ContentTitleTextView = itemView.findViewById(R.id.itemTitleTextViewDesign);
+            ContentProfileTextView = itemView.findViewById(R.id.itemProfileInfoTextViewDesign);
+            ContentTimeTextView = itemView.findViewById(R.id.itemTimeTextViewDesign);
         }
     }
 }

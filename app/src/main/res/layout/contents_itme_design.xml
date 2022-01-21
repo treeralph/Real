@@ -6,20 +6,19 @@
     android:background="@color/white">
 
     <LinearLayout
+        android:id="@+id/contentsItemLinearLayoutDesign"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
         android:layout_marginTop="5dp"
-        android:layout_marginRight="20dp"
         android:layout_marginBottom="5dp"
         android:orientation="horizontal">
 
         <androidx.cardview.widget.CardView
-            android:layout_width="150dp"
-            android:layout_height="150dp"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            app:cardBackgroundColor="@color/black"
             app:cardCornerRadius="20dp"
-            app:contentPadding="2dp"
-            app:cardBackgroundColor="@color/black">
+            app:contentPadding="2dp">
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -31,7 +30,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/push_img"/>
+                    android:src="@drawable/push_img" />
 
             </androidx.cardview.widget.CardView>
         </androidx.cardview.widget.CardView>
@@ -43,48 +42,77 @@
             android:orientation="vertical"
             android:weightSum="1">
 
-            <TextView
-                android:id="@+id/itemTimeTextViewDesign"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="0000.00.00 - 00:00"
-                android:textSize="12dp"
-                android:textColor="@color/black"
-                android:fontFamily="@font/simplehae"/>
+                android:orientation="horizontal"
+                android:weightSum="1">
+                <TextView
+                    android:id="@+id/itemTimeTextViewDesign"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/simplehae"
+                    android:text="0000.00.00 - 00:00"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    android:layout_weight="1"/>
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:src="@drawable/message_circle_high"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:layout_width="25dp"
+                    android:layout_height="wrap_content"
+                    android:text="00"
+                    android:fontFamily="@font/simplehae"
+                    android:textColor="@color/black"
+                    android:textSize="13dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"/>
+
+
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/itemTitleTextViewDesign"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Content Title"
-                android:textSize="30dp"
-                android:textColor="@color/black"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
                 android:fontFamily="@font/simplehae"
-                android:textStyle="bold"
-                android:layout_weight="1"/>
+                android:text="Content Title"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="1">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/itemProfileImageImageViewDesign"
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
                     android:src="@drawable/push_img"
-                    app:civ_border_width="1.5dp"/>
+                    app:civ_border_width="1.5dp" />
+
                 <TextView
                     android:id="@+id/itemProfileInfoTextViewDesign"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_marginLeft="10dp"
+                    android:fontFamily="@font/simplehae"
                     android:text="UserNickName"
                     android:textColor="@color/black"
-                    android:fontFamily="@font/simplehae"
-                    android:textSize="16dp"
+                    android:textSize="14dp"
                     android:textStyle="bold"
-                    android:layout_gravity="center"/>
+                    android:layout_weight="1"/>
+
+
 
 
             </LinearLayout>

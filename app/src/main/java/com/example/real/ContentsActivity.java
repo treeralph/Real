@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 
 import androidx.annotation.NonNull;
@@ -18,6 +19,7 @@ import com.example.real.data.Contents;
 import com.example.real.databasemanager.FirestoreManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.api.Distribution;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -27,15 +29,30 @@ import java.util.ArrayList;
 public class ContentsActivity extends AppCompatActivity {
 
     FirebaseUser user;
-    ImageView chatRoomBtn;
+    LinearLayout chatRoomBtn;
+    RecyclerView recyclerView;
+    LinearLayout makeContentBtn;
+    ImageView SettingPopupImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_contents);
+        //setContentView(R.layout.activity_contents);
+        setContentView(R.layout.activity_contents_design);
 
+        recyclerView = findViewById(R.id.ContentsActivityRecyclerViewDesign);
+        makeContentBtn = findViewById(R.id.ContentsMakeContentBtnDesign);
+        SettingPopupImage = findViewById(R.id.ContentsSettingPopupImgDesign);
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        chatRoomBtn = findViewById(R.id.ContentsActivityChatRoomBtnDesign);
+
+        /*
+        recyclerView = findViewById(R.id.minetestRecyclerView);
+        makeContentBtn = findViewById(R.id.ContentsMakeContentBtn);
+        SettingPopupImage = findViewById(R.id.ContentsSettingPopupImg);
         user = FirebaseAuth.getInstance().getCurrentUser();
         chatRoomBtn = findViewById(R.id.ContentsActivityChatRoomBtn);
+         */
 
         chatRoomBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,9 +87,8 @@ public class ContentsActivity extends AppCompatActivity {
 
 
 
-        RecyclerView recyclerView = findViewById(R.id.minetestRecyclerView);
+
         recyclerView.setHasFixedSize(true);
-        // todo: make recyclerView show all items without scroll
         recyclerView.setNestedScrollingEnabled(false);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
@@ -89,7 +105,7 @@ public class ContentsActivity extends AppCompatActivity {
             }
         });
 
-        ImageView makeContentBtn = (ImageView) findViewById(R.id.ContentsMakeContentBtn);
+
         makeContentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -117,7 +133,6 @@ public class ContentsActivity extends AppCompatActivity {
         });
 
 
-        ImageView SettingPopupImage = (ImageView) findViewById(R.id.ContentsSettingPopupImg);
         SettingPopupImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
