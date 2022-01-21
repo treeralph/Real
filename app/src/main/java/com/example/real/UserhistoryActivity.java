@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.real.adapter.ExpandableListAdapter;
@@ -34,20 +35,19 @@ public class UserhistoryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_userhistory);
+        setContentView(R.layout.activity_userhistory_design);
 
         // XML VARIABLES
-        CircleImageView userprofileimg = (CircleImageView) findViewById(R.id.UserhistoryProfileimg);
+        ImageView userprofileimg = (ImageView) findViewById(R.id.UserhistoryProfileimg);
         TextView userprofilenickname = (TextView) findViewById(R.id.UserhistoryUserNickname);
         TextView NumContents = (TextView) findViewById(R.id.UserhistoryNumContents);
         TextView NumComments = (TextView) findViewById(R.id.UserhistoryNumComments);
 
-        Button ContentsBtn = (Button) findViewById(R.id.UserhistoryBtnContents);
-        Button AuctionContentsBtn = (Button) findViewById(R.id.UserhistoryBtnAuctionContents);
-        Button CommentsBtn = (Button) findViewById(R.id.UserhistoryBtnComments);
+        LinearLayout ContentsBtn = (LinearLayout) findViewById(R.id.UserhistoryBtnContents);
+        LinearLayout AuctionContentsBtn = (LinearLayout) findViewById(R.id.UserhistoryBtnAuctionContents);
+        LinearLayout CommentsBtn = (LinearLayout) findViewById(R.id.UserhistoryBtnComments);
 
-        TextView ToggleSection = (TextView) findViewById(R.id.UserhistoryToggleSection);
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.UserhistoryRecyclerView);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.UserhistoryRecyclerViewDesign);
 
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
@@ -91,8 +91,8 @@ public class UserhistoryActivity extends AppCompatActivity {
                     else if (shardtype.equals("Comment")){NUM_COMMENTS ++; LIST_Comments.add(shardtype + "#" +shardaddress);}
                     else{}
                 }
-                NumContents.setText("싸지른 글 수 : "+ String.valueOf(NUM_CONTENTS));
-                NumComments.setText("싸지른 댁글 수 : "+ String.valueOf(NUM_COMMENTS));
+                NumContents.setText(String.valueOf(NUM_CONTENTS));
+                NumComments.setText(String.valueOf(NUM_COMMENTS));
                 //"Address":"Content/MfnsDaivaiyedaOpTxdp/Comments/20220110163124295"
             }
         });
@@ -116,7 +116,9 @@ public class UserhistoryActivity extends AppCompatActivity {
         ContentsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ToggleSection.setText(" 작성한 컨태ㄴ츠");
+                ContentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.grey1));
+                CommentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.white));
+                AuctionContentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.white));
                 LIST_DATASET.clear();
                 //LIST_DATASET.addAll(LIST_Contents);
                 AdapterForHistory.AddItem(LIST_Contents);
@@ -129,7 +131,9 @@ public class UserhistoryActivity extends AppCompatActivity {
         AuctionContentsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ToggleSection.setText(" 작성한 옥션 컨텐츠");
+                ContentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.white));
+                CommentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.white));
+                AuctionContentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.grey1));
                 LIST_DATASET.clear();
                 LIST_DATASET.addAll(LIST_Auctioncontents);
                 AdapterForHistory.notifyDataSetChanged();
@@ -140,7 +144,9 @@ public class UserhistoryActivity extends AppCompatActivity {
         CommentsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ToggleSection.setText(" 작성한 댁글");
+                ContentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.white));
+                CommentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.grey1));
+                AuctionContentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.white));
                 LIST_DATASET.clear();
                 LIST_DATASET.addAll(LIST_Comments);
                 AdapterForHistory.notifyDataSetChanged();
