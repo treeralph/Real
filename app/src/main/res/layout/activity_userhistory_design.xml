@@ -8,145 +8,150 @@
     android:background="@color/white"
     tools:context=".UserhistoryActivity">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
-        <!-- ㅄ색기 정보 -->
-        <ImageView
-            android:id="@+id/UserhistoryProfileimg"
-            android:scaleType="centerCrop"
-            android:src="@drawable/push_img"
-            android:layout_width="match_parent"
-            android:layout_height="340dp"/>
+        android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="120dp"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@color/black">
-            
-            <TextView
-                android:id="@+id/UserhistoryUserNickname"
-                android:text="박강혁씨발새끼"
-                android:textSize="30dp"
-                android:fontFamily="@font/simplehae"
-                android:gravity="center"
-                android:textStyle="bold"
-                android:textColor="@color/white"
-                android:layout_marginTop="40dp"
+            >
+            <!-- ㅄ색기 정보 -->
+            <ImageView
+                android:id="@+id/UserhistoryProfileimg"
+                android:scaleType="centerCrop"
+                android:src="@drawable/push_img"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <!--
-            <TextView
+                android:layout_height="340dp"/>
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:gravity="center"
-                android:text="2021.01.21"
-                android:fontFamily="@font/simplehae"
-                android:textColor="@color/white"
-                android:textSize="25dp"
-                android:textStyle="bold" />
-            -->
+                android:layout_height="120dp"
+                android:orientation="vertical"
+                android:background="@color/black">
+
+                <TextView
+                    android:id="@+id/UserhistoryUserNickname"
+                    android:text="박강혁씨발새끼"
+                    android:textSize="30dp"
+                    android:fontFamily="@font/simplehae"
+                    android:gravity="center"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:layout_marginTop="40dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <!--
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:text="2021.01.21"
+                    android:fontFamily="@font/simplehae"
+                    android:textColor="@color/white"
+                    android:textSize="25dp"
+                    android:textStyle="bold" />
+                -->
+            </LinearLayout>
+            <!-- ㅄ색기 간략 이력 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/UserhistoryBtnAuctionContents"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_weight="1.8"
+                    android:orientation="vertical">
+                    <TextView
+
+                        android:text="50,000,000"
+                        android:fontFamily="@font/simplehae"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="20dp"
+                        android:layout_marginTop="33dp"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:gravity="center"
+                        android:text="earning"
+                        android:fontFamily="@font/simplehae"
+                        android:textColor="@color/black"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="15dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/UserhistoryBtnContents"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/UserhistoryNumContents"
+                        android:text="7"
+                        android:fontFamily="@font/simplehae"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="20dp"
+                        android:layout_marginTop="33dp"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:gravity="center"
+                        android:text="trash"
+                        android:fontFamily="@font/simplehae"
+                        android:textColor="@color/black"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="15dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/UserhistoryBtnComments"
+                    android:layout_width="0dp"
+                    android:layout_height="110dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/UserhistoryNumComments"
+                        android:text="13"
+                        android:fontFamily="@font/simplehae"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="20dp"
+                        android:layout_marginTop="33dp"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:gravity="center"
+                        android:text="comments"
+                        android:fontFamily="@font/simplehae"
+                        android:textColor="@color/black"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="15dp"/>
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <!-- 상세 이력 -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/UserhistoryRecyclerViewDesign"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_marginBottom="10dp"/>
+
         </LinearLayout>
-        <!-- ㅄ색기 간략 이력 -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="110dp"
-            android:orientation="horizontal">
+    </ScrollView>
 
-            <LinearLayout
-                android:id="@+id/UserhistoryBtnAuctionContents"
-                android:layout_width="0dp"
-                android:layout_height="110dp"
-                android:layout_weight="1.8"
-                android:orientation="vertical">
-                <TextView
-
-                    android:text="50,000,000"
-                    android:fontFamily="@font/simplehae"
-                    android:gravity="center"
-                    android:textColor="@color/black"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="20dp"
-                    android:layout_marginTop="33dp"
-                    android:textStyle="bold"/>
-                <TextView
-                    android:gravity="center"
-                    android:text="earning"
-                    android:fontFamily="@font/simplehae"
-                    android:textColor="@color/black"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="15dp"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/UserhistoryBtnContents"
-                android:layout_width="0dp"
-                android:layout_height="110dp"
-                android:layout_weight="1"
-                android:orientation="vertical">
-                <TextView
-                    android:id="@+id/UserhistoryNumContents"
-                    android:text="7"
-                    android:fontFamily="@font/simplehae"
-                    android:gravity="center"
-                    android:textColor="@color/black"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="20dp"
-                    android:layout_marginTop="33dp"
-                    android:textStyle="bold"/>
-                <TextView
-                    android:gravity="center"
-                    android:text="trash"
-                    android:fontFamily="@font/simplehae"
-                    android:textColor="@color/black"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="15dp"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/UserhistoryBtnComments"
-                android:layout_width="0dp"
-                android:layout_height="110dp"
-                android:layout_weight="1"
-                android:orientation="vertical">
-                <TextView
-                    android:id="@+id/UserhistoryNumComments"
-                    android:text="13"
-                    android:fontFamily="@font/simplehae"
-                    android:gravity="center"
-                    android:textColor="@color/black"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="20dp"
-                    android:layout_marginTop="33dp"
-                    android:textStyle="bold"/>
-                <TextView
-                    android:gravity="center"
-                    android:text="comments"
-                    android:fontFamily="@font/simplehae"
-                    android:textColor="@color/black"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="15dp"/>
-            </LinearLayout>
-        </LinearLayout>
-
-
-        <!-- 상세 이력 -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/UserhistoryRecyclerViewDesign"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"/>
-
-    </LinearLayout>
 
 </RelativeLayout>

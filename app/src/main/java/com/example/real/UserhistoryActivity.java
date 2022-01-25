@@ -87,7 +87,7 @@ public class UserhistoryActivity extends AppCompatActivity {
                     String shardtype = shard.getAsJsonObject().get("Type").getAsString();
                     String shardaddress = shard.getAsJsonObject().get("Address").getAsString();
                     if (shardtype.equals("Content")){NUM_CONTENTS ++; LIST_Contents.add(shardtype + "#" + shardaddress);}
-                    else if (shardtype.equals("AuctionContent")){NUM_CONTENTS ++; LIST_Auctioncontents.add(shardtype + "#" +shardaddress);}
+                    else if (shardtype.equals("AuctionContent")){/*NUM_CONTENTS ++ */; LIST_Auctioncontents.add(shardtype + "#" +shardaddress);}
                     else if (shardtype.equals("Comment")){NUM_COMMENTS ++; LIST_Comments.add(shardtype + "#" +shardaddress);}
                     else{}
                 }

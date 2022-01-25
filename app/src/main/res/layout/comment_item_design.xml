@@ -29,7 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-
+                <!-- 1. Profile Img -->
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/designTestCommentUserProfileImageImageView"
                     android:layout_width="45dp"
@@ -47,7 +47,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
-
+                        <!-- 2. Nickname -->
                         <TextView
                             android:id="@+id/designTestCommentUserProfileNickNameTextView"
                             android:layout_width="match_parent"
@@ -57,6 +57,7 @@
                             android:fontFamily="@font/simplehae"
                             android:textStyle="bold"
                             android:layout_weight="1"/>
+                        <!-- 3. Time -->
                         <TextView
                             android:id="@+id/designTestCommentTimeTextView"
                             android:layout_width="match_parent"
@@ -72,6 +73,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
+                        <!-- 4. Mention -->
                         <TextView
                             android:id="@+id/designTestCommentDescriptionTextView"
                             android:layout_width="match_parent"
@@ -83,7 +85,7 @@
                             android:fontFamily="@font/simplehae"
                             android:textSize="13dp"
                             android:layout_weight="1"/>
-
+                        <!-- 5. Popup Btn -->
                         <ImageView
                             android:id="@+id/designTestCommentPopUpButton"
                             android:layout_width="15dp"

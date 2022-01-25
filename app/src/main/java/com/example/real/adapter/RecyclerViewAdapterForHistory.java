@@ -17,6 +17,7 @@ import com.example.real.R;
 import com.example.real.data.AuctionContent;
 import com.example.real.data.Comment;
 import com.example.real.data.Content;
+import com.example.real.data.UserProfile;
 import com.example.real.databasemanager.FirestoreManager;
 import com.example.real.databasemanager.StorageManager;
 import com.example.real.tool.TimeTextTool;
@@ -35,9 +36,13 @@ public class RecyclerViewAdapterForHistory extends RecyclerView.Adapter<Recycler
     private Context context;
     private FirebaseUser user;
 
+    private FirestoreManager firestoreManagerForUserProfile;
     private FirestoreManager firestoreManagerForContent;
     private FirestoreManager firestoreManagerForComment;
+    private FirestoreManager firestoreManagerForAuctionContent;
     private StorageManager storageManagerForContent;
+    private StorageManager storageManagerForUserProfileImg;
+
 
     public RecyclerViewAdapterForHistory(List<String> data, Context context) {
         this.data = data;
@@ -45,8 +50,11 @@ public class RecyclerViewAdapterForHistory extends RecyclerView.Adapter<Recycler
         this.user = FirebaseAuth.getInstance().getCurrentUser();
 
         storageManagerForContent = new StorageManager(context, "Image", user.getUid());
+        storageManagerForUserProfileImg = new StorageManager(context,"UserProfileImage", user.getUid());
         firestoreManagerForComment = new FirestoreManager(context, "Comment", user.getUid());
         firestoreManagerForContent = new FirestoreManager(context, "Content", user.getUid());
+        firestoreManagerForAuctionContent = new FirestoreManager(context, "AuctionContent", user.getUid());
+        firestoreManagerForUserProfile = new FirestoreManager(context, "UserProfile", user.getUid());
 
         // data looks like
         // [ "Content/MfnsDaivaiyedaOpTxdp/Comments/20220110163124295" , ~~~ ]
@@ -110,6 +118,7 @@ public class RecyclerViewAdapterForHistory extends RecyclerView.Adapter<Recycler
         String[] datumSplit = datum.split("#");
         String address = datumSplit[1];
         String[] addressSplit = address.split("/");
+        //String datumType = datumSplit[0];
         String datumType = addressSplit[0];
         String contentId = addressSplit[1];
 
@@ -121,7 +130,7 @@ public class RecyclerViewAdapterForHistory extends RecyclerView.Adapter<Recycler
                 ContentViewHolder contentViewHolder = (ContentViewHolder) holder;
 
                 Log.d("HEREHERE", "여기 사람있어요");
-
+                System.out.println(datumType);
                 String path = "image/"+ contentId + "/100/0";
                 Log.d("park",path);
                 storageManagerForContent.downloadImg2View(path, contentViewHolder.logitemforcontent_ContentImg, new Callback() {
@@ -145,13 +154,15 @@ public class RecyclerViewAdapterForHistory extends RecyclerView.Adapter<Recycler
                 Log.d("TRACKING2-2", "why");
 
                 AuctionContentViewHolder auctionContentViewHolder = (AuctionContentViewHolder) holder;
-
-                storageManagerForContent.downloadImg2View("image", contentId, auctionContentViewHolder.logitemforauctioncontent_AuctionContentImg, new Callback() {
+                String auctionpath = "image/"+ contentId + "/100/0";
+                System.out.println(contentId);
+                storageManagerForContent.downloadImg2View( auctionpath, auctionContentViewHolder.logitemforauctioncontent_AuctionContentImg, new Callback() {
                     @Override
                     public void OnCallback(Object object) {
-                        firestoreManagerForContent.read(datumType, contentId, new Callback() {
+                        firestoreManagerForAuctionContent.read(datumType, contentId, new Callback() {
                             @Override
                             public void OnCallback(Object object) {
+                                System.out.println(datumType);
                                 AuctionContent auctionContent = (AuctionContent) object;
                                 TimeTextTool timeTextTool = new TimeTextTool(auctionContent.getTime());
                                 auctionContentViewHolder.logitemforauctioncontent_AuctionContentTitle.setText(auctionContent.getTitle());
@@ -167,7 +178,7 @@ public class RecyclerViewAdapterForHistory extends RecyclerView.Adapter<Recycler
                 Log.d("TRACKING3-2", "why");
 
                 CommentViewHolder commentViewHolder = (CommentViewHolder) holder;
-
+                System.out.println(datumType);
                 String subPath = "";
                 for (int i = 1; i < addressSplit.length; i++) {
                     subPath += addressSplit[i] + "/";
@@ -180,8 +191,21 @@ public class RecyclerViewAdapterForHistory extends RecyclerView.Adapter<Recycler
                     @Override
                     public void OnCallback(Object object) {
                         Comment comment = (Comment) object;
+                        storageManagerForUserProfileImg.downloadImg2View("UserProfileImage/" + comment.getTo(), commentViewHolder.logitemforcomment_ToProfileImg, new Callback() {
+                            @Override
+                            public void OnCallback(Object object) {
+
+                            }
+                        });
+                        firestoreManagerForUserProfile.read("UserProfile", comment.getTo(), new Callback() {
+                            @Override
+                            public void OnCallback(Object object) {
+                                UserProfile CurrentUserProfile = (UserProfile)object;
+                                commentViewHolder.logitemforcomment_To.setText("@" + CurrentUserProfile.getNickName());
+                            }
+                        });
+
                         TimeTextTool timeTextTool = new TimeTextTool(comment.getTime());
-                        commentViewHolder.logitemforcomment_To.setText(comment.getTo());
                         commentViewHolder.logitemforcomment_Mention.setText(comment.getMention());
                         commentViewHolder.logitemforcomment_CommentTime.setText(timeTextTool.Time2Text());
                     }
@@ -238,6 +262,7 @@ public class RecyclerViewAdapterForHistory extends RecyclerView.Adapter<Recycler
         TextView logitemforcomment_To;
         TextView logitemforcomment_Mention;
         TextView logitemforcomment_CommentTime;
+        ImageView logitemforcomment_ToProfileImg;
 
         public CommentViewHolder(View itemView) {
             super(itemView);
@@ -245,6 +270,7 @@ public class RecyclerViewAdapterForHistory extends RecyclerView.Adapter<Recycler
             logitemforcomment_To = itemView.findViewById(R.id.logitemforcomment_To);
             logitemforcomment_Mention = itemView.findViewById(R.id.logitemforcomment_Mention);
             logitemforcomment_CommentTime = itemView.findViewById(R.id.logitemforcomment_CommentTime);
+            logitemforcomment_ToProfileImg = itemView.findViewById(R.id.logitemforcomment_ToProfileImg);
         }
     }
 }
