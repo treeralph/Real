@@ -38,13 +38,12 @@
         <activity android:name=".PaymentActivity" />
         <activity android:name=".LiveContentActivity" />
         <activity android:name=".MakeContentActivity" />
-        <activity android:name=".IntroActivity" />
         <activity android:name=".ContentActivity" />
         <activity android:name=".RegisterActivity" />
-        <activity android:name=".LoginActivity">
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".IntroActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

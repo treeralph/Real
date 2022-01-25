@@ -59,7 +59,8 @@ public class AuctionContentActivity extends AppCompatActivity {
 
     ViewPagerAdapter adapter;
 
-    DateTimeFormatter formatter = new DateTimeFormatterBuilder().appendPattern("yyyyMMddHHmmssSSS").toFormatter();
+    //todo
+    DateTimeFormatter formatter = new DateTimeFormatterBuilder().appendPattern("yyyyMMddHHmmss").appendValue(ChronoField.MILLI_OF_SECOND, 3).toFormatter();
     LocalDateTime tempEndTime;
 
     MyHandler handler;

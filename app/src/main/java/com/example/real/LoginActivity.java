@@ -3,6 +3,7 @@ package com.example.real;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
@@ -56,18 +57,15 @@ public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "GoogleActivity";
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
-
-    private static final int FORTEST = 1;
-    private ImageView imageViewForTest;
-    private Button buttonForTest;
+    CardView gglLoginBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        //setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_login_design);
 
-
-        Button gglLoginBtn = (Button)findViewById(R.id.GoogleLoginBtn);
+        gglLoginBtn = findViewById(R.id.LoginActivityGoogleLoginButton);
 
         // Google Login Part
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)

@@ -21,11 +21,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class LoadingActivity extends Activity {
 
-    // 박강혁 바보 멍청이
-    // 족까
+
     public static Context LoadingContext;
     LoadingHandler handler;
     LottieAnimationView lottie;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
