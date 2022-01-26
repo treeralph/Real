@@ -7,11 +7,14 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.real.Callback;
@@ -24,6 +27,9 @@ import com.example.real.databasemanager.StorageManager;
 import com.example.real.tool.TimeTextTool;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -103,7 +109,7 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
                 final ListHeaderViewHolder itemController = (ListHeaderViewHolder) holder;
                 itemController.refferalItem = item;
-
+                itemController.header_recommentview.setVisibility(View.GONE);
                 FirestoreManager firestoreManagerforUserprofile1 = new FirestoreManager(context, "UserProfile",item.from);
                 firestoreManagerforUserprofile1.read("UserProfile", item.from, new Callback() {
                     @Override
@@ -159,6 +165,7 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     itemController.btn_expand_toggle.setText("답글 "+ item.recomment_token+ "개 보기");//down
                 }
 
+                /*
                 itemController.header_linearlayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -172,6 +179,109 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         context.startActivity(intentX);
                     }
                 });
+
+                 */
+
+                itemController.header_linearlayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(itemController.header_recommentview.getVisibility()==View.GONE){
+                            itemController.header_recommentview.setVisibility(View.VISIBLE);
+                        }else{
+                            itemController.header_recommentview.setVisibility(View.GONE);
+                        }
+                    }
+                });
+
+                itemController.header_recommentbtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String temp_mention = itemController.header_recommentedittext.getText().toString();
+                        if(temp_mention.isEmpty()){}
+                        else{
+                            itemController.header_recommentview.setVisibility(View.GONE);
+                            // String contentid = contentid;
+                            String from = user.getUid();
+                            String to = item.from;
+                            String header = item.time;
+                            String temp_path = "Content/" + contentid + "/Comments/" + header + "/Recomments";
+                            Comment temp_comment = new Comment(from, to, temp_mention, header);
+                            FirestoreManager firestoreManagerForComment = new FirestoreManager(context, "Comment", from);
+                            firestoreManagerForComment.read("Content/" + contentid + "/Comments", header, new Callback() {
+                                @Override
+                                public void OnCallback(Object object) {
+                                    Comment temp = (Comment) object;
+                                    String plus =  String.valueOf(Integer.parseInt(temp.getRecomment_token()) + 1);
+                                    firestoreManagerForComment.update("Content/" + contentid + "/Comments", header, "Recomment_token", plus, new Callback() {
+                                        @Override
+                                        public void OnCallback(Object object) {
+                                            firestoreManagerForComment.write(temp_comment, temp_path, temp_comment.getTime(), new Callback() {
+                                                @Override
+                                                public void OnCallback(Object object) {
+                                                    FirestoreManager firestoreManagerForUserProfile = new FirestoreManager(context, "UserProfile", from);
+                                                    firestoreManagerForUserProfile.read("UserProfile",from, new Callback() {
+                                                        @Override
+                                                        public void OnCallback(Object object) {
+                                                            UserProfile userprofile = (UserProfile) object;
+                                                            String userlog = userprofile.getUserLog();
+                                                            String address = "Content/" + contentid +"/Comments/" + header + "/Recomments/" + temp_comment.getTime();
+                                                            if(userlog.equals("")){
+                                                                // Create Json Obj & JsonArray
+                                                                JsonArray frame = new JsonArray();
+                                                                JsonObject init = new JsonObject();
+                                                                init.addProperty("Type","Comment");
+                                                                init.addProperty("Address",address);
+                                                                frame.add(init);
+                                                                firestoreManagerForUserProfile.update("UserProfile", from, "UserLog",
+                                                                        frame.toString(), new Callback() {
+                                                                            @Override
+                                                                            public void OnCallback(Object object) {
+
+                                                                            }
+                                                                        });
+                                                            } else{
+                                                                // Parsing JsonArray
+                                                                JsonParser parser = new JsonParser();
+                                                                Object tempparsed = parser.parse(userlog);
+                                                                JsonArray templog = (JsonArray) tempparsed;
+
+                                                                // Create Json Obj
+                                                                JsonObject temp = new JsonObject();
+                                                                temp.addProperty("Type", "Comment");
+                                                                temp.addProperty("Address",address);
+
+                                                                // Add & Update
+                                                                templog.add(temp);
+                                                                firestoreManagerForUserProfile.update("UserProfile", from, "UserLog",
+                                                                        templog.toString(), new Callback() {
+                                                                            @Override
+                                                                            public void OnCallback(Object object) {
+
+                                                                            }
+                                                                        });
+                                                            }
+                                                        }
+                                                    });
+
+
+
+                                                }
+                                            }); };
+
+                                    });
+                                }
+                            });
+
+                        }
+                    }
+                });
+
+
+
+
+
+
+
 
                 itemController.header_popup.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -206,7 +316,7 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 final ListChildViewHolder itemController1 = (ListChildViewHolder) holder;
                 itemController1.refferalItem = item;
                 //itemController.header_profile_image.setImageURI(item.);
-
+                itemController1.child_recommentview.setVisibility(View.GONE);
                 FirestoreManager firestoreManagerforUserprofile = new FirestoreManager(context, "UserProfile",item.from);
                 firestoreManagerforUserprofile.read("UserProfile", item.from, new Callback() {
                     @Override
@@ -249,7 +359,7 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                     }
                 });
 
-
+                /*
                 itemController1.child_linearlayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -268,6 +378,115 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         context.startActivity(intentX);
                     }
                 });
+                 */
+
+                itemController1.child_linearlayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(itemController1.child_recommentview.getVisibility()==View.GONE){
+                            itemController1.child_recommentview.setVisibility(View.VISIBLE);
+                        }else{
+                            itemController1.child_recommentview.setVisibility(View.GONE);
+                        }
+                    }
+                });
+
+                itemController1.child_recommentbtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String temp_mention = itemController1.child_recommentedittext.getText().toString();
+                        if(temp_mention.isEmpty()){}
+                        else{
+                            itemController1.child_recommentview.setVisibility(View.GONE);
+                            // String contentid = contentid;
+                            String from = user.getUid();
+                            String to = item.from;
+                            int parameter = position;
+                            while (data.get(parameter).type == CHILD){
+                                parameter -= 1;
+                            };
+                            String header = data.get(parameter).time;
+                            String temp_path = "Content/" + contentid + "/Comments/" + header + "/Recomments";
+                            Comment temp_comment = new Comment(from, to, temp_mention, header);
+                            FirestoreManager firestoreManagerForComment = new FirestoreManager(context, "Comment", from);
+                            firestoreManagerForComment.read("Content/" + contentid + "/Comments", header, new Callback() {
+                                @Override
+                                public void OnCallback(Object object) {
+                                    Comment temp = (Comment) object;
+                                    String plus =  String.valueOf(Integer.parseInt(temp.getRecomment_token()) + 1);
+                                    firestoreManagerForComment.update("Content/" + contentid + "/Comments", header, "Recomment_token", plus, new Callback() {
+                                        @Override
+                                        public void OnCallback(Object object) {
+                                            firestoreManagerForComment.write(temp_comment, temp_path, temp_comment.getTime(), new Callback() {
+                                                @Override
+                                                public void OnCallback(Object object) {
+                                                    FirestoreManager firestoreManagerForUserProfile = new FirestoreManager(context, "UserProfile", from);
+                                                    firestoreManagerForUserProfile.read("UserProfile",from, new Callback() {
+                                                        @Override
+                                                        public void OnCallback(Object object) {
+                                                            UserProfile userprofile = (UserProfile) object;
+                                                            String userlog = userprofile.getUserLog();
+                                                            String address = "Content/" + contentid +"/Comments/" + header + "/Recomments/" + temp_comment.getTime();
+                                                            if(userlog.equals("")){
+                                                                // Create Json Obj & JsonArray
+                                                                JsonArray frame = new JsonArray();
+                                                                JsonObject init = new JsonObject();
+                                                                init.addProperty("Type","Comment");
+                                                                init.addProperty("Address",address);
+                                                                frame.add(init);
+                                                                firestoreManagerForUserProfile.update("UserProfile", from, "UserLog",
+                                                                        frame.toString(), new Callback() {
+                                                                            @Override
+                                                                            public void OnCallback(Object object) {
+
+                                                                            }
+                                                                        });
+                                                            } else{
+                                                                // Parsing JsonArray
+                                                                JsonParser parser = new JsonParser();
+                                                                Object tempparsed = parser.parse(userlog);
+                                                                JsonArray templog = (JsonArray) tempparsed;
+
+                                                                // Create Json Obj
+                                                                JsonObject temp = new JsonObject();
+                                                                temp.addProperty("Type", "Comment");
+                                                                temp.addProperty("Address",address);
+
+                                                                // Add & Update
+                                                                templog.add(temp);
+                                                                firestoreManagerForUserProfile.update("UserProfile", from, "UserLog",
+                                                                        templog.toString(), new Callback() {
+                                                                            @Override
+                                                                            public void OnCallback(Object object) {
+
+                                                                            }
+                                                                        });
+                                                            }
+                                                        }
+                                                    });
+
+
+
+                                                }
+                                            }); };
+
+                                    });
+                                }
+                            });
+
+                        }
+                    }
+                });
+
+
+
+
+
+
+
+
+
+
                 itemController1.child_popup.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -313,6 +532,9 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 FirestoreManager firestoreManagerforUserprofile2 = new FirestoreManager(context, "UserProfile", item.from);
 
 
+                itemController2.bachelor_recommentview.setVisibility(View.GONE);
+
+
                 firestoreManagerforUserprofile2.read("UserProfile", item.from, new Callback() {
                     @Override
                     public void OnCallback(Object object) {
@@ -329,7 +551,7 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
 
                 itemController2.bachelor_mention.setText(item.mention);
-
+                /*
                 itemController2.bachelor_linearlayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -345,6 +567,104 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         //Toast.makeText(context,"asdf",Toast.LENGTH_SHORT).show();
                     }
                 });
+                 */
+
+                itemController2.bachelor_linearlayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(itemController2.bachelor_recommentview.getVisibility()==View.GONE){
+                            itemController2.bachelor_recommentview.setVisibility(View.VISIBLE);
+                        }else{
+                            itemController2.bachelor_recommentview.setVisibility(View.GONE);
+                        }
+                    }
+                });
+                itemController2.bachelor_recommentbtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String temp_mention = itemController2.bachelor_recommentedittext.getText().toString();
+                        if(temp_mention.isEmpty()){}
+                        else{
+                            itemController2.bachelor_recommentview.setVisibility(View.GONE);
+                            // String contentid = contentid;
+                            String from = user.getUid();
+                            String to = item.from;
+                            String header = item.time;
+                            String temp_path = "Content/" + contentid + "/Comments/" + header + "/Recomments";
+                            Comment temp_comment = new Comment(from, to, temp_mention, header);
+                            FirestoreManager firestoreManagerForComment = new FirestoreManager(context, "Comment", from);
+                            firestoreManagerForComment.read("Content/" + contentid + "/Comments", header, new Callback() {
+                                @Override
+                                public void OnCallback(Object object) {
+                                    Comment temp = (Comment) object;
+                                    String plus =  String.valueOf(Integer.parseInt(temp.getRecomment_token()) + 1);
+                                    firestoreManagerForComment.update("Content/" + contentid + "/Comments", header, "Recomment_token", plus, new Callback() {
+                                        @Override
+                                        public void OnCallback(Object object) {
+                                            firestoreManagerForComment.write(temp_comment, temp_path, temp_comment.getTime(), new Callback() {
+                                                @Override
+                                                public void OnCallback(Object object) {
+                                                    //data.add(position+1,new ExpandableListAdapter.Item(ExpandableListAdapter.CHILD, from, to, header, temp_mention, "0"));
+                                                    //notifyItemInserted(position+1);
+
+                                                    FirestoreManager firestoreManagerForUserProfile = new FirestoreManager(context, "UserProfile", from);
+                                                    firestoreManagerForUserProfile.read("UserProfile",from, new Callback() {
+                                                        @Override
+                                                        public void OnCallback(Object object) {
+                                                            UserProfile userprofile = (UserProfile) object;
+                                                            String userlog = userprofile.getUserLog();
+                                                            String address = "Content/" + contentid +"/Comments/" + header + "/Recomments/" + temp_comment.getTime();
+                                                            if(userlog.equals("")){
+                                                                // Create Json Obj & JsonArray
+                                                                JsonArray frame = new JsonArray();
+                                                                JsonObject init = new JsonObject();
+                                                                init.addProperty("Type","Comment");
+                                                                init.addProperty("Address",address);
+                                                                frame.add(init);
+                                                                firestoreManagerForUserProfile.update("UserProfile", from, "UserLog",
+                                                                        frame.toString(), new Callback() {
+                                                                            @Override
+                                                                            public void OnCallback(Object object) {
+
+                                                                            }
+                                                                        });
+                                                            } else{
+                                                                // Parsing JsonArray
+                                                                JsonParser parser = new JsonParser();
+                                                                Object tempparsed = parser.parse(userlog);
+                                                                JsonArray templog = (JsonArray) tempparsed;
+
+                                                                // Create Json Obj
+                                                                JsonObject temp = new JsonObject();
+                                                                temp.addProperty("Type", "Comment");
+                                                                temp.addProperty("Address",address);
+
+                                                                // Add & Update
+                                                                templog.add(temp);
+                                                                firestoreManagerForUserProfile.update("UserProfile", from, "UserLog",
+                                                                        templog.toString(), new Callback() {
+                                                                            @Override
+                                                                            public void OnCallback(Object object) {
+
+                                                                            }
+                                                                        });
+                                                            }
+                                                        }
+                                                    });
+
+
+
+                                                }
+                                            }); };
+
+                                    });
+                                }
+                            });
+
+                        }
+                    }
+                });
+
 
                 itemController2.bachelor_popup.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -453,6 +773,9 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         public TextView btn_expand_toggle;
         public ImageView header_popup;
         public Item refferalItem;
+        public CardView header_recommentview;
+        public EditText header_recommentedittext;
+        public Button header_recommentbtn;
 
         public ListHeaderViewHolder(View itemView) {
             super(itemView);
@@ -463,6 +786,9 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             header_mention = (TextView) itemView.findViewById(R.id.header_mention);
             header_popup = (ImageView) itemView.findViewById(R.id.header_popup);
             btn_expand_toggle = (TextView) itemView.findViewById(R.id.header_toggle);
+            header_recommentview = (CardView) itemView.findViewById(R.id.header_recommentview);
+            header_recommentedittext = (EditText) itemView.findViewById(R.id.header_recommentedittext);
+            header_recommentbtn = (Button) itemView.findViewById(R.id.header_recommentbtn);
         }
     }
     private static class ListChildViewHolder extends RecyclerView.ViewHolder {
@@ -474,6 +800,9 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         public Item refferalItem;
         public TextView child_toanother;
         public ImageView child_popup;
+        public CardView child_recommentview;
+        public EditText child_recommentedittext;
+        public Button child_recommentbtn;
         public ListChildViewHolder(View itemView) {
             super(itemView);
             child_linearlayout = (LinearLayout) itemView.findViewById(R.id.child_linearlayout);
@@ -483,6 +812,9 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             child_mention = (TextView) itemView.findViewById(R.id.child_mention);
             child_popup = (ImageView) itemView.findViewById(R.id.child_popup);
             child_toanother = (TextView) itemView.findViewById(R.id.child_toanother);
+            child_recommentview = (CardView) itemView.findViewById(R.id.child_recommentview);
+            child_recommentedittext = (EditText) itemView.findViewById(R.id.child_recommentedittext);
+            child_recommentbtn = (Button) itemView.findViewById(R.id.child_recommentbtn);
         }
     }
     private static class ListBachelorViewHolder extends RecyclerView.ViewHolder {
@@ -493,6 +825,9 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         public TextView bachelor_mention;
         public ImageView bachelor_popup;
         public Item refferalItem;
+        public CardView bachelor_recommentview;
+        public EditText bachelor_recommentedittext;
+        public Button bachelor_recommentbtn;
 
         public ListBachelorViewHolder(View itemView) {
             super(itemView);
@@ -513,6 +848,9 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             bachelor_time = (TextView) itemView.findViewById(R.id.designTestCommentTimeTextView);
             bachelor_popup = (ImageView) itemView.findViewById(R.id.designTestCommentPopUpButton);
             bachelor_mention = (TextView) itemView.findViewById(R.id.designTestCommentDescriptionTextView);
+            bachelor_recommentview = (CardView) itemView.findViewById(R.id.bachelor_recommentview);
+            bachelor_recommentedittext = (EditText) itemView.findViewById(R.id.bachelor_recommentedittext);
+            bachelor_recommentbtn = (Button) itemView.findViewById(R.id.bachelor_recommentbtn);
 
         }
     }
