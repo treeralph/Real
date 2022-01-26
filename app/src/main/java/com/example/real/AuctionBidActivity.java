@@ -84,6 +84,7 @@ public class AuctionBidActivity extends AppCompatActivity {
                                             firestoreManagerForAuctionContent.update("Content", contentId, "priceGap", priceGap, new Callback() {
                                                 @Override
                                                 public void OnCallback(Object object) {
+                                                    setResult(100);
                                                     Intent intent = new Intent(AuctionBidActivity.this, AuctionContentActivity.class);
                                                     intent.putExtra("ContentId", contentId);
                                                     startActivity(intent);

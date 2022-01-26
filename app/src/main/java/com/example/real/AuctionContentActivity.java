@@ -12,7 +12,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
@@ -53,13 +55,16 @@ public class AuctionContentActivity extends AppCompatActivity {
     ViewPager AuctionContentViewPager;
     ImageView AuctionContentUserProfileImgImageView;
     TextView AuctionContentCurrentPriceTextView;
-    Button AuctionContentBidBtn;
+    CardView AuctionContentBidBtn;
     Button AuctionContentMessageBtn;
     TextView AuctionContentRemainingTimeTextView;
+    EditText AuctionContentCommentEditText;
+    Button AuctionContentCommentBtn;
+    RecyclerView AuctionComments_Recyclerview;
+    Button srtbtn;
+
 
     ViewPagerAdapter adapter;
-
-    //todo
     DateTimeFormatter formatter = new DateTimeFormatterBuilder().appendPattern("yyyyMMddHHmmss").appendValue(ChronoField.MILLI_OF_SECOND, 3).toFormatter();
     LocalDateTime tempEndTime;
 
@@ -69,15 +74,14 @@ public class AuctionContentActivity extends AppCompatActivity {
     String userUID;
     String contentUID;
 
-    EditText AuctionContentCommentEditText;
-    Button AuctionContentCommentBtn;
-    private RecyclerView AuctionComments_Recyclerview;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_auction_content);
+        //setContentView(R.layout.activity_auction_content);
+        setContentView(R.layout.activity_auction_content_design);
+
 
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
@@ -94,16 +98,20 @@ public class AuctionContentActivity extends AppCompatActivity {
         StorageManager storageManagerForUserProfile = new StorageManager(
                 AuctionContentActivity.this, "UserProfileImage", user.getUid());
 
-        AuctionContentTitleTextView = findViewById(R.id.AuctionContentActivityTitleTextView);
-        AuctionContentUserProfileInfoTextView = findViewById(R.id.AuctionContentActivityProfileInfoTextView);
-        AuctionContentTimeTextView = findViewById(R.id.AuctionContentActivityTimeTextView);
-        AuctionContentDescriptionTextView = findViewById(R.id.AuctionContentActivityDescriptionTextView);
-        AuctionContentViewPager = findViewById(R.id.AuctionContentActivityViewPager);
-        AuctionContentUserProfileImgImageView = findViewById(R.id.AuctionContentActivityProfileImageImageView);
-        AuctionContentMessageBtn = findViewById(R.id.AuctionContentActivityMessageBtn);
-        AuctionContentCurrentPriceTextView = findViewById(R.id.AuctionContentActivityAuctionPrice);
-        AuctionContentBidBtn = findViewById(R.id.AuctionContentActivityAuctionBidBtn);
-        AuctionContentRemainingTimeTextView = findViewById(R.id.AuctionContentTextViewRemainTime);
+        AuctionContentTitleTextView = findViewById(R.id.AuctionContentActivityTitleTextViewDesign);
+        AuctionContentUserProfileInfoTextView = findViewById(R.id.AuctionContentActivityProfileInfoTextViewDesign);
+        AuctionContentTimeTextView = findViewById(R.id.AuctionContentActivityTimeTextViewDesign);
+        AuctionContentDescriptionTextView = findViewById(R.id.AuctionContentActivityDescriptionTextViewDesign);
+        AuctionContentViewPager = findViewById(R.id.AuctionContentActivityContentImageViewPagerDesign);
+        AuctionContentUserProfileImgImageView = findViewById(R.id.AuctionContentActivityProfileImageImageViewDesign);
+        AuctionContentMessageBtn = findViewById(R.id.AuctionContentActivityMessageButtonDesign);
+        AuctionContentCurrentPriceTextView = findViewById(R.id.AuctionContentActivityAuctionPriceDesign);
+        AuctionContentBidBtn = findViewById(R.id.AuctionContentActivityAuctionBidButtonDesign);
+        AuctionContentRemainingTimeTextView = findViewById(R.id.AuctionContentActivityRemainingTimeDesign);
+        AuctionComments_Recyclerview = findViewById(R.id.AuctionContentActivityCommentRecyclerViewDesign);
+        AuctionContentCommentEditText = findViewById(R.id.AuctionContentActivityCommentEditTextDesign);
+        AuctionContentCommentBtn = findViewById(R.id.AuctionContentActivityCommentButtonDesign);
+        srtbtn = findViewById(R.id.AuctionContentActivitySortingButtonDesign);
 
         AuctionContentMessageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,7 +130,8 @@ public class AuctionContentActivity extends AppCompatActivity {
                 if(!LocalDateTime.now().isAfter(tempEndTime)) {
                     Intent intent = new Intent(AuctionContentActivity.this, AuctionBidActivity.class);
                     intent.putExtra("contentId", contentId);
-                    startActivity(intent);
+                    //startActivity(intent);
+                    startActivityForResult(intent, 0);
                 }else{
                     Toast.makeText(AuctionContentActivity.this, "This content is expired", Toast.LENGTH_SHORT).show();
                 }
@@ -243,9 +252,7 @@ public class AuctionContentActivity extends AppCompatActivity {
             }
         });
 
-        AuctionComments_Recyclerview = findViewById(R.id.AuctionContentActivitycomments_recyclerview);
-        AuctionContentCommentEditText = findViewById(R.id.AuctionContentActivityCommentEditText);
-        AuctionContentCommentBtn = findViewById(R.id.AuctionContentActivityCommentBtn);
+
         AuctionComments_Recyclerview.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
         List<ExpandableListAdapter.Item> data_auction = new ArrayList<>();
@@ -358,7 +365,6 @@ public class AuctionContentActivity extends AppCompatActivity {
             }
         });
 
-        Button srtbtn = (Button) findViewById(R.id.AuctionContentActivitySortingBtn);
         srtbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -444,5 +450,15 @@ public class AuctionContentActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==0){
+            if(resultCode==100){
+                finish();
+            }
+        }
     }
 }
