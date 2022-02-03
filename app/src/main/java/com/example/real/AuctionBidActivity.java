@@ -1,12 +1,14 @@
 package com.example.real;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,12 +23,16 @@ import java.util.concurrent.Callable;
 public class AuctionBidActivity extends AppCompatActivity {
 
     TextView AuctionPriceEditText;
-    Button AuctionPriceBidBtn;
+    TextView AuctionCurrentPriceTextView;
+    TextView AuctionPriceGapTextView;
+    ImageView UserPaddleImageView;
+    CardView AuctionPriceBidBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_auction_bid);
+        //setContentView(R.layout.activity_auction_bid);
+        setContentView(R.layout.activity_auction_bid_design);
 
         String contentId = getIntent().getStringExtra("contentId");
 
@@ -35,8 +41,11 @@ public class AuctionBidActivity extends AppCompatActivity {
         FirestoreManager firestoreManagerForAuctionContent =
                 new FirestoreManager(AuctionBidActivity.this, "AuctionContent", user.getUid());
 
-        AuctionPriceEditText = findViewById(R.id.AuctionBidActivityPriceEditText);
-        AuctionPriceBidBtn = findViewById(R.id.AuctionBidActivityBidBtn);
+        AuctionPriceEditText = findViewById(R.id.AuctionBidActivityBiddingPriceEditText);
+        AuctionPriceBidBtn = findViewById(R.id.AuctionBidActivityBidButton);
+        AuctionCurrentPriceTextView = findViewById(R.id.AuctionBidActivityCurrentPriceTextView);
+        AuctionPriceGapTextView = findViewById(R.id.AuctionBidActivityPriceGapTextView);
+        UserPaddleImageView = findViewById(R.id.AuctionBidActivityUserPaddleImageView);
 
         firestoreManagerForAuctionContent.read("Content", contentId, new Callback() {
             @Override
@@ -44,6 +53,9 @@ public class AuctionBidActivity extends AppCompatActivity {
                 AuctionContent auctionContent = (AuctionContent)object;
                 int bidPrice = Integer.parseInt(auctionContent.getPrice()) + Integer.parseInt(auctionContent.getPriceGap());
                 AuctionPriceEditText.setText(String.valueOf(bidPrice));
+                AuctionCurrentPriceTextView.setText(auctionContent.getPrice());
+                AuctionPriceGapTextView.setText(auctionContent.getPriceGap());
+
             }
         });
 
@@ -56,7 +68,7 @@ public class AuctionBidActivity extends AppCompatActivity {
                     public void OnCallback(Object object) {
                         AuctionContent auctionContent = (AuctionContent)object;
                         ArrayList<String> userList = auctionContent.getAuctionUserList();
-                        userList.add(user.getUid());
+                        //userList.add(user.getUid());
 
                         AuctionContent tempAuctionContent = null;
                         try {
@@ -74,6 +86,8 @@ public class AuctionBidActivity extends AppCompatActivity {
                         int threshold = Integer.parseInt(auctionContent.getPrice()) + Integer.parseInt(auctionContent.getPriceGap());
 
                         if(Integer.parseInt(bidPrice) >= threshold) { // Bid price test
+                            String userListItem = user.getUid() + "#" + bidPrice;
+                            userList.add(userListItem);
                             // userList, bidPrice, priceGap
                             firestoreManagerForAuctionContent.update("Content", contentId, "auctionUserList", userList, new Callback() {
                                 @Override

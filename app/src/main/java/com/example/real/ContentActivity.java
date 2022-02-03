@@ -2,6 +2,8 @@
 package com.example.real;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -72,10 +74,31 @@ public class ContentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_content_design);
         /////////////////////////////////////////////////
 
-        adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        ContentTitleTextView = findViewById(R.id.designTestContentTitleTextView);
+        ContentUserProfileInfoTextView = findViewById(R.id.designTestContentUserProfileNickNameTextView);
+        ContentTimeTextView = findViewById(R.id.designTestContentTimeTextView);
+        ContentDescriptionTextView = findViewById(R.id.designTestContentDescriptionTextView);
+        ContentViewPager = findViewById(R.id.designTestContentImageViewPager); //
+        ContentUserProfileImgImageView = findViewById(R.id.designTestContentUserProfileImageImageView);
+        ContentMessageBtn = findViewById(R.id.designTestContentMessageButton);
+        Comments_Recyclerview = findViewById(R.id.designTestContentCommentRecyclerView);
+        ContentCommentEditText = findViewById(R.id.designTestCommentEditText);
+        ContentCommentBtn = findViewById(R.id.designTestContentCommentAddButton);
+        srtbtn = findViewById(R.id.designTestContentSortingButton);
 
+
+        adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        ViewPagerAdapter tempAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         String contentId = getIntent().getStringExtra("ContentId");
+        byte[] bytes = getIntent().getByteArrayExtra("ImageBitmap");
+        Bitmap imageBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+
+        ImgViewFromGalleryFragment fragment = new ImgViewFromGalleryFragment(imageBitmap);
+        tempAdapter.addItem(fragment);
+        ContentViewPager.setAdapter(tempAdapter);
+
+
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser(); userUID = user.getUid();
 
@@ -104,17 +127,6 @@ public class ContentActivity extends AppCompatActivity {
          */
 
         // new one\
-        ContentTitleTextView = findViewById(R.id.designTestContentTitleTextView);
-        ContentUserProfileInfoTextView = findViewById(R.id.designTestContentUserProfileNickNameTextView);
-        ContentTimeTextView = findViewById(R.id.designTestContentTimeTextView);
-        ContentDescriptionTextView = findViewById(R.id.designTestContentDescriptionTextView);
-        ContentViewPager = findViewById(R.id.designTestContentImageViewPager); //
-        ContentUserProfileImgImageView = findViewById(R.id.designTestContentUserProfileImageImageView);
-        ContentMessageBtn = findViewById(R.id.designTestContentMessageButton);
-        Comments_Recyclerview = findViewById(R.id.designTestContentCommentRecyclerView);
-        ContentCommentEditText = findViewById(R.id.designTestCommentEditText);
-        ContentCommentBtn = findViewById(R.id.designTestContentCommentAddButton);
-        srtbtn = findViewById(R.id.designTestContentSortingButton);
 
         //////////////////////////////////////////////////////////////////////////////////////
 

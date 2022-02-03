@@ -1,8 +1,16 @@
 package com.example.real.adapter;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.transition.AutoTransition;
+import android.transition.Scene;
+import android.transition.Transition;
+import android.transition.TransitionManager;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +36,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 public class RecyclerViewAdapterForContents extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -57,19 +66,45 @@ public class RecyclerViewAdapterForContents extends RecyclerView.Adapter<Recycle
         String contentType = contentsList.get(position).getContentType();
         MyViewHolder myViewHolder = (MyViewHolder)holder;
 
-        // As click content, send content id from contents to content
+                // As click content, send content id from contents to content
         myViewHolder.ContentLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 if(contentType.equals("Content")) {
+
+                    Bitmap bitmap = ((BitmapDrawable)myViewHolder.ContentImgView.getDrawable()).getBitmap();
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    byte[] byteArray = stream.toByteArray();
+
                     Intent intent = new Intent(context, ContentActivity.class);
                     intent.putExtra("ContentId", contentId);
-                    context.startActivity(intent);
+                    intent.putExtra("ImageBitmap", byteArray);
+
+                    Pair[] pairs = new Pair[1];
+                    pairs[0] = new Pair<View, String>(myViewHolder.ContentImgView, "contentsItemImageCardView");
+                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, pairs);
+
+                    context.startActivity(intent, options.toBundle());
+
                 } else if(contentType.equals("AuctionContent")){
+
+                    Bitmap bitmap = ((BitmapDrawable)myViewHolder.ContentImgView.getDrawable()).getBitmap();
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    byte[] byteArray = stream.toByteArray();
+
                     Intent intent = new Intent(context, AuctionContentActivity.class);
                     intent.putExtra("ContentId", contentId);
-                    context.startActivity(intent);
+                    intent.putExtra("ImageBitmap", byteArray);
+
+                    Pair[] pairs = new Pair[1];
+                    pairs[0] = new Pair<View, String>(myViewHolder.ContentImgView, "contentsItemImageCardView");
+                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, pairs);
+
+                    context.startActivity(intent, options.toBundle());
+
                 } else{
 
                 }
