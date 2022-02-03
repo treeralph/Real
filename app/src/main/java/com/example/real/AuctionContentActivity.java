@@ -1,6 +1,8 @@
 package com.example.real;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -112,6 +114,18 @@ public class AuctionContentActivity extends AppCompatActivity {
         AuctionContentCommentEditText = findViewById(R.id.AuctionContentActivityCommentEditTextDesign);
         AuctionContentCommentBtn = findViewById(R.id.AuctionContentActivityCommentButtonDesign);
         srtbtn = findViewById(R.id.AuctionContentActivitySortingButtonDesign);
+
+        ViewPagerAdapter tempAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+
+        byte[] bytes = getIntent().getByteArrayExtra("ImageBitmap");
+        Bitmap imageBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+
+        ImgViewFromGalleryFragment fragment = new ImgViewFromGalleryFragment(imageBitmap);
+        tempAdapter.addItem(fragment);
+        AuctionContentViewPager.setAdapter(tempAdapter);
+
+
+
 
         AuctionContentMessageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
