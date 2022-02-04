@@ -71,42 +71,46 @@ public class RecyclerViewAdapterForContents extends RecyclerView.Adapter<Recycle
             @Override
             public void onClick(View v) {
 
-                if(contentType.equals("Content")) {
+                try {
+                    if (contentType.equals("Content")) {
 
-                    Bitmap bitmap = ((BitmapDrawable)myViewHolder.ContentImgView.getDrawable()).getBitmap();
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                    byte[] byteArray = stream.toByteArray();
+                        Bitmap bitmap = ((BitmapDrawable) myViewHolder.ContentImgView.getDrawable()).getBitmap();
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        byte[] byteArray = stream.toByteArray();
 
-                    Intent intent = new Intent(context, ContentActivity.class);
-                    intent.putExtra("ContentId", contentId);
-                    intent.putExtra("ImageBitmap", byteArray);
+                        Intent intent = new Intent(context, ContentActivity.class);
+                        intent.putExtra("ContentId", contentId);
+                        intent.putExtra("ImageBitmap", byteArray);
 
-                    Pair[] pairs = new Pair[1];
-                    pairs[0] = new Pair<View, String>(myViewHolder.ContentImgView, "contentsItemImageCardView");
-                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, pairs);
+                        Pair[] pairs = new Pair[1];
+                        pairs[0] = new Pair<View, String>(myViewHolder.ContentImgView, "contentsItemImageCardView");
+                        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, pairs);
 
-                    context.startActivity(intent, options.toBundle());
+                        context.startActivity(intent, options.toBundle());
 
-                } else if(contentType.equals("AuctionContent")){
+                    } else if (contentType.equals("AuctionContent")) {
 
-                    Bitmap bitmap = ((BitmapDrawable)myViewHolder.ContentImgView.getDrawable()).getBitmap();
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                    byte[] byteArray = stream.toByteArray();
+                        Bitmap bitmap = ((BitmapDrawable) myViewHolder.ContentImgView.getDrawable()).getBitmap();
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        byte[] byteArray = stream.toByteArray();
 
-                    Intent intent = new Intent(context, AuctionContentActivity.class);
-                    intent.putExtra("ContentId", contentId);
-                    intent.putExtra("ImageBitmap", byteArray);
+                        Intent intent = new Intent(context, AuctionContentActivity.class);
+                        intent.putExtra("ContentId", contentId);
+                        intent.putExtra("ImageBitmap", byteArray);
 
-                    Pair[] pairs = new Pair[1];
-                    pairs[0] = new Pair<View, String>(myViewHolder.ContentImgView, "contentsItemImageCardView");
-                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, pairs);
+                        Pair[] pairs = new Pair[1];
+                        pairs[0] = new Pair<View, String>(myViewHolder.ContentImgView, "contentsItemImageCardView");
+                        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, pairs);
 
-                    context.startActivity(intent, options.toBundle());
+                        context.startActivity(intent, options.toBundle());
 
-                } else{
+                    } else {
 
+                    }
+                } catch(Exception e){
+                    e.printStackTrace();
                 }
             }
         });

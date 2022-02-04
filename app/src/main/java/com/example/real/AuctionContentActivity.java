@@ -65,7 +65,6 @@ public class AuctionContentActivity extends AppCompatActivity {
     RecyclerView AuctionComments_Recyclerview;
     Button srtbtn;
 
-
     ViewPagerAdapter adapter;
     DateTimeFormatter formatter = new DateTimeFormatterBuilder().appendPattern("yyyyMMddHHmmss").appendValue(ChronoField.MILLI_OF_SECOND, 3).toFormatter();
     LocalDateTime tempEndTime;
@@ -75,8 +74,6 @@ public class AuctionContentActivity extends AppCompatActivity {
 
     String userUID;
     String contentUID;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
