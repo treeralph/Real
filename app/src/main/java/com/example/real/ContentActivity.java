@@ -1,16 +1,21 @@
 
 package com.example.real;
 
+import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.transition.Transition;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.ContentView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -66,6 +71,8 @@ public class ContentActivity extends AppCompatActivity {
 
     RecyclerView Comments_Recyclerview;
 
+    ImageView BackgroundImageView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +80,7 @@ public class ContentActivity extends AppCompatActivity {
         // todo: for design test
         setContentView(R.layout.activity_content_design);
         /////////////////////////////////////////////////
+
 
         ContentTitleTextView = findViewById(R.id.designTestContentTitleTextView);
         ContentUserProfileInfoTextView = findViewById(R.id.designTestContentUserProfileNickNameTextView);
@@ -85,20 +93,13 @@ public class ContentActivity extends AppCompatActivity {
         ContentCommentEditText = findViewById(R.id.designTestCommentEditText);
         ContentCommentBtn = findViewById(R.id.designTestContentCommentAddButton);
         srtbtn = findViewById(R.id.designTestContentSortingButton);
-
-
+        BackgroundImageView = findViewById(R.id.designTestViewPagerBackgroundImageView);
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        ViewPagerAdapter tempAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         String contentId = getIntent().getStringExtra("ContentId");
         byte[] bytes = getIntent().getByteArrayExtra("ImageBitmap");
         Bitmap imageBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-
-        ImgViewFromGalleryFragment fragment = new ImgViewFromGalleryFragment(imageBitmap);
-        tempAdapter.addItem(fragment);
-        ContentViewPager.setAdapter(tempAdapter);
-
-
+        BackgroundImageView.setImageBitmap(imageBitmap);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser(); userUID = user.getUid();
 

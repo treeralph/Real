@@ -30,4 +30,10 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     public int getCount() {
         return items.size();
     }
+
+    public void removeAt(int position){
+        items.remove(position);
+        notifyDataSetChanged();
+
+    }
 }

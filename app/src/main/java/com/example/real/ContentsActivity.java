@@ -1,7 +1,9 @@
 package com.example.real;
 
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
+import android.transition.Transition;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,6 +41,8 @@ public class ContentsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_contents);
         setContentView(R.layout.activity_contents_design);
+
+
 
         recyclerView = findViewById(R.id.ContentsActivityRecyclerViewDesign);
         makeContentBtn = findViewById(R.id.ContentsMakeContentBtnDesign);

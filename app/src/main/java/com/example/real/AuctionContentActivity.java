@@ -65,6 +65,8 @@ public class AuctionContentActivity extends AppCompatActivity {
     RecyclerView AuctionComments_Recyclerview;
     Button srtbtn;
 
+    ImageView AuctionContentViewPagerBackgroudImageView;
+
     ViewPagerAdapter adapter;
     DateTimeFormatter formatter = new DateTimeFormatterBuilder().appendPattern("yyyyMMddHHmmss").appendValue(ChronoField.MILLI_OF_SECOND, 3).toFormatter();
     LocalDateTime tempEndTime;
@@ -110,17 +112,13 @@ public class AuctionContentActivity extends AppCompatActivity {
         AuctionComments_Recyclerview = findViewById(R.id.AuctionContentActivityCommentRecyclerViewDesign);
         AuctionContentCommentEditText = findViewById(R.id.AuctionContentActivityCommentEditTextDesign);
         AuctionContentCommentBtn = findViewById(R.id.AuctionContentActivityCommentButtonDesign);
+        AuctionContentViewPagerBackgroudImageView = findViewById(R.id.AuctionContentActivityViewPagerBackgroudImageView);
         srtbtn = findViewById(R.id.AuctionContentActivitySortingButtonDesign);
 
-        ViewPagerAdapter tempAdapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         byte[] bytes = getIntent().getByteArrayExtra("ImageBitmap");
         Bitmap imageBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-
-        ImgViewFromGalleryFragment fragment = new ImgViewFromGalleryFragment(imageBitmap);
-        tempAdapter.addItem(fragment);
-        AuctionContentViewPager.setAdapter(tempAdapter);
-
+        AuctionContentViewPagerBackgroudImageView.setImageBitmap(imageBitmap);
 
 
 

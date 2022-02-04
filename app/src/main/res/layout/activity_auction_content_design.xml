@@ -14,11 +14,26 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <androidx.viewpager.widget.ViewPager
-                android:id="@+id/AuctionContentActivityContentImageViewPagerDesign"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="400dp"
-                android:background="@color/yellow"/>
+                android:layout_height="400dp">
+
+                <ImageView
+                    android:id="@+id/AuctionContentActivityViewPagerBackgroudImageView"
+                    android:transitionName="contentsItemImageCardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp"
+                    android:scaleType="centerCrop"
+                    android:background="@color/yellow"/>
+
+                <androidx.viewpager.widget.ViewPager
+                    android:id="@+id/AuctionContentActivityContentImageViewPagerDesign"
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp"
+                    android:background="#00ffffff"/>
+
+            </FrameLayout>
+
 
             <TextView
                 android:id="@+id/AuctionContentActivityTitleTextViewDesign"

@@ -6,10 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.transition.AutoTransition;
-import android.transition.Scene;
-import android.transition.Transition;
-import android.transition.TransitionManager;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,14 +14,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.real.AuctionContentActivity;
 import com.example.real.Callback;
 import com.example.real.ContentActivity;
-import com.example.real.ContentsActivity;
 import com.example.real.R;
 import com.example.real.data.Content;
 import com.example.real.data.Contents;
@@ -34,7 +30,6 @@ import com.example.real.databasemanager.FirestoreManager;
 import com.example.real.databasemanager.StorageManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -54,7 +49,7 @@ public class RecyclerViewAdapterForContents extends RecyclerView.Adapter<Recycle
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         //View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.contents_item_v2, parent, false);
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.contents_itme_design, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.contents_item_design, parent, false);
         return new MyViewHolder(v);
     }
 
@@ -72,6 +67,7 @@ public class RecyclerViewAdapterForContents extends RecyclerView.Adapter<Recycle
             public void onClick(View v) {
 
                 try {
+                    //myViewHolder.ContentCardView.setCardBackgroundColor(000000);
                     if (contentType.equals("Content")) {
 
                         Bitmap bitmap = ((BitmapDrawable) myViewHolder.ContentImgView.getDrawable()).getBitmap();
@@ -84,7 +80,7 @@ public class RecyclerViewAdapterForContents extends RecyclerView.Adapter<Recycle
                         intent.putExtra("ImageBitmap", byteArray);
 
                         Pair[] pairs = new Pair[1];
-                        pairs[0] = new Pair<View, String>(myViewHolder.ContentImgView, "contentsItemImageCardView");
+                        pairs[0] = new Pair<View, String>(myViewHolder.ContentCardView, "contentsItemImageCardView");
                         ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, pairs);
 
                         context.startActivity(intent, options.toBundle());
@@ -101,7 +97,7 @@ public class RecyclerViewAdapterForContents extends RecyclerView.Adapter<Recycle
                         intent.putExtra("ImageBitmap", byteArray);
 
                         Pair[] pairs = new Pair[1];
-                        pairs[0] = new Pair<View, String>(myViewHolder.ContentImgView, "contentsItemImageCardView");
+                        pairs[0] = new Pair<View, String>(myViewHolder.ContentCardView, "contentsItemImageCardView");
                         ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, pairs);
 
                         context.startActivity(intent, options.toBundle());
@@ -170,6 +166,7 @@ public class RecyclerViewAdapterForContents extends RecyclerView.Adapter<Recycle
     public static class MyViewHolder extends RecyclerView.ViewHolder{
 
         LinearLayout ContentLinearLayout;
+        CardView ContentCardView;
         ImageView ContentImgView;
         ImageView ContentProfileImgView;
         TextView ContentTitleTextView;
@@ -179,6 +176,7 @@ public class RecyclerViewAdapterForContents extends RecyclerView.Adapter<Recycle
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             ContentLinearLayout = itemView.findViewById(R.id.contentsItemLinearLayoutDesign);
+            ContentCardView = itemView.findViewById(R.id.itemCardViewDesign);
             ContentImgView = itemView.findViewById(R.id.itemImageViewDesign);
             ContentProfileImgView = itemView.findViewById(R.id.itemProfileImageImageViewDesign);
             ContentTitleTextView = itemView.findViewById(R.id.itemTitleTextViewDesign);
