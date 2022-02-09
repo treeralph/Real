@@ -107,27 +107,39 @@ public class UserhistoryActivity extends AppCompatActivity {
         firestoreManagerForUserProfile.read("UserProfile", userUID, new Callback() {
             @Override
             public void OnCallback(Object object) {
-                UserProfile CurrentUserProfile = (UserProfile)object;
-                String nickname = CurrentUserProfile.getNickName();
-                userprofilenickname.setText(nickname);
-                String userlog = CurrentUserProfile.getUserLog();
-                JsonParser parser = new JsonParser();
-                Object tempparsed = parser.parse(userlog);
-                JsonArray templog = (JsonArray) tempparsed;
+                try {
+                    UserProfile CurrentUserProfile = (UserProfile) object;
+                    String nickname = CurrentUserProfile.getNickName();
+                    userprofilenickname.setText(nickname);
+                    String userlog = CurrentUserProfile.getUserLog();
+                    JsonParser parser = new JsonParser();
+                    Object tempparsed = parser.parse(userlog);
+                    JsonArray templog = (JsonArray) tempparsed;
 
-                // DISCRIMINATING USERLOG
-                int NUM_CONTENTS = 0; int NUM_COMMENTS = 0;
-                for (JsonElement shard : templog){
-                    String shardtype = shard.getAsJsonObject().get("Type").getAsString();
-                    String shardaddress = shard.getAsJsonObject().get("Address").getAsString();
-                    if (shardtype.equals("Content")){NUM_CONTENTS ++; LIST_Contents.add(shardtype + "#" + shardaddress);}
-                    else if (shardtype.equals("AuctionContent")){/*NUM_CONTENTS ++ */; LIST_Auctioncontents.add(shardtype + "#" +shardaddress);}
-                    else if (shardtype.equals("Comment")){NUM_COMMENTS ++; LIST_Comments.add(shardtype + "#" +shardaddress);}
-                    else{}
+                    // DISCRIMINATING USERLOG
+                    int NUM_CONTENTS = 0;
+                    int NUM_COMMENTS = 0;
+                    for (JsonElement shard : templog) {
+                        String shardtype = shard.getAsJsonObject().get("Type").getAsString();
+                        String shardaddress = shard.getAsJsonObject().get("Address").getAsString();
+                        if (shardtype.equals("Content")) {
+                            NUM_CONTENTS++;
+                            LIST_Contents.add(shardtype + "#" + shardaddress);
+                        } else if (shardtype.equals("AuctionContent")) {/*NUM_CONTENTS ++ */
+                            ;
+                            LIST_Auctioncontents.add(shardtype + "#" + shardaddress);
+                        } else if (shardtype.equals("Comment")) {
+                            NUM_COMMENTS++;
+                            LIST_Comments.add(shardtype + "#" + shardaddress);
+                        } else {
+                        }
+                    }
+                    NumContents.setText(String.valueOf(NUM_CONTENTS));
+                    NumComments.setText(String.valueOf(NUM_COMMENTS));
+                    //"Address":"Content/MfnsDaivaiyedaOpTxdp/Comments/20220110163124295"}
+                } catch(Exception e){
+                    e.printStackTrace();
                 }
-                NumContents.setText(String.valueOf(NUM_CONTENTS));
-                NumComments.setText(String.valueOf(NUM_COMMENTS));
-                //"Address":"Content/MfnsDaivaiyedaOpTxdp/Comments/20220110163124295"
             }
         });
         storageManagerForUserProfile.downloadImg2View("UserProfileImage", userUID, userprofileimg, new Callback() {

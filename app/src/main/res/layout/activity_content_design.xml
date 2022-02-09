@@ -5,194 +5,338 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white">
 
-    <androidx.core.widget.NestedScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="1">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp">
+
+                    <ImageView
+                        android:id="@+id/designTestViewPagerBackgroundImageView"
+                        android:transitionName="contentsItemImageCardView"
+                        android:layout_width="match_parent"
+                        android:layout_height="400dp"
+                        android:scaleType="centerCrop"
+                        android:background="@color/yellow"/>
+
+                    <androidx.viewpager.widget.ViewPager
+                        android:id="@+id/designTestContentImageViewPager"
+                        android:layout_width="match_parent"
+                        android:layout_height="400dp"
+                        android:background="#00ffffff"/>
+
+
+                </FrameLayout>
+
+
+
+                <TextView
+                    android:id="@+id/designTestContentTitleTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/simplehae"
+                    android:text="Content Title"
+                    android:textColor="@color/black"
+                    android:textSize="30dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/designTestContentTimeTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:fontFamily="@font/simplehae"
+                    android:gravity="right"
+                    android:text="0000.00.00 - 00:00"
+                    android:textColor="@color/black"
+                    android:textSize="15dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:layout_marginLeft="20dp"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/designTestContentUserProfileImageImageView"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:src="@drawable/push_img"
+                        app:civ_border_width="1.5dp"/>
+
+                    <TextView
+                        android:id="@+id/designTestContentUserProfileNickNameTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="15dp"
+                        android:fontFamily="@font/simplehae"
+                        android:text="UserNickName"
+
+                        android:textColor="@color/black"
+                        android:textSize="20dp"
+                        android:textStyle="bold"
+                        android:layout_weight="1"/>
+
+                    <ImageView
+                        android:id="@+id/desingContentLikeFlicker"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/star_blank"/>
+
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/designTestContentDescriptionTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Description"
+                    android:textSize="20dp"
+                    android:textColor="@color/grey"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="30dp"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@color/grey1"
+                    android:layout_marginTop="20dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Comment"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:textSize="25dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="20dp"/>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/designTestContentCommentRecyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginLeft="25dp"
+                        android:layout_marginRight="25dp">
+
+                        <EditText
+                            android:id="@+id/designTestCommentEditText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black"
+                            android:backgroundTint="@color/black"
+                            android:layout_weight="1"/>
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/black"
+                            android:layout_weight="3.3"
+                            app:cardCornerRadius="13dp"
+                            app:contentPadding="1dp">
+
+                            <Button
+                                android:id="@+id/designTestContentCommentAddButton"
+                                android:layout_width="match_parent"
+                                android:layout_height="35dp"
+                                android:background="@color/black"
+                                android:text="Comment"
+                                android:textSize="13dp"
+                                android:fontFamily="@font/simplehae"
+                                android:textStyle="bold" />
+
+
+                        </androidx.cardview.widget.CardView>
+                    </LinearLayout>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginTop="40dp"
+                        android:layout_marginBottom="50dp"
+                        app:contentPadding="6dp"
+                        app:cardBackgroundColor="@color/black"
+                        app:cardCornerRadius="20dp">
+                        <Button
+                            android:id="@+id/designTestContentMessageButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Message to Seller"
+                            android:textStyle="bold"
+                            android:textSize="25dp"
+                            android:background="@color/black"
+                            android:fontFamily="@font/simplehae"/>
+                    </androidx.cardview.widget.CardView>
+
+                    <Button
+                        android:id="@+id/designTestContentSortingButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="400dp">
-
-                <ImageView
-                    android:id="@+id/designTestViewPagerBackgroundImageView"
-                    android:transitionName="contentsItemImageCardView"
-                    android:layout_width="match_parent"
-                    android:layout_height="400dp"
-                    android:scaleType="centerCrop"
-                    android:background="@color/yellow"/>
-
-                <androidx.viewpager.widget.ViewPager
-                    android:id="@+id/designTestContentImageViewPager"
-                    android:layout_width="match_parent"
-                    android:layout_height="400dp"
-                    android:background="#00ffffff"/>
-
-
-            </FrameLayout>
-
-
-
-            <TextView
-                android:id="@+id/designTestContentTitleTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="20dp"
-                android:fontFamily="@font/simplehae"
-                android:text="Content Title"
-                android:textColor="@color/black"
-                android:textSize="30dp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/designTestContentTimeTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
-                android:fontFamily="@font/simplehae"
-                android:gravity="right"
-                android:text="0000.00.00 - 00:00"
-                android:textColor="@color/black"
-                android:textSize="15dp" />
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/toplineborder"
+            android:orientation="horizontal">
 
             <LinearLayout
+                android:id="@+id/ContentActivityContentsButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
-                android:layout_marginLeft="20dp"
-                android:orientation="horizontal"
-                android:weightSum="1">
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/designTestContentUserProfileImageImageView"
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:src="@drawable/push_img"
-                    app:civ_border_width="1.5dp"/>
-
-                <TextView
-                    android:id="@+id/designTestContentUserProfileNickNameTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="15dp"
-                    android:fontFamily="@font/simplehae"
-                    android:text="UserNickName"
-
-                    android:textColor="@color/black"
-                    android:textSize="20dp"
-                    android:textStyle="bold"
-                    android:layout_weight="1"/>
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/desingContentLikeFlicker"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginRight="20dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/star_blank"/>
+                    android:src="@drawable/contents_icon_thick" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:fontFamily="@font/simplehae"
+                    android:gravity="center"
+                    android:text="Contents"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
-            <TextView
-                android:id="@+id/designTestContentDescriptionTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Description"
-                android:textSize="20dp"
-                android:textColor="@color/grey"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="30dp"/>
+
             <LinearLayout
+                android:id="@+id/ContentActivityUserHistoryButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:background="@color/grey1"
-                android:layout_marginTop="20dp">
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/user_high" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Comment"
+                    android:layout_marginTop="3dp"
+                    android:fontFamily="@font/simplehae"
+                    android:gravity="center"
+                    android:text="User"
                     android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:textSize="25dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="20dp"/>
+                    android:textSize="12dp"
+                    android:textStyle="bold" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/designTestContentCommentRecyclerView"
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/octopus_2" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ContentActivityChatRoomButtonnDesign"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/mail_high" />
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp" />
-                <LinearLayout
+                    android:layout_marginTop="3dp"
+                    android:fontFamily="@font/simplehae"
+                    android:gravity="center"
+                    android:text="Message"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ContentActivityModifyBtnDesign"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/modify_icon_v1" />
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginLeft="25dp"
-                    android:layout_marginRight="25dp">
-
-                    <EditText
-                        android:id="@+id/designTestCommentEditText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/black"
-                        android:backgroundTint="@color/black"
-                        android:layout_weight="1"/>
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/black"
-                        android:layout_weight="3.3"
-                        app:cardCornerRadius="13dp"
-                        app:contentPadding="1dp">
-
-                        <Button
-                            android:id="@+id/designTestContentCommentAddButton"
-                            android:layout_width="match_parent"
-                            android:layout_height="35dp"
-                            android:background="@color/black"
-                            android:text="Comment"
-                            android:textSize="13dp"
-                            android:fontFamily="@font/simplehae"
-                            android:textStyle="bold" />
-
-
-                    </androidx.cardview.widget.CardView>
-                </LinearLayout>
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="40dp"
-                    android:layout_marginBottom="50dp"
-                    app:contentPadding="6dp"
-                    app:cardBackgroundColor="@color/black"
-                    app:cardCornerRadius="20dp">
-                    <Button
-                        android:id="@+id/designTestContentMessageButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Message to Seller"
-                        android:textStyle="bold"
-                        android:textSize="25dp"
-                        android:background="@color/black"
-                        android:fontFamily="@font/simplehae"/>
-                </androidx.cardview.widget.CardView>
-
-                <Button
-                    android:id="@+id/designTestContentSortingButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_marginTop="3dp"
+                    android:fontFamily="@font/simplehae"
+                    android:gravity="center"
+                    android:text="Modify"
+                    android:textColor="@color/black"
+                    android:textSize="12dp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
         </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+    </LinearLayout>
 </RelativeLayout>

@@ -1,5 +1,6 @@
 package com.example.real;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -47,7 +48,10 @@ public class ChattingRoomActivity extends AppCompatActivity {
         userBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(ChattingRoomActivity.this, UserhistoryActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                finish();
             }
         });
 
@@ -80,5 +84,6 @@ public class ChattingRoomActivity extends AppCompatActivity {
     @Override
     public void finish() {
         super.finish();
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
 }

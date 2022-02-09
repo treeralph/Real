@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.ContentView;
@@ -79,6 +80,11 @@ public class ContentActivity extends AppCompatActivity {
 
     ImageView BackgroundImageView;
 
+    LinearLayout ContentsBtn;
+    LinearLayout UserhistoryBtn;
+    LinearLayout ChatRoomBtn;
+    LinearLayout ModifyBtn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,6 +108,40 @@ public class ContentActivity extends AppCompatActivity {
         BackgroundImageView = findViewById(R.id.designTestViewPagerBackgroundImageView);
         ContentLikeFlicker = findViewById(R.id.desingContentLikeFlicker);
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        ContentsBtn = findViewById(R.id.ContentActivityContentsButton);
+        UserhistoryBtn = findViewById(R.id.ContentActivityUserHistoryButton);
+        ChatRoomBtn = findViewById(R.id.ContentActivityChatRoomButtonnDesign);
+        ModifyBtn = findViewById(R.id.ContentActivityModifyBtnDesign);
+
+        ContentsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+        UserhistoryBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        ChatRoomBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+        ModifyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ContentActivity.this, PopUpActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
         String contentId = getIntent().getStringExtra("ContentId");
         byte[] bytes = getIntent().getByteArrayExtra("ImageBitmap");
