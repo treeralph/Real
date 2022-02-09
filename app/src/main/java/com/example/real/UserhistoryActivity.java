@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
@@ -53,10 +54,43 @@ public class UserhistoryActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
+        LinearLayout contentsBtn = (LinearLayout) findViewById(R.id.UserhistoryActivityContentsButton);
+        LinearLayout chatRoomBtn = (LinearLayout) findViewById(R.id.UserhistoryActivityChatRoomButton);
+        LinearLayout userProfileBtn = (LinearLayout) findViewById(R.id.UserhistoryActivityUserProfileButton);
 
         // GET CURRENT USER DATA INCLUDING USERLOG
         // On callback DISCRIMINATING USERLOG
 
+        // toolbar
+
+        contentsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+        chatRoomBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(UserhistoryActivity.this, ChattingRoomActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                finish();
+            }
+        });
+
+        userProfileBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(UserhistoryActivity.this, SetUserProfileActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                finish();
+            }
+        });
+
+        //
         List<String> LIST_Contents = new ArrayList<>();
         List<String> LIST_Auctioncontents = new ArrayList<>();
         List<String> LIST_Comments = new ArrayList<>();
@@ -73,32 +107,27 @@ public class UserhistoryActivity extends AppCompatActivity {
         firestoreManagerForUserProfile.read("UserProfile", userUID, new Callback() {
             @Override
             public void OnCallback(Object object) {
-                try {
-                    UserProfile CurrentUserProfile = (UserProfile)object;
-                    String nickname = CurrentUserProfile.getNickName();
-                    userprofilenickname.setText(nickname);
-                    String userlog = CurrentUserProfile.getUserLog();
-                    JsonParser parser = new JsonParser();
-                    Object tempparsed = parser.parse(userlog);
-                    JsonArray templog = (JsonArray) tempparsed;
+                UserProfile CurrentUserProfile = (UserProfile)object;
+                String nickname = CurrentUserProfile.getNickName();
+                userprofilenickname.setText(nickname);
+                String userlog = CurrentUserProfile.getUserLog();
+                JsonParser parser = new JsonParser();
+                Object tempparsed = parser.parse(userlog);
+                JsonArray templog = (JsonArray) tempparsed;
 
-                    // DISCRIMINATING USERLOG
-                    int NUM_CONTENTS = 0; int NUM_COMMENTS = 0;
-                    for (JsonElement shard : templog){
-                        String shardtype = shard.getAsJsonObject().get("Type").getAsString();
-                        String shardaddress = shard.getAsJsonObject().get("Address").getAsString();
-                        if (shardtype.equals("Content")){NUM_CONTENTS ++; LIST_Contents.add(shardtype + "#" + shardaddress);}
-                        else if (shardtype.equals("AuctionContent")){/*NUM_CONTENTS ++ */; LIST_Auctioncontents.add(shardtype + "#" +shardaddress);}
-                        else if (shardtype.equals("Comment")){NUM_COMMENTS ++; LIST_Comments.add(shardtype + "#" +shardaddress);}
-                        else{}
-                    }
-                    NumContents.setText(String.valueOf(NUM_CONTENTS));
-                    NumComments.setText(String.valueOf(NUM_COMMENTS));
-                    //"Address":"Content/MfnsDaivaiyedaOpTxdp/Comments/20220110163124295"
-                }catch (Exception e){
-                    int NUM_CONTENTS = 0; int NUM_COMMENTS = 0;
+                // DISCRIMINATING USERLOG
+                int NUM_CONTENTS = 0; int NUM_COMMENTS = 0;
+                for (JsonElement shard : templog){
+                    String shardtype = shard.getAsJsonObject().get("Type").getAsString();
+                    String shardaddress = shard.getAsJsonObject().get("Address").getAsString();
+                    if (shardtype.equals("Content")){NUM_CONTENTS ++; LIST_Contents.add(shardtype + "#" + shardaddress);}
+                    else if (shardtype.equals("AuctionContent")){/*NUM_CONTENTS ++ */; LIST_Auctioncontents.add(shardtype + "#" +shardaddress);}
+                    else if (shardtype.equals("Comment")){NUM_COMMENTS ++; LIST_Comments.add(shardtype + "#" +shardaddress);}
+                    else{}
                 }
-
+                NumContents.setText(String.valueOf(NUM_CONTENTS));
+                NumComments.setText(String.valueOf(NUM_COMMENTS));
+                //"Address":"Content/MfnsDaivaiyedaOpTxdp/Comments/20220110163124295"
             }
         });
         storageManagerForUserProfile.downloadImg2View("UserProfileImage", userUID, userprofileimg, new Callback() {
@@ -158,8 +187,11 @@ public class UserhistoryActivity extends AppCompatActivity {
                 recyclerView.setAdapter(AdapterForHistory);
             }
         });
+    }
 
-
-
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
 }

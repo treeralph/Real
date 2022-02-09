@@ -1,16 +1,21 @@
 package com.example.real;
 
 import android.animation.ObjectAnimator;
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.transition.Transition;
 import android.util.Log;
+import android.util.Pair;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
 
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.real.adapter.RecyclerViewAdapterForContents;
 import com.example.real.data.Contents;
 import com.example.real.databasemanager.FirestoreManager;
+import com.example.real.tool.OnSwipeTouchListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.api.Distribution;
@@ -34,7 +40,7 @@ public class ContentsActivity extends AppCompatActivity {
     LinearLayout chatRoomBtn;
     RecyclerView recyclerView;
     LinearLayout makeContentBtn;
-    ImageView SettingPopupImage;
+    LinearLayout userHistoryBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,13 +48,11 @@ public class ContentsActivity extends AppCompatActivity {
         //setContentView(R.layout.activity_contents);
         setContentView(R.layout.activity_contents_design);
 
-
-
         recyclerView = findViewById(R.id.ContentsActivityRecyclerViewDesign);
         makeContentBtn = findViewById(R.id.ContentsMakeContentBtnDesign);
-        SettingPopupImage = findViewById(R.id.ContentsSettingPopupImgDesign);
         user = FirebaseAuth.getInstance().getCurrentUser();
         chatRoomBtn = findViewById(R.id.ContentsActivityChatRoomBtnDesign);
+        userHistoryBtn = findViewById(R.id.ContentsActivityUserHistoryButton);
 
         /*
         recyclerView = findViewById(R.id.minetestRecyclerView);
@@ -58,11 +62,21 @@ public class ContentsActivity extends AppCompatActivity {
         chatRoomBtn = findViewById(R.id.ContentsActivityChatRoomBtn);
          */
 
+        userHistoryBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ContentsActivity.this, UserhistoryActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+            }
+        });
+
         chatRoomBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ContentsActivity.this, ChattingRoomActivity.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
             }
         });
 
@@ -137,6 +151,7 @@ public class ContentsActivity extends AppCompatActivity {
         });
 
 
+        /*
         SettingPopupImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -158,6 +173,8 @@ public class ContentsActivity extends AppCompatActivity {
                 popupMenu2.show();
             }
         });
+
+         */
 
 
 

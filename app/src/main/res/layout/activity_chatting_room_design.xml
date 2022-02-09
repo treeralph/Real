@@ -1,22 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/ContentsActivityRelativeLayout"
-    android:transitionName="MainTransition"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="30dp"
         android:layout_marginRight="20dp"
+        android:layout_marginTop="30dp"
         android:orientation="vertical"
         android:weightSum="1">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="45dp"
@@ -26,33 +22,28 @@
             <View
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_weight="1" />
-
+                android:layout_weight="1"/>
             <ImageView
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_gravity="right|center"
                 android:src="@drawable/search_high" />
-            <!--
-            <ImageView
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_marginLeft="10dp"
-                android:src="@drawable/bell"
-                android:layout_gravity="right|center"/>
-            -->
-
-
         </LinearLayout>
 
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/ContentsActivityRecyclerViewDesign"
+
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_weight="1" />
+            android:layout_weight="1">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/ChattingRoomActivityChattingRoomRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+
+        </ScrollView>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -62,6 +53,7 @@
             android:orientation="horizontal">
 
             <LinearLayout
+                android:id="@+id/ChattingRoomActivityContentsButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -72,7 +64,7 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/contents_icon_colored" />
+                    android:src="@drawable/contents_icon_thick" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -88,7 +80,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/ContentsActivityUserHistoryButton"
+                android:id="@+id/ChattingRoomActivityUserButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -132,7 +124,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/ContentsActivityChatRoomBtnDesign"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -143,7 +134,7 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/mail_high" />
+                    android:src="@drawable/mail_colored" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -159,7 +150,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/ContentsMakeContentBtnDesign"
+                android:id="@+id/ChattingRoomActivityEditButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -187,73 +178,4 @@
         </LinearLayout>
 
     </LinearLayout>
-
-    <!--
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@drawable/lineforborder"
-        android:layout_alignParentBottom="true">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:id="@+id/ContentsActivityChatRoomBtnDesign"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="10dp"
-                android:layout_weight="1">
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/mail"
-                    android:layout_gravity="center"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:text="Message"
-                    android:textColor="@color/black"
-                    android:gravity="center"
-                    android:fontFamily="@font/simplehae"
-                    android:textStyle="bold"
-                    android:textSize="15dp"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ContentsMakeContentBtnDesign"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="10dp"
-                android:layout_weight="1">
-
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/edit"
-                    android:layout_gravity="center"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:text="Edit"
-                    android:textColor="@color/black"
-                    android:gravity="center"
-                    android:fontFamily="@font/simplehae"
-                    android:textStyle="bold"
-                    android:textSize="15dp"/>
-
-            </LinearLayout>
-        </LinearLayout>
-
-    </LinearLayout>
-    -->
 </RelativeLayout>
