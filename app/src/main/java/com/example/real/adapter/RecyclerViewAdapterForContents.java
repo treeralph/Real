@@ -30,6 +30,10 @@ import com.example.real.databasemanager.FirestoreManager;
 import com.example.real.databasemanager.StorageManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -39,6 +43,8 @@ public class RecyclerViewAdapterForContents extends RecyclerView.Adapter<Recycle
     private ArrayList<Contents> contentsList;
     private Context context;
     private FirebaseUser user;
+    static final int FLICKERNEGATIVE = -1;
+    static final int FLICKERPOSITIVE = 1;
 
     public RecyclerViewAdapterForContents(ArrayList<Contents> contentsList, Context context) {
         this.contentsList = contentsList;
@@ -111,6 +117,107 @@ public class RecyclerViewAdapterForContents extends RecyclerView.Adapter<Recycle
             }
         });
 
+        final int[] w = {FLICKERNEGATIVE}; // 나중에 DB에서 값을 받아오게 바꾸3
+        myViewHolder.ContentLikeFlicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(w[0] == FLICKERNEGATIVE){// 하트가 비어있는 상태에서 버튼을 누르면
+                    // DB에 UserLog Write
+                    FirestoreManager firestoreManagerForUserProfile = new FirestoreManager(
+                            context, "UserProfile", user.getUid());
+                    firestoreManagerForUserProfile.read("UserProfile", user.getUid(), new Callback() {
+                        @Override
+                        public void OnCallback(Object object) {
+                            UserProfile userprofile = (UserProfile) object;
+                            String userlog = userprofile.getUserLog();
+                            String address = "Content/" + contentId;
+                            if(userlog.equals("")){
+                                // Create Json Obj & JsonArray
+                                JsonArray frame = new JsonArray();
+                                JsonObject init = new JsonObject();
+                                init.addProperty("Type","Like");
+                                init.addProperty("Address",address);
+                                frame.add(init);
+                                firestoreManagerForUserProfile.update("UserProfile", user.getUid(), "UserLog",
+                                        frame.toString(), new Callback() {
+                                            @Override
+                                            public void OnCallback(Object object) {
+
+                                            }
+                                        });
+                            } else{
+                                // Parsing JsonArray
+                                JsonParser parser = new JsonParser();
+                                Object tempparsed = parser.parse(userlog);
+                                JsonArray templog = (JsonArray) tempparsed;
+
+                                // Create Json Obj
+                                JsonObject temp = new JsonObject();
+                                temp.addProperty("Type", "Like");
+                                temp.addProperty("Address",address);
+
+                                // Add & Update
+                                templog.add(temp);
+                                firestoreManagerForUserProfile.update("UserProfile", user.getUid(), "UserLog",
+                                        templog.toString(), new Callback() {
+                                            @Override
+                                            public void OnCallback(Object object) {
+
+                                            }
+                                        });
+                            }
+
+                        }
+                    });
+
+                    // Write 끝나면 콜백에 w값을 바꿔주고 이미지변경
+                    w[0] = FLICKERPOSITIVE;
+                    myViewHolder.ContentLikeFlicker.setImageResource(R.drawable.new_heart_red);
+                }
+                else{                       // 하트가 차있는 상태에서 버튼을 누르면
+                    // DB에 UserLog Search & Delete
+                    FirestoreManager firestoreManagerForUserProfile = new FirestoreManager(
+                            context, "UserProfile", user.getUid());
+                    firestoreManagerForUserProfile.read("UserProfile", user.getUid(), new Callback() {
+                        @Override
+                        public void OnCallback(Object object) {
+                            UserProfile userprofile = (UserProfile) object;
+                            String userlog = userprofile.getUserLog();
+                            String address = "Content/" + contentId;
+
+                            // Parsing JsonArray
+                            JsonParser parser = new JsonParser();
+                            Object tempparsed = parser.parse(userlog);
+                            JsonArray templog = (JsonArray) tempparsed;
+
+                            // Create Json Obj
+                            JsonObject temp = new JsonObject();
+                            temp.addProperty("Type", "Like");
+                            temp.addProperty("Address",address);
+
+                            // Delete & Update
+                            templog.remove(temp);
+                            firestoreManagerForUserProfile.update("UserProfile", user.getUid(), "UserLog",
+                                    templog.toString(), new Callback() {
+                                        @Override
+                                        public void OnCallback(Object object) {
+
+                                        }
+                                    });
+
+
+                        }
+                    });
+
+
+                    // Delete 끝나면 콜백에 w값을 바꿔주고 이미지변경
+                    w[0] = FLICKERNEGATIVE;
+                    myViewHolder.ContentLikeFlicker.setImageResource(R.drawable.new_heart_empty);
+                }
+
+            }
+        });
 
         FirestoreManager firestoreManagerForContent = new FirestoreManager(context, "Content", user.getUid());
         firestoreManagerForContent.read("Content", contentId, new Callback() {
@@ -132,12 +239,38 @@ public class RecyclerViewAdapterForContents extends RecyclerView.Adapter<Recycle
                 myViewHolder.ContentTimeTextView.setText(year + "." + month + "." + day + " - " + hour + ":" + min);
 
                 FirestoreManager firestoreManagerForUser = new FirestoreManager(context, "UserProfile", user.getUid());
+                firestoreManagerForUser.read("UserProfile", user.getUid(), new Callback() {
+                    @Override
+                    public void OnCallback(Object object) {
+                        UserProfile userprofile = (UserProfile)object;
+                        String userlog = userprofile.getUserLog();
+                        String address = "Content/" + contentId;
+
+                        // Parsing JsonArray
+                        JsonParser parser = new JsonParser();
+                        Object tempparsed = parser.parse(userlog);
+                        JsonArray templog = (JsonArray) tempparsed;
+
+                        // Search Obj in Array
+                        for (JsonElement shard : templog){
+                            String shardtype = shard.getAsJsonObject().get("Type").getAsString();
+                            String shardaddress = shard.getAsJsonObject().get("Address").getAsString();
+                            System.out.println(shardtype + " * " + shardaddress);
+                            if(shardtype.equals("Like") & shardaddress.equals(address)){
+                                myViewHolder.ContentLikeFlicker.setImageResource(R.drawable.new_heart_red);
+                                w[0] = FLICKERPOSITIVE;
+                                break;
+                            }
+                        }
+                    }
+                });
                 firestoreManagerForUser.read("UserProfile", uid, new Callback() {
                     @Override
                     public void OnCallback(Object object) {
                         UserProfile userProfile = (UserProfile)object;
                         String nickname = userProfile.getNickName();
                         myViewHolder.ContentProfileTextView.setText(nickname);
+
 
                         StorageManager storageManagerForUserProfileImage = new StorageManager(context, "UserProfileImage", user.getUid());
                         storageManagerForUserProfileImage.downloadImg2View("UserProfileImage", uid, myViewHolder.ContentProfileImgView, new Callback() {
@@ -172,6 +305,7 @@ public class RecyclerViewAdapterForContents extends RecyclerView.Adapter<Recycle
         TextView ContentTitleTextView;
         TextView ContentProfileTextView;
         TextView ContentTimeTextView;
+        ImageView ContentLikeFlicker;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -182,6 +316,7 @@ public class RecyclerViewAdapterForContents extends RecyclerView.Adapter<Recycle
             ContentTitleTextView = itemView.findViewById(R.id.itemTitleTextViewDesign);
             ContentProfileTextView = itemView.findViewById(R.id.itemProfileInfoTextViewDesign);
             ContentTimeTextView = itemView.findViewById(R.id.itemTimeTextViewDesign);
+            ContentLikeFlicker = itemView.findViewById(R.id.itemLikeFlickerDesign);
         }
     }
 }

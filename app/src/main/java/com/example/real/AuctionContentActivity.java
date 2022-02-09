@@ -37,6 +37,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -50,6 +54,8 @@ import static com.example.real.adapter.ExpandableListAdapter.CHILD;
 
 public class AuctionContentActivity extends AppCompatActivity {
 
+    static final int FLICKERNEGATIVE = -1;
+    static final int FLICKERPOSITIVE = 1;
     TextView AuctionContentTitleTextView;
     TextView AuctionContentUserProfileInfoTextView;
     TextView AuctionContentTimeTextView;
@@ -66,7 +72,7 @@ public class AuctionContentActivity extends AppCompatActivity {
     Button srtbtn;
 
     ImageView AuctionContentViewPagerBackgroudImageView;
-
+    ImageView AuctionContentLikeFlicker;
     ViewPagerAdapter adapter;
     DateTimeFormatter formatter = new DateTimeFormatterBuilder().appendPattern("yyyyMMddHHmmss").appendValue(ChronoField.MILLI_OF_SECOND, 3).toFormatter();
     LocalDateTime tempEndTime;
@@ -113,12 +119,122 @@ public class AuctionContentActivity extends AppCompatActivity {
         AuctionContentCommentEditText = findViewById(R.id.AuctionContentActivityCommentEditTextDesign);
         AuctionContentCommentBtn = findViewById(R.id.AuctionContentActivityCommentButtonDesign);
         AuctionContentViewPagerBackgroudImageView = findViewById(R.id.AuctionContentActivityViewPagerBackgroudImageView);
+        AuctionContentLikeFlicker = findViewById(R.id.desingAuctionContentLikeFlicker);
         srtbtn = findViewById(R.id.AuctionContentActivitySortingButtonDesign);
 
 
         byte[] bytes = getIntent().getByteArrayExtra("ImageBitmap");
         Bitmap imageBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
         AuctionContentViewPagerBackgroudImageView.setImageBitmap(imageBitmap);
+
+
+        final int[] w = {FLICKERNEGATIVE};
+        AuctionContentLikeFlicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(w[0] == FLICKERNEGATIVE){// 하트가 비어있는 상태에서 버튼을 누르면
+                    // DB에 UserLog Write
+                    FirestoreManager firestoreManagerForUserProfile = new FirestoreManager(
+                            AuctionContentActivity.this, "UserProfile", user.getUid());
+                    firestoreManagerForUserProfile.read("UserProfile", user.getUid(), new Callback() {
+                        @Override
+                        public void OnCallback(Object object) {
+                            UserProfile userprofile = (UserProfile) object;
+                            String userlog = userprofile.getUserLog();
+                            String address = "Content/" + contentId;
+                            if(userlog.equals("")){
+                                // Create Json Obj & JsonArray
+                                JsonArray frame = new JsonArray();
+                                JsonObject init = new JsonObject();
+                                init.addProperty("Type","Like");
+                                init.addProperty("Address",address);
+                                frame.add(init);
+                                firestoreManagerForUserProfile.update("UserProfile", user.getUid(), "UserLog",
+                                        frame.toString(), new Callback() {
+                                            @Override
+                                            public void OnCallback(Object object) {
+
+                                            }
+                                        });
+                            } else{
+                                // Parsing JsonArray
+                                JsonParser parser = new JsonParser();
+                                Object tempparsed = parser.parse(userlog);
+                                JsonArray templog = (JsonArray) tempparsed;
+
+                                // Create Json Obj
+                                JsonObject temp = new JsonObject();
+                                temp.addProperty("Type", "Like");
+                                temp.addProperty("Address",address);
+
+                                // Add & Update
+                                templog.add(temp);
+                                firestoreManagerForUserProfile.update("UserProfile", user.getUid(), "UserLog",
+                                        templog.toString(), new Callback() {
+                                            @Override
+                                            public void OnCallback(Object object) {
+
+                                            }
+                                        });
+                            }
+
+                        }
+                    });
+
+                    // Write 끝나면 콜백에 w값을 바꿔주고 이미지변경
+                    w[0] = FLICKERPOSITIVE;
+                    AuctionContentLikeFlicker.setImageResource(R.drawable.new_heart_red);
+                }
+                else{                       // 하트가 차있는 상태에서 버튼을 누르면
+                    // DB에 UserLog Search & Delete
+                    FirestoreManager firestoreManagerForUserProfile = new FirestoreManager(
+                            AuctionContentActivity.this, "UserProfile", user.getUid());
+                    firestoreManagerForUserProfile.read("UserProfile", user.getUid(), new Callback() {
+                        @Override
+                        public void OnCallback(Object object) {
+                            UserProfile userprofile = (UserProfile) object;
+                            String userlog = userprofile.getUserLog();
+                            String address = "Content/" + contentId;
+
+                            // Parsing JsonArray
+                            JsonParser parser = new JsonParser();
+                            Object tempparsed = parser.parse(userlog);
+                            JsonArray templog = (JsonArray) tempparsed;
+
+                            // Create Json Obj
+                            JsonObject temp = new JsonObject();
+                            temp.addProperty("Type", "Like");
+                            temp.addProperty("Address",address);
+
+                            // Delete & Update
+                            templog.remove(temp);
+                            firestoreManagerForUserProfile.update("UserProfile", user.getUid(), "UserLog",
+                                    templog.toString(), new Callback() {
+                                        @Override
+                                        public void OnCallback(Object object) {
+
+                                        }
+                                    });
+
+
+                        }
+                    });
+
+
+                    // Delete 끝나면 콜백에 w값을 바꿔주고 이미지변경
+                    w[0] = FLICKERNEGATIVE;
+                    AuctionContentLikeFlicker.setImageResource(R.drawable.new_heart_empty);
+                }
+
+            }
+        });
+
+
+
+
+
+
 
 
 
@@ -220,6 +336,34 @@ public class AuctionContentActivity extends AppCompatActivity {
 
                         AuctionContentUserProfileInfoTextView.setText(nickname);
 
+                        // Userlog 읽어오고 특정 엘레멘트가 존재하는지 확인
+                        FirestoreManager firestoreManagerForUserProfile = new FirestoreManager(
+                                AuctionContentActivity.this, "UserProfile", user.getUid());
+                        firestoreManagerForUserProfile.read("UserProfile", user.getUid(), new Callback() {
+                            @Override
+                            public void OnCallback(Object object) {
+                                UserProfile userprofile = (UserProfile) object;
+                                String userlog = userprofile.getUserLog();
+                                String address = "Content/" + contentId;
+
+                                // Parsing JsonArray
+                                JsonParser parser = new JsonParser();
+                                Object tempparsed = parser.parse(userlog);
+                                JsonArray templog = (JsonArray) tempparsed;
+
+                                // Search Obj in Array
+                                for (JsonElement shard : templog){
+                                    String shardtype = shard.getAsJsonObject().get("Type").getAsString();
+                                    String shardaddress = shard.getAsJsonObject().get("Address").getAsString();
+                                    System.out.println(shardtype + " * " + shardaddress);
+                                    if(shardtype.equals("Like") & shardaddress.equals(address)){
+                                        AuctionContentLikeFlicker.setImageResource(R.drawable.new_heart_red);
+                                        w[0] = FLICKERPOSITIVE;
+                                        break;
+                                    }
+                                }
+                            }
+                        });
                         storageManagerForUserProfile.downloadImg2View("UserProfileImage", uid, AuctionContentUserProfileImgImageView, new Callback() {
                             @Override
                             public void OnCallback(Object object) {
