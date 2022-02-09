@@ -195,7 +195,7 @@ public class ContentActivity extends AppCompatActivity {
 
                     // Write 끝나면 콜백에 w값을 바꿔주고 이미지변경
                     w[0] = FLICKERPOSITIVE;
-                    ContentLikeFlicker.setImageResource(R.drawable.star);
+                    ContentLikeFlicker.setImageResource(R.drawable.new_heart_red);
                 }
                 else{                       // 하트가 차있는 상태에서 버튼을 누르면
                     // DB에 UserLog Search & Delete
@@ -235,7 +235,7 @@ public class ContentActivity extends AppCompatActivity {
 
                     // Delete 끝나면 콜백에 w값을 바꿔주고 이미지변경
                     w[0] = FLICKERNEGATIVE;
-                    ContentLikeFlicker.setImageResource(R.drawable.star_blank);
+                    ContentLikeFlicker.setImageResource(R.drawable.new_heart_empty);
                 }
 
             }
@@ -305,7 +305,7 @@ public class ContentActivity extends AppCompatActivity {
                                     String shardaddress = shard.getAsJsonObject().get("Address").getAsString();
                                     System.out.println(shardtype + " * " + shardaddress);
                                     if(shardtype.equals("Like") & shardaddress.equals(address)){
-                                        ContentLikeFlicker.setImageResource(R.drawable.star);
+                                        ContentLikeFlicker.setImageResource(R.drawable.new_heart_red);
                                         w[0] = FLICKERPOSITIVE;
                                         break;
                                     }
