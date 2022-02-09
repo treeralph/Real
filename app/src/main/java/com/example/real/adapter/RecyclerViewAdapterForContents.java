@@ -172,6 +172,7 @@ public class RecyclerViewAdapterForContents extends RecyclerView.Adapter<Recycle
         TextView ContentTitleTextView;
         TextView ContentProfileTextView;
         TextView ContentTimeTextView;
+        ImageView ContentLikeFlicker;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -182,6 +183,7 @@ public class RecyclerViewAdapterForContents extends RecyclerView.Adapter<Recycle
             ContentTitleTextView = itemView.findViewById(R.id.itemTitleTextViewDesign);
             ContentProfileTextView = itemView.findViewById(R.id.itemProfileInfoTextViewDesign);
             ContentTimeTextView = itemView.findViewById(R.id.itemTimeTextViewDesign);
+            ContentLikeFlicker = itemView.findViewById(R.id.itemLikeFlickerDesign);
         }
     }
 }
