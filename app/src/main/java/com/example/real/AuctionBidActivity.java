@@ -51,7 +51,7 @@ public class AuctionBidActivity extends AppCompatActivity {
             @Override
             public void OnCallback(Object object) {
                 AuctionContent auctionContent = (AuctionContent)object;
-                int bidPrice = Integer.parseInt(auctionContent.getPrice()) + Integer.parseInt(auctionContent.getPriceGap());
+                Long bidPrice = Long.parseLong(auctionContent.getPrice()) + Long.parseLong(auctionContent.getPriceGap());
                 AuctionPriceEditText.setText(String.valueOf(bidPrice));
                 AuctionCurrentPriceTextView.setText(auctionContent.getPrice());
                 AuctionPriceGapTextView.setText(auctionContent.getPriceGap());

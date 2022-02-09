@@ -127,6 +127,10 @@ public class ContentsActivity extends AppCompatActivity {
         makeContentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(ContentsActivity.this, PopUpActivityForContents.class);
+                startActivity(intent);
+
+                /*
                 PopupMenu popupMenu = new PopupMenu(getApplicationContext(), v);
                 getMenuInflater().inflate(R.menu.contentspopup, popupMenu.getMenu());
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -147,36 +151,9 @@ public class ContentsActivity extends AppCompatActivity {
                     }
                 });
                 popupMenu.show();
+
+                 */
             }
         });
-
-
-        /*
-        SettingPopupImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PopupMenu popupMenu2 = new PopupMenu(getApplicationContext(), v);
-                getMenuInflater().inflate(R.menu.contentssettingpopup, popupMenu2.getMenu());
-                popupMenu2.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        if(item.getItemId() == R.id.Settingpopup1){
-                            Intent intent = new Intent(ContentsActivity.this, SetUserProfileActivity.class);
-                            startActivity(intent);
-                        }else if(item.getItemId() == R.id.Settingpopup2){
-                            Intent intent = new Intent(ContentsActivity.this, UserhistoryActivity.class);
-                            startActivity(intent);
-                        }
-                        return false;
-                    }
-                });
-                popupMenu2.show();
-            }
-        });
-
-         */
-
-
-
     }
 }

@@ -3,10 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/popUpActivityRelativeLayout"
+    android:id="@+id/popUpActivityForContentsRelativeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PopUpActivity"
+    tools:context=".PopUpActivityForContents"
     android:background="#00ffffff">
 
     <LinearLayout
@@ -31,7 +31,7 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/popUpActivityModifyButton"
+                    android:id="@+id/popUpActivityForContentsMakeContentButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -39,14 +39,14 @@
                     <ImageView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:src="@drawable/eraser_icon"/>
+                        android:src="@drawable/pansil_icon"/>
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:fontFamily="@font/simplehae"
                         android:gravity="center"
-                        android:text="Modify"
+                        android:text="Content"
                         android:textColor="@color/black"
                         android:textSize="30dp" />
 
@@ -54,7 +54,7 @@
 
 
                 <LinearLayout
-                    android:id="@+id/popUpActivityDeleteButton"
+                    android:id="@+id/popUpActivityForContentsMakeAuctionContentButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -63,14 +63,14 @@
                     <ImageView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:src="@drawable/trash_can_icon"/>
+                        android:src="@drawable/pansil_with_a_icon"/>
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:fontFamily="@font/simplehae"
                         android:gravity="center"
-                        android:text="Delete"
+                        android:text="Auction"
                         android:textColor="@color/black"
                         android:textSize="30dp" />
 
@@ -82,6 +82,5 @@
         </androidx.cardview.widget.CardView>
 
     </LinearLayout>
-
 
 </RelativeLayout>
