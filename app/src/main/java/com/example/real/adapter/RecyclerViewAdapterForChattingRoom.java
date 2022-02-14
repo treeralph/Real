@@ -123,13 +123,6 @@ public class RecyclerViewAdapterForChattingRoom extends RecyclerView.Adapter<Rec
                                 String clientNickName = userProfile.getNickName();
                                 myViewHolder.chattingRoomItemClientUserNickName.setText(clientNickName);
                                 if(user.getUid().equals(user1)) {
-                                    System.out.println(user1+"  #################################################");
-                                    System.out.println(user1+"  #################################################");
-                                    System.out.println(user1+"  #################################################");
-                                    System.out.println(user2+"  #################################################");
-                                    System.out.println(user2+"  #################################################");
-                                    System.out.println(user2+"  #################################################");
-
                                     storageManagerForUserProfileImage.downloadImg2View("UserProfileImage", user2, myViewHolder.chattingRoomItemUserProfileImageView, new Callback() {
                                         @Override
                                         public void OnCallback(Object object) {

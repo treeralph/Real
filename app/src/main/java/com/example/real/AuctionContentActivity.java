@@ -123,10 +123,13 @@ public class AuctionContentActivity extends AppCompatActivity {
         srtbtn = findViewById(R.id.AuctionContentActivitySortingButtonDesign);
 
 
-        byte[] bytes = getIntent().getByteArrayExtra("ImageBitmap");
-        Bitmap imageBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-        AuctionContentViewPagerBackgroudImageView.setImageBitmap(imageBitmap);
-
+        try {
+            byte[] bytes = getIntent().getByteArrayExtra("ImageBitmap");
+            Bitmap imageBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            AuctionContentViewPagerBackgroudImageView.setImageBitmap(imageBitmap);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
 
         final int[] w = {FLICKERNEGATIVE};
         AuctionContentLikeFlicker.setOnClickListener(new View.OnClickListener() {
@@ -257,6 +260,7 @@ public class AuctionContentActivity extends AppCompatActivity {
                     intent.putExtra("contentId", contentId);
                     //startActivity(intent);
                     startActivityForResult(intent, 0);
+                    overridePendingTransition(R.anim.fadein, R.anim.fadeout);
                 }else{
                     Toast.makeText(AuctionContentActivity.this, "This content is expired", Toast.LENGTH_SHORT).show();
                 }
@@ -613,5 +617,11 @@ public class AuctionContentActivity extends AppCompatActivity {
                 finish();
             }
         }
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
 }

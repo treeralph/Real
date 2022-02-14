@@ -166,6 +166,24 @@ public class FirestoreManager {
                 });
     }
 
+    public void delete(String collectionPath, String documentPath, Callback callback){
+        DocumentReference ref = db.document(collectionPath + "/" + documentPath);
+        ref.delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d("Firestore_delete", "DocumentSnapshot successfully deleted!");
+                        callback.OnCallback("");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Firestore_delete", "Error deleting document", e);
+                    }
+                });
+    }
+
 
     // "read" Method is overloaded
     public void read(String collectionPath, Callback callback){ // CollectionReference - Read more than one

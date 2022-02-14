@@ -10,6 +10,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.transition.Transition;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,10 +34,14 @@ import com.example.real.databasemanager.FirestoreManager;
 import com.example.real.databasemanager.StorageManager;
 import com.example.real.fragment.ImgViewFromGalleryFragment;
 import com.example.real.tool.NumberingMachine;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
@@ -44,6 +49,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.squareup.okhttp.internal.DiskLruCache;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -72,12 +78,14 @@ public class ContentActivity extends AppCompatActivity {
     String userUID;
     String contentUID;
 
+    String contentId;
+    String contentTime;
+
     EditText ContentCommentEditText;
     Button ContentCommentBtn;
     Button srtbtn;
 
     RecyclerView Comments_Recyclerview;
-
     ImageView BackgroundImageView;
 
     LinearLayout ContentsBtn;
@@ -92,7 +100,6 @@ public class ContentActivity extends AppCompatActivity {
         // todo: for design test
         setContentView(R.layout.activity_content_design);
         /////////////////////////////////////////////////
-
 
         ContentTitleTextView = findViewById(R.id.designTestContentTitleTextView);
         ContentUserProfileInfoTextView = findViewById(R.id.designTestContentUserProfileNickNameTextView);
@@ -123,14 +130,18 @@ public class ContentActivity extends AppCompatActivity {
         UserhistoryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(ContentActivity.this, UserhistoryActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
             }
         });
 
         ChatRoomBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(ContentActivity.this, ChattingRoomActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
             }
         });
 
@@ -138,12 +149,15 @@ public class ContentActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(ContentActivity.this, PopUpActivity.class);
+                intent.putExtra("ContentID", contentId);
+                intent.putExtra("ContentUID", contentUID);
+                intent.putExtra("ContentTime", contentTime);
                 startActivity(intent);
             }
         });
 
 
-        String contentId = getIntent().getStringExtra("ContentId");
+        contentId = getIntent().getStringExtra("ContentId");
         byte[] bytes = getIntent().getByteArrayExtra("ImageBitmap");
         Bitmap imageBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
         BackgroundImageView.setImageBitmap(imageBitmap);
@@ -286,7 +300,6 @@ public class ContentActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 String databasePath = "/Messages/" + contentId + "/" + userUID;
-
                 Intent intent = new Intent(ContentActivity.this, ChattingActivity.class);
                 intent.putExtra("databasePath", databasePath);
                 intent.putExtra("contentId", contentId);
@@ -305,7 +318,7 @@ public class ContentActivity extends AppCompatActivity {
                 String uid = tempContent.getUid(); contentUID = uid;
                 String title = tempContent.getTitle();
                 String description = tempContent.getContent();
-                String time = tempContent.getTime();
+                String time = tempContent.getTime(); contentTime = time;
 
                 String year = time.substring(0, 4);
                 String month = time.substring(4, 6);
@@ -595,7 +608,6 @@ public class ContentActivity extends AppCompatActivity {
                                 //data.add(temp_header);
                                 for (Comment QuaryRecomment : Y) {
 
-
                                     int RecommentType = CHILD;
 
                                     if (count[0] == 0) {
@@ -613,5 +625,11 @@ public class ContentActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
 }

@@ -210,4 +210,57 @@ public class StorageManager {
             }
         });
     }
+
+    public void delete(String path, String subPath, Callback callback){
+
+        /*
+        StorageReference cRef = ref.child(path + "/" + subPath);
+        cRef.delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d("StorageManager_delete", "DocumentSnapshot successfully deleted!");
+                        callback.OnCallback("");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("StorageManager_delete", "Error deleting document", e);
+                    }
+                });
+
+         */
+
+        StorageReference aRef = ref.child("image/lhYwG4yjYweQHdIeFrxF");
+        aRef.listAll()
+                .addOnSuccessListener(new OnSuccessListener<ListResult>() {
+                    @Override
+                    public void onSuccess(ListResult listResult) {
+                        for(StorageReference sRef : listResult.getItems()){
+                            sRef.delete()
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+                                            Log.d("TESTTEST", "Success");
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.d("TESTTEST", e.getMessage());
+                                        }
+                                    });
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("TESTTEST", e.getMessage());
+                    }
+                });
+    }
+
+
 }
