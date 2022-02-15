@@ -23,13 +23,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/UserhistoryProfileimg"
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="340dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/push_img" />
+                    android:layout_height="340dp">
+                    <ImageView
+                        android:id="@+id/UserhistoryProfileimg"
+                        android:layout_width="match_parent"
+                        android:layout_height="340dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/push_img" />
+                    <ImageView
+                        android:id="@+id/UserhistoryActivitySetUserProfileImg"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/edit_grey_g"
+                        android:layout_gravity="bottom|right"
+                        android:layout_marginBottom="15dp"
+                        android:layout_marginRight="15dp"/>
+                </FrameLayout>
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -37,17 +49,34 @@
                     android:background="@color/black"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/UserhistoryUserNickname"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="40dp"
-                        android:fontFamily="@font/simplehae"
-                        android:gravity="center"
-                        android:text="박강혁씨발새끼"
-                        android:textColor="@color/white"
-                        android:textSize="30dp"
-                        android:textStyle="bold" />
+                        android:orientation="horizontal"
+                        android:layout_marginTop="45dp"
+                        android:weightSum="1">
+                        <TextView
+                            android:id="@+id/UserhistoryUserNickname"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="45dp"
+                            android:fontFamily="@font/simplehae"
+                            android:gravity="center"
+                            android:text="박강혁씨발새끼"
+                            android:textColor="@color/white"
+                            android:textSize="30dp"
+                            android:textStyle="bold"
+                            android:layout_weight="1"/>
+                        <ImageView
+                            android:id="@+id/UserhistoryActivitySetUserProfileNickname"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/edit_white"
+                            android:layout_gravity="bottom|right"
+                            android:layout_marginRight="15dp"/>
+
+                    </LinearLayout>
+
 
                     <!--
                     <TextView
@@ -157,11 +186,48 @@
                 </LinearLayout>
 
 
+
+
                 <!-- 상세 이력 -->
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/UserhistoryRecyclerViewDesign"
                     android:layout_width="match_parent"
                     android:layout_height="300dp"
+                    android:layout_marginBottom="10dp" />
+                <LinearLayout
+                    android:id="@+id/UserhistoryBtnLovers"
+                    android:layout_width="match_parent"
+                    android:layout_height="110dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/UserhistoryNumLovers"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="33dp"
+                        android:fontFamily="@font/simplehae"
+                        android:gravity="center"
+                        android:text="9"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/simplehae"
+                        android:gravity="center"
+                        android:text="Lovers"
+                        android:textColor="@color/black"
+                        android:textSize="15dp" />
+                </LinearLayout>
+
+                <!-- 상세 이력 -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/UserhistoryLoverRecyclerViewDesign"
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"
                     android:layout_marginBottom="10dp" />
             </LinearLayout>
         </ScrollView>

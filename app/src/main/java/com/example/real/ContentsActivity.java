@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.real.adapter.RecyclerViewAdapterForContents;
 import com.example.real.data.Contents;
@@ -41,6 +42,7 @@ public class ContentsActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     LinearLayout makeContentBtn;
     LinearLayout userHistoryBtn;
+    SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +55,7 @@ public class ContentsActivity extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         chatRoomBtn = findViewById(R.id.ContentsActivityChatRoomBtnDesign);
         userHistoryBtn = findViewById(R.id.ContentsActivityUserHistoryButton);
+        swipeRefreshLayout = findViewById(R.id.ContentsActivitySwipeRefreshLayout);
 
         /*
         recyclerView = findViewById(R.id.minetestRecyclerView);
@@ -61,6 +64,9 @@ public class ContentsActivity extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         chatRoomBtn = findViewById(R.id.ContentsActivityChatRoomBtn);
          */
+
+
+
 
         userHistoryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,6 +129,26 @@ public class ContentsActivity extends AppCompatActivity {
             }
         });
 
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Set category
+
+                // Clear & refresh Dataset
+                manager.read("Contents", new Callback() {
+                    @Override
+                    public void OnCallback(Object object) {
+                        ArrayList<Contents> contentsList = (ArrayList<Contents>)object;
+
+                        // Actually, we don't clear our dataset but create new adapter with same name
+                        RecyclerViewAdapterForContents adapter = new RecyclerViewAdapterForContents(contentsList, ContentsActivity.this);
+                        recyclerView.setAdapter(adapter);
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                });
+            }
+        });
 
         makeContentBtn.setOnClickListener(new View.OnClickListener() {
             @Override

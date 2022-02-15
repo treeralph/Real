@@ -225,6 +225,30 @@ public class FirestoreManager {
                 });
     }
 
+    public void readIgnore(String collectionPath, String documentPath, Callback callback){ // DocumentReference - only Read one
+        DocumentReference ref = db.document(collectionPath + "/" + documentPath);
+        ref.get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(task.isSuccessful()){
+                            DocumentSnapshot document = task.getResult();
+                            Log.d(TAG, document.getId() + " => " + document.getData());
+                            try {
+                                Data datum = CurrentDataType.Constructor(document.getData());
+                                callback.OnCallback(datum);
+                            } catch(Exception e){
+                                e.printStackTrace();
+                                callback.OnCallback(null);
+                            }
+                        } else{
+                            Log.d(TAG, "Error getting document: ",task.getException());
+                        }
+                    }
+                });
+    }
+
+
     // write method is overloaded
     public void write(Data datum, String path, Callback callback){
         CollectionReference ref = db.collection(path);
