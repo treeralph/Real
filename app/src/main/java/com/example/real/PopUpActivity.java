@@ -91,8 +91,10 @@ public class PopUpActivity extends Activity {
                                         storageManagerForContent.delete("image", contentID, new Callback() {
                                             @Override
                                             public void OnCallback(Object object) {
-                                                Log.w("ContentDelete", "Content was successfully deleted");
+                                                Log.d("ContentDelete", "Content was successfully deleted");
+                                                setResult(1);
                                                 Toast.makeText(PopUpActivity.this, "Content was successfully deleted", Toast.LENGTH_SHORT).show();
+                                                finish();
                                             }
                                         });
                                     }
@@ -107,5 +109,10 @@ public class PopUpActivity extends Activity {
                 }
             }
         });
+    }
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
 }

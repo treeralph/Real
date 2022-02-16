@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -86,4 +87,8 @@ public class ChattingRoomActivity extends AppCompatActivity {
         super.finish();
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
+
+
+
+
 }

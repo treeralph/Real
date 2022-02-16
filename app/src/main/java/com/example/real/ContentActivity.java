@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import androidx.annotation.ContentView;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -63,6 +64,7 @@ public class ContentActivity extends AppCompatActivity {
 
     static final int FLICKERNEGATIVE = -1;
     static final int FLICKERPOSITIVE = 1;
+    static final int CONTENTDELETEDCODE = 2;
 
     TextView ContentTitleTextView;
     TextView ContentUserProfileInfoTextView;
@@ -152,7 +154,7 @@ public class ContentActivity extends AppCompatActivity {
                 intent.putExtra("ContentID", contentId);
                 intent.putExtra("ContentUID", contentUID);
                 intent.putExtra("ContentTime", contentTime);
-                startActivity(intent);
+                startActivityForResult(intent, 0);
             }
         });
 
@@ -631,5 +633,16 @@ public class ContentActivity extends AppCompatActivity {
     public void finish() {
         super.finish();
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 0){ // content delete
+            if(resultCode == 1){ // content delete done
+                setResult(CONTENTDELETEDCODE);
+                finish();
+            }
+        }
     }
 }

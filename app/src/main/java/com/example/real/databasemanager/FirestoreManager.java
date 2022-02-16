@@ -215,9 +215,12 @@ public class FirestoreManager {
                         if(task.isSuccessful()){
                             DocumentSnapshot document = task.getResult();
                             Log.d(TAG, document.getId() + " => " + document.getData());
-
-                            Data datum = CurrentDataType.Constructor(document.getData());
-                            callback.OnCallback(datum);
+                            if (document.exists()) {
+                                Data datum = CurrentDataType.Constructor(document.getData());
+                                callback.OnCallback(datum);
+                            }else{
+                                callback.OnCallback(null);
+                            }
                         } else{
                             Log.d(TAG, "Error getting document: ",task.getException());
                         }
@@ -225,6 +228,27 @@ public class FirestoreManager {
                 });
     }
 
+    public void read(String collectionPath, String documentPath, Callback successCallback, Callback failureCallback){ // DocumentReference - only Read one
+        DocumentReference ref = db.document(collectionPath + "/" + documentPath);
+        ref.get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(task.isSuccessful()){
+                            DocumentSnapshot document = task.getResult();
+                            Log.d(TAG, document.getId() + " => " + document.getData());
+                            if (document.exists()) {
+                                Data datum = CurrentDataType.Constructor(document.getData());
+                                successCallback.OnCallback(datum);
+                            }else{
+                                failureCallback.OnCallback(null);
+                            }
+                        } else{
+                            Log.d(TAG, "Error getting document: ",task.getException());
+                        }
+                    }
+                });
+    }
     // write method is overloaded
     public void write(Data datum, String path, Callback callback){
         CollectionReference ref = db.collection(path);

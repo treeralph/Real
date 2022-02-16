@@ -294,7 +294,6 @@ public class AuctionContentActivity extends AppCompatActivity {
 
                 handler = new MyHandler();
                 thread = new Thread(new Runnable() {
-
                     @Override
                     public void run() {
                         LocalDateTime now = LocalDateTime.now();

@@ -3,6 +3,8 @@ package com.example.real.adapter;
 import android.accessibilityservice.GestureDescription;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.real.AuctionContentActivity;
 import com.example.real.Callback;
 import com.example.real.ChattingActivity;
 import com.example.real.R;
@@ -27,9 +30,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.sql.Time;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class RecyclerViewAdapterForChattingRoom extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+
+    static final String TAG = "ChattingRoomActivityRecyclerViewAdapter";
 
     private ArrayList<String> chattingRoomPathList;
     private Context context;
@@ -74,7 +81,7 @@ public class RecyclerViewAdapterForChattingRoom extends RecyclerView.Adapter<Rec
         String[] pathSplit = chattingRoomPath.split("/");
         String contentId = pathSplit[2];
         String clientUid = pathSplit[3];
-        String user2 = clientUid;
+        user2 = clientUid;
 
         myViewHolder.chattingRoomItemLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,6 +94,34 @@ public class RecyclerViewAdapterForChattingRoom extends RecyclerView.Adapter<Rec
                 context.startActivity(intent);
             }
         });
+
+        Thread.UncaughtExceptionHandler uncaughtExceptionHandler = (thread, throwable) -> {
+            myViewHolder.chattingRoomItemContentTitleTextView.setText("Expired Content");
+            firestoreManagerForUserProfile.read("UserProfile", clientUid, new Callback() {
+                @Override
+                public void OnCallback(Object object) {
+                    UserProfile userProfile = (UserProfile) object;
+                    String clientNickName = userProfile.getNickName();
+                    myViewHolder.chattingRoomItemClientUserNickName.setText(clientNickName);
+                    if (user.getUid().equals(user1)) {
+                        storageManagerForUserProfileImage.downloadImg2View("UserProfileImage", user2, myViewHolder.chattingRoomItemUserProfileImageView, new Callback() {
+                            @Override
+                            public void OnCallback(Object object) {
+
+                            }
+                        });
+                    } else {
+                        storageManagerForUserProfileImage.downloadImg2View("UserProfileImage", user1, myViewHolder.chattingRoomItemUserProfileImageView, new Callback() {
+                            @Override
+                            public void OnCallback(Object object) {
+
+                            }
+                        });
+                    }
+                }
+            });
+        };
+        //Thread.currentThread().setUncaughtExceptionHandler(uncaughtExceptionHandler);
 
         myViewHolder.chattingRoomItemMoveContentButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,13 +137,14 @@ public class RecyclerViewAdapterForChattingRoom extends RecyclerView.Adapter<Rec
             }
         });
 
+        // todo: how to handle asynchronous in try/catch statement.
         firestoreManagerForContent.read("Content", contentId, new Callback() {
             @Override
             public void OnCallback(Object object) {
                 Content content = (Content) object;
                 String contentTitle = content.getTitle();
                 String contentTime = content.getTime();
-                String user1 = contentUID;
+                user1 = contentUID;
                 TimeTextTool timeTextTool = new TimeTextTool(contentTime);
                 myViewHolder.chattingRoomItemContentMoreInfoTextView.setText(timeTextTool.Time2Text());
                 contentUID = content.getUid();
@@ -122,14 +158,14 @@ public class RecyclerViewAdapterForChattingRoom extends RecyclerView.Adapter<Rec
                                 UserProfile userProfile = (UserProfile) object;
                                 String clientNickName = userProfile.getNickName();
                                 myViewHolder.chattingRoomItemClientUserNickName.setText(clientNickName);
-                                if(user.getUid().equals(user1)) {
+                                if (user.getUid().equals(user1)) {
                                     storageManagerForUserProfileImage.downloadImg2View("UserProfileImage", user2, myViewHolder.chattingRoomItemUserProfileImageView, new Callback() {
                                         @Override
                                         public void OnCallback(Object object) {
 
                                         }
                                     });
-                                }else{
+                                } else {
                                     storageManagerForUserProfileImage.downloadImg2View("UserProfileImage", user1, myViewHolder.chattingRoomItemUserProfileImageView, new Callback() {
                                         @Override
                                         public void OnCallback(Object object) {
@@ -139,6 +175,34 @@ public class RecyclerViewAdapterForChattingRoom extends RecyclerView.Adapter<Rec
                                 }
                             }
                         });
+                    }
+                });
+            }
+        }, new Callback() {
+            @Override
+            public void OnCallback(Object object) {
+                myViewHolder.chattingRoomItemContentTitleTextView.setText("Expired Content");
+                firestoreManagerForUserProfile.read("UserProfile", clientUid, new Callback() {
+                    @Override
+                    public void OnCallback(Object object) {
+                        UserProfile userProfile = (UserProfile) object;
+                        String clientNickName = userProfile.getNickName();
+                        myViewHolder.chattingRoomItemClientUserNickName.setText(clientNickName);
+                        if (user.getUid().equals(user1)) {
+                            storageManagerForUserProfileImage.downloadImg2View("UserProfileImage", user2, myViewHolder.chattingRoomItemUserProfileImageView, new Callback() {
+                                @Override
+                                public void OnCallback(Object object) {
+
+                                }
+                            });
+                        } else {
+                            storageManagerForUserProfileImage.downloadImg2View("UserProfileImage", user1, myViewHolder.chattingRoomItemUserProfileImageView, new Callback() {
+                                @Override
+                                public void OnCallback(Object object) {
+
+                                }
+                            });
+                        }
                     }
                 });
             }

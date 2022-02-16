@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,11 +37,15 @@ import java.util.ArrayList;
 
 public class ContentsActivity extends AppCompatActivity {
 
+    static final int CONTENTACTIVITY = 10;
+    static final int CONTENTDELETEDCODE = 2;
+
     FirebaseUser user;
     LinearLayout chatRoomBtn;
     RecyclerView recyclerView;
     LinearLayout makeContentBtn;
     LinearLayout userHistoryBtn;
+    FirestoreManager manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +58,8 @@ public class ContentsActivity extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         chatRoomBtn = findViewById(R.id.ContentsActivityChatRoomBtnDesign);
         userHistoryBtn = findViewById(R.id.ContentsActivityUserHistoryButton);
+
+        manager = new FirestoreManager(ContentsActivity.this, "Contents", user.getUid());
 
         /*
         recyclerView = findViewById(R.id.minetestRecyclerView);
@@ -103,57 +110,44 @@ public class ContentsActivity extends AppCompatActivity {
                     }
                 });
 
-
-
-
         recyclerView.setHasFixedSize(true);
         recyclerView.setNestedScrollingEnabled(false);
-
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        FirestoreManager manager = new FirestoreManager(ContentsActivity.this, "Contents", user.getUid());
         manager.read("Contents", new Callback() {
             @Override
             public void OnCallback(Object object) {
                 ArrayList<Contents> contentsList = (ArrayList<Contents>)object;
-
                 RecyclerViewAdapterForContents adapter = new RecyclerViewAdapterForContents(contentsList, ContentsActivity.this);
                 recyclerView.setAdapter(adapter);
             }
         });
-
 
         makeContentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ContentsActivity.this, PopUpActivityForContents.class);
                 startActivity(intent);
-
-                /*
-                PopupMenu popupMenu = new PopupMenu(getApplicationContext(), v);
-                getMenuInflater().inflate(R.menu.contentspopup, popupMenu.getMenu());
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        if(item.getItemId() == R.id.popup1){
-                            Intent intent = new Intent(ContentsActivity.this, MakeContentActivity.class);
-                            startActivity(intent);
-                        } else if(item.getItemId() == R.id.popup2){
-                            Intent intent = new Intent(ContentsActivity.this, MakeAuctionContentActivity.class);
-                            startActivity(intent);
-                        } else if(item.getItemId() == R.id.popup3){
-
-                        } else{
-
-                        }
-                        return false;
-                    }
-                });
-                popupMenu.show();
-
-                 */
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == CONTENTACTIVITY){ // ContentActivity
+            if(resultCode == CONTENTDELETEDCODE){
+                manager.read("Contents", new Callback() {
+                    @Override
+                    public void OnCallback(Object object) {
+                        ArrayList<Contents> contentsList = (ArrayList<Contents>)object;
+                        RecyclerViewAdapterForContents adapter = new RecyclerViewAdapterForContents(contentsList, ContentsActivity.this);
+                        recyclerView.setAdapter(adapter);
+                    }
+                });
+            }
+        }
     }
 }

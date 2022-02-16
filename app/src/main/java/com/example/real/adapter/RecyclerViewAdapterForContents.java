@@ -40,6 +40,8 @@ import java.util.ArrayList;
 
 public class RecyclerViewAdapterForContents extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    static final int CONTENTACTIVITY = 10;
+
     private ArrayList<Contents> contentsList;
     private Context context;
     private FirebaseUser user;
@@ -89,7 +91,8 @@ public class RecyclerViewAdapterForContents extends RecyclerView.Adapter<Recycle
                         pairs[0] = new Pair<View, String>(myViewHolder.ContentCardView, "contentsItemImageCardView");
                         ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, pairs);
 
-                        context.startActivity(intent, options.toBundle());
+                        //context.startActivity(intent, options.toBundle());
+                        ((Activity) context).startActivityForResult(intent, CONTENTACTIVITY,options.toBundle());
 
                     } else if (contentType.equals("AuctionContent")) {
 
@@ -106,7 +109,9 @@ public class RecyclerViewAdapterForContents extends RecyclerView.Adapter<Recycle
                         pairs[0] = new Pair<View, String>(myViewHolder.ContentCardView, "contentsItemImageCardView");
                         ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, pairs);
 
-                        context.startActivity(intent, options.toBundle());
+                        //context.startActivity(intent, options.toBundle());
+                        ((Activity) context).startActivityForResult(intent, CONTENTACTIVITY, options.toBundle());
+
 
                     } else {
 

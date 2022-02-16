@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.real.Callback;
 import com.example.real.tool.ImageSizeTool;
+import com.example.real.tool.NumberingMachine;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -213,42 +214,43 @@ public class StorageManager {
 
     public void delete(String path, String subPath, Callback callback){
 
-        /*
-        StorageReference cRef = ref.child(path + "/" + subPath);
-        cRef.delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Log.d("StorageManager_delete", "DocumentSnapshot successfully deleted!");
-                        callback.OnCallback("");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("StorageManager_delete", "Error deleting document", e);
-                    }
-                });
-
-         */
-
-        StorageReference aRef = ref.child("image/lhYwG4yjYweQHdIeFrxF");
+        StorageReference aRef = ref.child("/" + path + "/" + subPath);
         aRef.listAll()
                 .addOnSuccessListener(new OnSuccessListener<ListResult>() {
                     @Override
                     public void onSuccess(ListResult listResult) {
-                        for(StorageReference sRef : listResult.getItems()){
-                            sRef.delete()
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        NumberingMachine nm = new NumberingMachine();
+                        for(StorageReference sRef : listResult.getPrefixes()){
+                            sRef.listAll()
+                                    .addOnSuccessListener(new OnSuccessListener<ListResult>() {
                                         @Override
-                                        public void onSuccess(Void unused) {
-                                            Log.d("TESTTEST", "Success");
+                                        public void onSuccess(ListResult listResult_1) {
+                                            for(StorageReference tRef : listResult_1.getItems()){
+                                                tRef.delete()
+                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                            @Override
+                                                            public void onSuccess(Void unused) {
+                                                                nm.add();
+                                                                if(listResult.getPrefixes().size() * listResult_1.getItems().size() == nm.getNumber()){
+                                                                    Log.d(TAG + "/delete", "Content is deleted");
+                                                                    callback.OnCallback(null);
+                                                                }
+
+                                                            }
+                                                        })
+                                                        .addOnFailureListener(new OnFailureListener() {
+                                                            @Override
+                                                            public void onFailure(@NonNull Exception e) {
+                                                                Log.e(TAG + "/delete_2", e.getMessage());
+                                                            }
+                                                        });
+                                            }
                                         }
                                     })
                                     .addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
-                                            Log.d("TESTTEST", e.getMessage());
+                                            Log.e(TAG + "/delete_1", e.getMessage());
                                         }
                                     });
                         }
@@ -257,7 +259,7 @@ public class StorageManager {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d("TESTTEST", e.getMessage());
+                        Log.d(TAG + "/delete_0", e.getMessage());
                     }
                 });
     }
