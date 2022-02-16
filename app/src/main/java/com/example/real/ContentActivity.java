@@ -160,9 +160,14 @@ public class ContentActivity extends AppCompatActivity {
 
 
         contentId = getIntent().getStringExtra("ContentId");
-        byte[] bytes = getIntent().getByteArrayExtra("ImageBitmap");
-        Bitmap imageBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-        BackgroundImageView.setImageBitmap(imageBitmap);
+        try {
+            byte[] bytes = getIntent().getByteArrayExtra("ImageBitmap");
+            Bitmap imageBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            BackgroundImageView.setImageBitmap(imageBitmap);
+        }catch (Exception e){
+
+        }
+
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser(); userUID = user.getUid();
 
