@@ -85,9 +85,13 @@ public class RecyclerViewAdapterForHistory extends RecyclerView.Adapter<Recycler
             // COMMENT
             Log.d("TRACKING3", Address);
             return 3;
+        } else if (DatumSplit[0].equals("Like")){
+
+            Log.d("TRACKING4", Address);
+            return 4;
         } else{
             // error
-            return 4;
+            return 5;
         }
     }
 
@@ -108,6 +112,9 @@ public class RecyclerViewAdapterForHistory extends RecyclerView.Adapter<Recycler
                 Log.d("TRACKING3-1", "why");
                 return new CommentViewHolder(
                         LayoutInflater.from(parent.getContext()).inflate(R.layout.logitem_for_comment, parent, false));
+            case 4:
+                return new ContentViewHolder(
+                        LayoutInflater.from(parent.getContext()).inflate(R.layout.logitem_for_content, parent, false));
             default: return null;
         }
     }
@@ -212,7 +219,30 @@ public class RecyclerViewAdapterForHistory extends RecyclerView.Adapter<Recycler
                 });
 
                 break;
+            case 4: // type - Like ( orthogonal )
 
+                ContentViewHolder contentViewHolder2 = (ContentViewHolder) holder;
+
+                Log.d("HEREHERE", "여기 사람있어요");
+                System.out.println(datumType);
+                String likepath = "image/"+ contentId + "/100/0";
+                Log.d("park",likepath);
+                storageManagerForContent.downloadImg2View(likepath, contentViewHolder2.logitemforcontent_ContentImg, new Callback() {
+                    @Override
+                    public void OnCallback(Object object) {
+                        firestoreManagerForContent.read(datumType, contentId, new Callback() {
+                            @Override
+                            public void OnCallback(Object object) {
+                                Content content = (Content) object;
+                                TimeTextTool timeTextTool = new TimeTextTool(content.getTime());
+                                contentViewHolder2.logitemforcontent_ContentTitle.setText(content.getTitle());
+                                contentViewHolder2.logitemforcontent_ContentDescription.setText(content.getContent());
+                                contentViewHolder2.logitemforcontent_ContentTime.setText(timeTextTool.Time2Text());
+                            }
+                        });
+                    }
+                });
+                break;
             default:
                 Log.e("RECYCLERVIEWADAPTERFORHISTORY_ONBINDVIEWHOLDER", "NON_CASE_ERROR");
         }
@@ -273,4 +303,6 @@ public class RecyclerViewAdapterForHistory extends RecyclerView.Adapter<Recycler
             logitemforcomment_ToProfileImg = itemView.findViewById(R.id.logitemforcomment_ToProfileImg);
         }
     }
+
+
 }
