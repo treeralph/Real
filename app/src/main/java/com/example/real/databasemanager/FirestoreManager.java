@@ -196,6 +196,7 @@ public class FirestoreManager {
                         if(task.isSuccessful()){
                             for(QueryDocumentSnapshot document : task.getResult()){
                                 Log.d(TAG, document.getId() + " => " + document.getData());
+
                                 dataList.add(CurrentDataType.Constructor(document.getData()));
                             }
                             callback.OnCallback(dataList);

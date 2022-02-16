@@ -502,13 +502,43 @@ public class AuctionContentActivity extends AppCompatActivity {
                                 public void OnCallback(Object object) {
                                     UserProfile userprofile = (UserProfile) object;
                                     String userlog = userprofile.getUserLog();
-                                    firestoreManagerForUserProfile.update("UserProfile", user.getUid(), "UserLog",
-                                            userlog + "\n COMMENT WRITE : " + contentUID + " " + temp_comment.toString(), new Callback() {
-                                                @Override
-                                                public void OnCallback(Object object) {
+                                    String address = "Content/" + contentId +"/Comments/" + temp_comment.getTime();
+                                    if(userlog.equals("")){
+                                        // Create Json Obj & JsonArray
+                                        JsonArray frame = new JsonArray();
+                                        JsonObject init = new JsonObject();
+                                        init.addProperty("Type","Comment");
+                                        init.addProperty("Address",address);
+                                        frame.add(init);
+                                        firestoreManagerForUserProfile.update("UserProfile", user.getUid(), "UserLog",
+                                                frame.toString(), new Callback() {
+                                                    @Override
+                                                    public void OnCallback(Object object) {
 
-                                                }
-                                            });
+                                                    }
+                                                });
+                                    } else{
+                                        // Parsing JsonArray
+                                        JsonParser parser = new JsonParser();
+                                        Object tempparsed = parser.parse(userlog);
+                                        JsonArray templog = (JsonArray) tempparsed;
+
+                                        // Create Json Obj
+                                        JsonObject temp = new JsonObject();
+                                        temp.addProperty("Type", "Comment");
+                                        temp.addProperty("Address",address);
+
+                                        // Add & Update
+                                        templog.add(temp);
+                                        firestoreManagerForUserProfile.update("UserProfile", user.getUid(), "UserLog",
+                                                templog.toString(), new Callback() {
+                                                    @Override
+                                                    public void OnCallback(Object object) {
+
+                                                    }
+                                                });
+                                    }
+
                                 }
                             });
                             data_auction.add(new ExpandableListAdapter.Item(ExpandableListAdapter.BACHELOR, user.getUid(), contentUID, temp_comment.getTime(), temp_mention, "0"));

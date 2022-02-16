@@ -1,18 +1,25 @@
 package com.example.real.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.real.AuctionContentActivity;
 import com.example.real.Callback;
+import com.example.real.ContentActivity;
 import com.example.real.R;
 import com.example.real.data.AuctionContent;
 import com.example.real.data.Comment;
@@ -21,11 +28,17 @@ import com.example.real.data.UserProfile;
 import com.example.real.databasemanager.FirestoreManager;
 import com.example.real.databasemanager.StorageManager;
 import com.example.real.tool.TimeTextTool;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.w3c.dom.Text;
 
+import java.io.ByteArrayOutputStream;
 import java.sql.Time;
 import java.util.List;
 import java.util.zip.Inflater;
@@ -155,6 +168,20 @@ public class RecyclerViewAdapterForHistory extends RecyclerView.Adapter<Recycler
                         });
                     }
                 });
+                contentViewHolder.logitemforcontent_Mainlayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Bitmap bitmap = ((BitmapDrawable) contentViewHolder.logitemforcontent_ContentImg.getDrawable()).getBitmap();
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        byte[] byteArray = stream.toByteArray();
+                        Intent intent = new Intent(context, ContentActivity.class);
+                        intent.putExtra("ContentId", contentId);
+                        intent.putExtra("ImageBitmap", byteArray);
+
+                        context.startActivity(intent);
+                    }
+                });
                 break;
 
             case 2: // type - AuctionContent
@@ -177,6 +204,20 @@ public class RecyclerViewAdapterForHistory extends RecyclerView.Adapter<Recycler
                                 auctionContentViewHolder.logitemforauctioncontent_AuctionContentTime.setText(timeTextTool.Time2Text());
                             }
                         });
+                    }
+                });
+                auctionContentViewHolder.logitemforauctioncontent_Mainlayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Bitmap bitmap = ((BitmapDrawable) auctionContentViewHolder.logitemforauctioncontent_AuctionContentImg.getDrawable()).getBitmap();
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        byte[] byteArray = stream.toByteArray();
+                        Intent intent = new Intent(context, ContentActivity.class);
+                        intent.putExtra("ContentId", contentId);
+                        intent.putExtra("ImageBitmap", byteArray);
+
+                        context.startActivity(intent);
                     }
                 });
                 break;
@@ -217,7 +258,30 @@ public class RecyclerViewAdapterForHistory extends RecyclerView.Adapter<Recycler
                         commentViewHolder.logitemforcomment_CommentTime.setText(timeTextTool.Time2Text());
                     }
                 });
-
+                commentViewHolder.logitemforcomment_Mainlayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        DocumentReference ref = FirebaseFirestore.getInstance().document("Content/" + contentId);
+                        System.out.println(ref.toString());
+                        ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()){
+                                    DocumentSnapshot document = task.getResult();
+                                    if (document.getString("contentType").equals("Content")){
+                                        Intent intent = new Intent(context, ContentActivity.class);
+                                        intent.putExtra("ContentId", contentId);
+                                        context.startActivity(intent); }
+                                    else if(document.getString("contentType").equals("AuctionContent")){
+                                        Intent intent = new Intent(context, AuctionContentActivity.class);
+                                        intent.putExtra("ContentId", contentId);
+                                        context.startActivity(intent); }
+                                }
+                                else{}
+                            }
+                        });
+                    }
+                });
                 break;
             case 4: // type - Like ( orthogonal )
 
@@ -253,12 +317,15 @@ public class RecyclerViewAdapterForHistory extends RecyclerView.Adapter<Recycler
         return data.size();
     }
 
+
+
     class ContentViewHolder extends RecyclerView.ViewHolder{
 
         ImageView logitemforcontent_ContentImg;
         TextView logitemforcontent_ContentTitle;
         TextView logitemforcontent_ContentDescription;
         TextView logitemforcontent_ContentTime;
+        LinearLayout logitemforcontent_Mainlayout;
 
         public ContentViewHolder(View itemView) {
             super(itemView);
@@ -267,6 +334,7 @@ public class RecyclerViewAdapterForHistory extends RecyclerView.Adapter<Recycler
             logitemforcontent_ContentTitle = itemView.findViewById(R.id.logitemforcontent_ContentTitle);
             logitemforcontent_ContentDescription = itemView.findViewById(R.id.logitemforcontent_ContentDescription);
             logitemforcontent_ContentTime = itemView.findViewById(R.id.logitemforcontent_ContentTime);
+            logitemforcontent_Mainlayout = itemView.findViewById(R.id.logitemforcontent_mainlayout);
         }
     }
 
@@ -276,6 +344,7 @@ public class RecyclerViewAdapterForHistory extends RecyclerView.Adapter<Recycler
         TextView logitemforauctioncontent_AuctionContentTitle;
         TextView logitemforauctioncontent_AuctionContentDescription;
         TextView logitemforauctioncontent_AuctionContentTime;
+        LinearLayout logitemforauctioncontent_Mainlayout;
 
         public AuctionContentViewHolder(View itemView) {
             super(itemView);
@@ -284,6 +353,7 @@ public class RecyclerViewAdapterForHistory extends RecyclerView.Adapter<Recycler
             logitemforauctioncontent_AuctionContentTitle = itemView.findViewById(R.id.logitemforauctioncontent_AuctionContentTitle);
             logitemforauctioncontent_AuctionContentDescription = itemView.findViewById(R.id.logitemforauctioncontent_AuctionContentDescription);
             logitemforauctioncontent_AuctionContentTime = itemView.findViewById(R.id.logitemforauctioncontent_AuctionContentTime);
+            logitemforauctioncontent_Mainlayout = itemView.findViewById(R.id.logitemforauctioncontent_mainlayout);
         }
     }
 
@@ -293,6 +363,7 @@ public class RecyclerViewAdapterForHistory extends RecyclerView.Adapter<Recycler
         TextView logitemforcomment_Mention;
         TextView logitemforcomment_CommentTime;
         ImageView logitemforcomment_ToProfileImg;
+        LinearLayout logitemforcomment_Mainlayout;
 
         public CommentViewHolder(View itemView) {
             super(itemView);
@@ -301,6 +372,7 @@ public class RecyclerViewAdapterForHistory extends RecyclerView.Adapter<Recycler
             logitemforcomment_Mention = itemView.findViewById(R.id.logitemforcomment_Mention);
             logitemforcomment_CommentTime = itemView.findViewById(R.id.logitemforcomment_CommentTime);
             logitemforcomment_ToProfileImg = itemView.findViewById(R.id.logitemforcomment_ToProfileImg);
+            logitemforcomment_Mainlayout = itemView.findViewById(R.id.logitemforcomment_mainlayout);
         }
     }
 

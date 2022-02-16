@@ -5,6 +5,7 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -55,6 +56,9 @@ public class UserhistoryActivity extends AppCompatActivity {
     ActivityResultLauncher<Intent> resultLauncher;
     FirebaseStorage tempstorage;
     StorageReference tempref;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -234,51 +238,93 @@ public class UserhistoryActivity extends AppCompatActivity {
             }
         });
 
+
         // CLICKLISTENER
         ContentsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ContentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.grey1));
-                CommentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.white));
-                AuctionContentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.white));
-                LIST_DATASET.clear();
-                //LIST_DATASET.addAll(LIST_Contents);
-                AdapterForHistory.AddItem(LIST_Contents);
-                Log.d("park",LIST_DATASET.toString());
-                //AdapterForHistory.notifyDataSetChanged();
-                recyclerView.setAdapter(AdapterForHistory);
+                if (LIST_DATASET.equals(LIST_Contents)){
+                    LIST_DATASET.clear();
+                    AdapterForHistory.notifyDataSetChanged();
+                    recyclerView.setAdapter(AdapterForHistory);
+                    ContentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.white));
+                }else{
+                    ContentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.grey1));
+                    CommentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.white));
+                    AuctionContentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.white));
+                    LIST_DATASET.clear();
+                    LIST_DATASET.addAll(LIST_Contents);
+                    //AdapterForHistory.AddItem(LIST_Contents);
+                    //Log.d("park",LIST_DATASET.toString());
+                    AdapterForHistory.notifyDataSetChanged();
+                    recyclerView.setAdapter(AdapterForHistory);
+                }
             }
         });
 
         AuctionContentsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ContentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.white));
-                CommentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.white));
-                AuctionContentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.grey1));
-                LIST_DATASET.clear();
-                LIST_DATASET.addAll(LIST_Auctioncontents);
-                AdapterForHistory.notifyDataSetChanged();
-                recyclerView.setAdapter(AdapterForHistory);
+                if (LIST_DATASET.equals(LIST_Auctioncontents)){
+                    LIST_DATASET.clear();
+                    AdapterForHistory.notifyDataSetChanged();
+                    recyclerView.setAdapter(AdapterForHistory);
+                    AuctionContentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.white));
+                }else{
+                    ContentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.white));
+                    CommentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.white));
+                    AuctionContentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.grey1));
+                    LIST_DATASET.clear();
+                    LIST_DATASET.addAll(LIST_Auctioncontents);
+                    AdapterForHistory.notifyDataSetChanged();
+                    recyclerView.setAdapter(AdapterForHistory);
+                }
             }
         });
 
         CommentsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ContentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.white));
-                CommentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.grey1));
-                AuctionContentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.white));
-                LIST_DATASET.clear();
-                LIST_DATASET.addAll(LIST_Comments);
-                AdapterForHistory.notifyDataSetChanged();
-                recyclerView.setAdapter(AdapterForHistory);
+                if (LIST_DATASET.equals(LIST_Comments)){
+                    LIST_DATASET.clear();
+                    AdapterForHistory.notifyDataSetChanged();
+                    recyclerView.setAdapter(AdapterForHistory);
+                    CommentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.white));
+                }else{
+                    ContentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.white));
+                    CommentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.grey1));
+                    AuctionContentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.white));
+                    LIST_DATASET.clear();
+                    LIST_DATASET.addAll(LIST_Comments);
+                    AdapterForHistory.notifyDataSetChanged();
+                    recyclerView.setAdapter(AdapterForHistory);
+                }
             }
         });
 
         setuserprofilenickname.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                CustomDialogForSetUserNickname dialog = new CustomDialogForSetUserNickname(UserhistoryActivity.this);
+                dialog.setDialogListener(new CustomDialogForSetUserNickname.CustomDialogListener() {
+                    @Override
+                    public void onPositiveClicked(String Nickname) {
+                        userprofilenickname.setText(Nickname);
+                        firestoreManagerForUserProfile.update("UserProfile", user.getUid(), "nickname", Nickname, new Callback() {
+                            @Override
+                            public void OnCallback(Object object) {
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onNegativeClicked() {
+
+                    }
+                });
+                dialog.show();
+
 
             }
         });
@@ -343,7 +389,6 @@ public class UserhistoryActivity extends AppCompatActivity {
 
 
 
-
     }
 
     @Override
@@ -351,4 +396,6 @@ public class UserhistoryActivity extends AppCompatActivity {
         super.finish();
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
+
+
 }
