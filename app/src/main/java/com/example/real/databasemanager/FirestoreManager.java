@@ -216,12 +216,8 @@ public class FirestoreManager {
                         if(task.isSuccessful()){
                             DocumentSnapshot document = task.getResult();
                             Log.d(TAG, document.getId() + " => " + document.getData());
-                            if (document.exists()) {
-                                Data datum = CurrentDataType.Constructor(document.getData());
-                                callback.OnCallback(datum);
-                            }else{
-                                callback.OnCallback(null);
-                            }
+                            Data datum = CurrentDataType.Constructor(document.getData());
+                            callback.OnCallback(datum);
                         } else{
                             Log.d(TAG, "Error getting document: ",task.getException());
                         }

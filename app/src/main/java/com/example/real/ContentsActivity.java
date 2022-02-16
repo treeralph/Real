@@ -136,11 +136,11 @@ public class ContentsActivity extends AppCompatActivity {
         });
 
 
+        /*
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 // Set category
-
                 // Clear & refresh Dataset
                 manager.read("Contents", new Callback() {
                     @Override
@@ -155,6 +155,8 @@ public class ContentsActivity extends AppCompatActivity {
                 });
             }
         });
+
+         */
 
         makeContentBtn.setOnClickListener(new View.OnClickListener() {
             @Override

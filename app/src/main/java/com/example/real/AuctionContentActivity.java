@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -71,6 +72,11 @@ public class AuctionContentActivity extends AppCompatActivity {
     RecyclerView AuctionComments_Recyclerview;
     Button srtbtn;
 
+    LinearLayout ContentsBtn;
+    LinearLayout UserhistoryBtn;
+    LinearLayout ChatRoomBtn;
+    LinearLayout ModifyBtn;
+
     ImageView AuctionContentViewPagerBackgroudImageView;
     ImageView AuctionContentLikeFlicker;
     ViewPagerAdapter adapter;
@@ -122,6 +128,41 @@ public class AuctionContentActivity extends AppCompatActivity {
         AuctionContentLikeFlicker = findViewById(R.id.desingAuctionContentLikeFlicker);
         srtbtn = findViewById(R.id.AuctionContentActivitySortingButtonDesign);
 
+        ContentsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+        UserhistoryBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(AuctionContentActivity.this, UserhistoryActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+            }
+        });
+
+        ChatRoomBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(AuctionContentActivity.this, ChattingRoomActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+            }
+        });
+
+        ModifyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(AuctionContentActivity.this, PopUpActivity.class);
+                intent.putExtra("ContentID", contentId);
+                intent.putExtra("ContentUID", contentUID);
+                //intent.putExtra("ContentTime", contentTime);
+                startActivityForResult(intent, 0);
+            }
+        });
 
         try {
             byte[] bytes = getIntent().getByteArrayExtra("ImageBitmap");
@@ -233,18 +274,12 @@ public class AuctionContentActivity extends AppCompatActivity {
             }
         });
 
-
-
-
-
-
-
-
-
         AuctionContentMessageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String databasePath = "/Messages/" + contentId + "/" + userUID;
                 Intent intent = new Intent(AuctionContentActivity.this, ChattingActivity.class);
+                intent.putExtra("databasePath", databasePath);
                 intent.putExtra("contentId", contentId);
                 intent.putExtra("userUID", userUID);
                 intent.putExtra("contentUID", contentUID);

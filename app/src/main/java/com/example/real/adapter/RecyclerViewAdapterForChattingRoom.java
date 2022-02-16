@@ -95,33 +95,6 @@ public class RecyclerViewAdapterForChattingRoom extends RecyclerView.Adapter<Rec
             }
         });
 
-        Thread.UncaughtExceptionHandler uncaughtExceptionHandler = (thread, throwable) -> {
-            myViewHolder.chattingRoomItemContentTitleTextView.setText("Expired Content");
-            firestoreManagerForUserProfile.read("UserProfile", clientUid, new Callback() {
-                @Override
-                public void OnCallback(Object object) {
-                    UserProfile userProfile = (UserProfile) object;
-                    String clientNickName = userProfile.getNickName();
-                    myViewHolder.chattingRoomItemClientUserNickName.setText(clientNickName);
-                    if (user.getUid().equals(user1)) {
-                        storageManagerForUserProfileImage.downloadImg2View("UserProfileImage", user2, myViewHolder.chattingRoomItemUserProfileImageView, new Callback() {
-                            @Override
-                            public void OnCallback(Object object) {
-
-                            }
-                        });
-                    } else {
-                        storageManagerForUserProfileImage.downloadImg2View("UserProfileImage", user1, myViewHolder.chattingRoomItemUserProfileImageView, new Callback() {
-                            @Override
-                            public void OnCallback(Object object) {
-
-                            }
-                        });
-                    }
-                }
-            });
-        };
-        //Thread.currentThread().setUncaughtExceptionHandler(uncaughtExceptionHandler);
 
         myViewHolder.chattingRoomItemMoveContentButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -225,8 +198,8 @@ public class RecyclerViewAdapterForChattingRoom extends RecyclerView.Adapter<Rec
         ImageView chattingRoomItemMoveContentButton;
         ImageView chattingRoomItemMoveUserProfileButton;
 
-
         public MyViewHolder(@NonNull View itemView) {
+
             super(itemView);
             chattingRoomItemLinearLayout = itemView.findViewById(R.id.chattingRoomItemLinearLayoutDesign);
             chattingRoomItemContentImageView = itemView.findViewById(R.id.ChattingRoomItemContentImageViewDesign);
