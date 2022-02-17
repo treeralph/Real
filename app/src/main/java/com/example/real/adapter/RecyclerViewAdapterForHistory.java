@@ -222,7 +222,7 @@ public class RecyclerViewAdapterForHistory extends RecyclerView.Adapter<Recycler
                         ByteArrayOutputStream stream = new ByteArrayOutputStream();
                         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
                         byte[] byteArray = stream.toByteArray();
-                        Intent intent = new Intent(context, ContentActivity.class);
+                        Intent intent = new Intent(context, AuctionContentActivity.class);
                         intent.putExtra("ContentId", contentId);
                         intent.putExtra("ImageBitmap", byteArray);
 
