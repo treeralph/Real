@@ -254,19 +254,22 @@ public class RecyclerViewAdapterForContents extends RecyclerView.Adapter<Recycle
                         // Parsing JsonArray
                         JsonParser parser = new JsonParser();
                         Object tempparsed = parser.parse(userlog);
-                        JsonArray templog = (JsonArray) tempparsed;
+                        if(!userlog.equals("")){
+                            JsonArray templog = (JsonArray) tempparsed;
 
-                        // Search Obj in Array
-                        for (JsonElement shard : templog){
-                            String shardtype = shard.getAsJsonObject().get("Type").getAsString();
-                            String shardaddress = shard.getAsJsonObject().get("Address").getAsString();
-                            System.out.println(shardtype + " * " + shardaddress);
-                            if(shardtype.equals("Like") & shardaddress.equals(address)){
-                                myViewHolder.ContentLikeFlicker.setImageResource(R.drawable.new_heart_red);
-                                w[0] = FLICKERPOSITIVE;
-                                break;
+                            // Search Obj in Array
+                            for (JsonElement shard : templog){
+                                String shardtype = shard.getAsJsonObject().get("Type").getAsString();
+                                String shardaddress = shard.getAsJsonObject().get("Address").getAsString();
+                                System.out.println(shardtype + " * " + shardaddress);
+                                if(shardtype.equals("Like") & shardaddress.equals(address)){
+                                    myViewHolder.ContentLikeFlicker.setImageResource(R.drawable.new_heart_red);
+                                    w[0] = FLICKERPOSITIVE;
+                                    break;
+                                }
                             }
                         }
+
                     }
                 });
                 firestoreManagerForUser.read("UserProfile", uid, new Callback() {

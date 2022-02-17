@@ -153,21 +153,30 @@ public class RecyclerViewAdapterForHistory extends RecyclerView.Adapter<Recycler
                 System.out.println(datumType);
                 String path = "image/"+ contentId + "/100/0";
                 Log.d("park",path);
-                storageManagerForContent.downloadImg2View(path, contentViewHolder.logitemforcontent_ContentImg, new Callback() {
+                firestoreManagerForContent.read(datumType, contentId, new Callback() {
                     @Override
                     public void OnCallback(Object object) {
-                        firestoreManagerForContent.read(datumType, contentId, new Callback() {
+                        Content content = (Content) object;
+                        TimeTextTool timeTextTool = new TimeTextTool(content.getTime());
+                        contentViewHolder.logitemforcontent_ContentTitle.setText(content.getTitle());
+                        contentViewHolder.logitemforcontent_ContentDescription.setText(content.getContent());
+                        contentViewHolder.logitemforcontent_ContentTime.setText(timeTextTool.Time2Text());
+                        storageManagerForContent.downloadImg2View(path, contentViewHolder.logitemforcontent_ContentImg, new Callback() {
                             @Override
                             public void OnCallback(Object object) {
-                                Content content = (Content) object;
-                                TimeTextTool timeTextTool = new TimeTextTool(content.getTime());
-                                contentViewHolder.logitemforcontent_ContentTitle.setText(content.getTitle());
-                                contentViewHolder.logitemforcontent_ContentDescription.setText(content.getContent());
-                                contentViewHolder.logitemforcontent_ContentTime.setText(timeTextTool.Time2Text());
+
                             }
                         });
                     }
+                }, new Callback() {
+                    @Override
+                    public void OnCallback(Object object) {
+                        data.remove(position);
+                        notifyItemRemoved(position);
+                        notifyItemRangeChanged(position, data.size());
+                    }
                 });
+
                 contentViewHolder.logitemforcontent_Mainlayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
