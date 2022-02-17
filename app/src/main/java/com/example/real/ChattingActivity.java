@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import androidx.annotation.Nullable;
@@ -27,6 +28,8 @@ import com.example.real.data.UserProfile;
 import com.example.real.databasemanager.FirestoreManager;
 import com.example.real.databasemanager.RealTimeDatabaseManager;
 import com.example.real.databasemanager.StorageManager;
+import com.google.android.gms.common.GooglePlayServicesIncorrectManifestValueException;
+import com.google.api.Distribution;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.type.DateTime;
@@ -43,8 +46,11 @@ public class ChattingActivity extends AppCompatActivity {
     ScrollView scrollView;
     RecyclerView messageRecyclerView;
     EditText messageEditText;
-    Button messageSendBtn;
-    Button additionalFunctionsBtn;
+    ImageView messageSendBtn;
+    ImageView additionalFunctionsBtn;
+    ImageView finishBtn;
+    LinearLayout moveUserProfileBtn;
+    LinearLayout moveContentBtn;
 
     FirebaseUser user;
 
@@ -84,20 +90,24 @@ public class ChattingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chatting);
+        //setContentView(R.layout.activity_chatting);
+        setContentView(R.layout.activity_chatting_design);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
 
         scrollView = findViewById(R.id.ChattingActivityScrollView);
 
-        messageRecyclerView = findViewById(R.id.ChattingActivityMessageRecyclerView);
+        messageRecyclerView = findViewById(R.id.ChattingActivityMessageRecyclerViewDesign);
         messageRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         messageRecyclerView.setLayoutManager(layoutManager);
 
-        messageEditText = findViewById(R.id.ChattingActivityMessageEditText);
-        messageSendBtn = findViewById(R.id.ChattingActivitySendButton);
-        additionalFunctionsBtn = findViewById(R.id.ChattingActivityAdditionalFunctionsButton);
+        messageEditText = findViewById(R.id.ChattingActivityMessageEditTextDesign);
+        messageSendBtn = findViewById(R.id.ChattingActivitySendButtonDesign);
+        additionalFunctionsBtn = findViewById(R.id.ChattingActivityAdditionalFunctionsButtonDesign);
+        finishBtn = findViewById(R.id.ChattingActivityFinishButtonDesign);
+        moveUserProfileBtn = findViewById(R.id.ChattingActivityMoveUserProfileButtonDesign);
+        moveContentBtn = findViewById(R.id.ChattingActivityMoveContentButtonDesign);
 
         databasePath = getIntent().getStringExtra("databasePath"); // databasePath
         contentId = getIntent().getStringExtra("contentId");
@@ -108,59 +118,32 @@ public class ChattingActivity extends AppCompatActivity {
         firestoreManagerForUserProfile = new FirestoreManager(this, "UserProfile", user.getUid());
         storageManagerForUserProfile = new StorageManager(this, "UserProfileImage", user.getUid());
 
-
-
-        /*
-        chooseImageButton.setOnClickListener(new View.OnClickListener() {
+        finishBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(intent, 0);
+                finish();
             }
         });
 
-
-        sendImageButton.setOnClickListener(new View.OnClickListener() {
+        moveUserProfileBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                if(user.getUid().equals(userUID)){
-                    fromUserToken = userUIDToken;
-                    fromUserUid = userUID;
-                    toUserToken = contentUIDToken;
-                    toUserUid = contentUID;
-                }else{
-                    fromUserToken = contentUIDToken;
-                    fromUserUid = contentUID;
-                    toUserToken = userUIDToken;
-                    toUserUid = userUID;
-                }
-
-                DateTimeFormatter formatter = new DateTimeFormatterBuilder().appendPattern("yyyyMMddHHmmss").appendValue(ChronoField.MILLI_OF_SECOND, 3).toFormatter();
-                LocalDateTime now = LocalDateTime.now();
-                String nowString = now.format(formatter);
-
-                imageUri = "MessageImage/" + fromUserUid + "/" + nowString;
-                storageManagerForMessageImage = new StorageManager(ChattingActivity.this, "MessageImage", user.getUid());
-                storageManagerForMessageImage.upload(imageUri, img, new Callback() {
-                    @Override
-                    public void OnCallback(Object object) {
-                        Message message = new Message(fromUserUid, toUserUid, "", fromUserToken, toUserToken, imageUri);
-                        realTimeDatabaseManager.writeMessage(databasePath, message);
-                        messageEditText.setText("");
-                    }
-                });
             }
         });
-         */
+
+        moveContentBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
         additionalFunctionsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 dialog = new Dialog(ChattingActivity.this, android.R.style.Theme_Black_NoTitleBar);
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.argb(100, 0, 0, 0)));
-                //dialog.setContentView(R.layout.activity_chatting_additional_functions);
                 dialog.setCancelable(true);
 
                 LayoutInflater inflater = dialog.getLayoutInflater();
@@ -328,5 +311,11 @@ public class ChattingActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
 }

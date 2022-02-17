@@ -80,7 +80,7 @@
                     android:textColor="@color/black"
                     android:fontFamily="@font/simplehae"
                     android:textStyle="bold"
-                    android:textSize="30dp"
+                    android:textSize="20dp"
                     android:layout_weight="1"/>
                 <ImageView
                     android:id="@+id/ChattingRoomItemMoveContentImageViewDesign"
@@ -100,7 +100,7 @@
                 android:text="MORE INFO"
                 android:textColor="@color/black"
                 android:fontFamily="@font/simplehae"
-                android:textSize="20dp"
+                android:textSize="13dp"
                 android:layout_weight="1"/>
 
             <LinearLayout
@@ -113,12 +113,12 @@
                     android:id="@+id/ChattingRoomItemUserNickNameTextViewDesign"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginBottom="12dp"
                     android:text="NICKNAME"
                     android:textColor="@color/black"
                     android:fontFamily="@font/simplehae"
                     android:textStyle="bold"
-                    android:textSize="20dp"
+                    android:textSize="16dp"
                     android:layout_weight="1"/>
                 <ImageView
                     android:id="@+id/ChattingRoomItemMoveUserProfileViewImageView"

@@ -88,6 +88,7 @@ public class AuctionContentActivity extends AppCompatActivity {
 
     String userUID;
     String contentUID;
+    String contentTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,6 +129,11 @@ public class AuctionContentActivity extends AppCompatActivity {
         AuctionContentLikeFlicker = findViewById(R.id.desingAuctionContentLikeFlicker);
         srtbtn = findViewById(R.id.AuctionContentActivitySortingButtonDesign);
 
+        ContentsBtn = findViewById(R.id.AuctionContentActivityContentsButtonDesign);
+        UserhistoryBtn = findViewById(R.id.AuctionContentActivityUserHistoryButtonDesign);
+        ChatRoomBtn = findViewById(R.id.AuctionContentActivityChatRoomButtonDesign);
+        ModifyBtn = findViewById(R.id.AuctionContentActivityModifyButtonDesign);
+
         ContentsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -159,7 +165,7 @@ public class AuctionContentActivity extends AppCompatActivity {
                 Intent intent = new Intent(AuctionContentActivity.this, PopUpActivity.class);
                 intent.putExtra("ContentID", contentId);
                 intent.putExtra("ContentUID", contentUID);
-                //intent.putExtra("ContentTime", contentTime);
+                intent.putExtra("ContentTime", contentTime);
                 startActivityForResult(intent, 0);
             }
         });
@@ -310,7 +316,7 @@ public class AuctionContentActivity extends AppCompatActivity {
                 String uid = tempAuctionContent.getUid(); contentUID = uid;
                 String title = tempAuctionContent.getTitle();
                 String description = tempAuctionContent.getContent();
-                String time = tempAuctionContent.getTime();
+                String time = tempAuctionContent.getTime(); contentTime = time;
                 String endTime = tempAuctionContent.getAuctionEndTime();
                 String price = tempAuctionContent.getPrice();
 
@@ -369,7 +375,6 @@ public class AuctionContentActivity extends AppCompatActivity {
                     @Override
                     public void OnCallback(Object object) {
                         UserProfile tempUserProfile = (UserProfile)object;
-
                         String nickname = tempUserProfile.getNickName();
 
                         AuctionContentUserProfileInfoTextView.setText(nickname);
@@ -572,7 +577,6 @@ public class AuctionContentActivity extends AppCompatActivity {
                                                     }
                                                 });
                                     }
-
                                 }
                             });
                             data_auction.add(new ExpandableListAdapter.Item(ExpandableListAdapter.BACHELOR, user.getUid(), contentUID, temp_comment.getTime(), temp_mention, "0"));

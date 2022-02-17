@@ -5,17 +5,45 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ChattingActivity">
+    tools:context=".ChattingActivity"
+    android:background="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="10dp"
+            android:text="NICKNAME"
+            android:textColor="@color/black"
+            android:fontFamily="@font/simplehae"
+            android:textStyle="bold"
+            android:textSize="30dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:text="MOVE TO CONTENT"
+            android:textColor="@color/black"
+            android:fontFamily="@font/simplehae"
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:gravity="right" />
+
+
 
         <ScrollView
             android:id="@+id/ChattingActivityScrollView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/toplineborder">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
