@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -49,8 +50,8 @@ public class ChattingActivity extends AppCompatActivity {
     ImageView messageSendBtn;
     ImageView additionalFunctionsBtn;
     ImageView finishBtn;
-    LinearLayout moveUserProfileBtn;
-    LinearLayout moveContentBtn;
+    TextView moveContentBtn;
+    ImageView scheduleBtn;
 
     FirebaseUser user;
 
@@ -106,8 +107,8 @@ public class ChattingActivity extends AppCompatActivity {
         messageSendBtn = findViewById(R.id.ChattingActivitySendButtonDesign);
         additionalFunctionsBtn = findViewById(R.id.ChattingActivityAdditionalFunctionsButtonDesign);
         finishBtn = findViewById(R.id.ChattingActivityFinishButtonDesign);
-        moveUserProfileBtn = findViewById(R.id.ChattingActivityMoveUserProfileButtonDesign);
         moveContentBtn = findViewById(R.id.ChattingActivityMoveContentButtonDesign);
+        scheduleBtn = findViewById(R.id.ChattingActivityScheduleButtonDesign);
 
         databasePath = getIntent().getStringExtra("databasePath"); // databasePath
         contentId = getIntent().getStringExtra("contentId");
@@ -125,7 +126,7 @@ public class ChattingActivity extends AppCompatActivity {
             }
         });
 
-        moveUserProfileBtn.setOnClickListener(new View.OnClickListener() {
+        scheduleBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 

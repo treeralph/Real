@@ -33,7 +33,7 @@ dependencies {
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
     implementation 'com.airbnb.android:lottie:3.0.0'
-
+    implementation 'com.r0adkll:slidableactivity:2.1.0'
     implementation 'com.tbuonomo:dotsindicator:4.2'
     implementation 'com.bogdwellers:pinchtozoom:0.1'
 

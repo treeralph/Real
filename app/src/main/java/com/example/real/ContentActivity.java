@@ -3,6 +3,8 @@ package com.example.real;
 
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.transition.Transition;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -55,6 +58,7 @@ import com.squareup.okhttp.internal.DiskLruCache;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -122,6 +126,10 @@ public class ContentActivity extends AppCompatActivity {
         ChatRoomBtn = findViewById(R.id.ContentActivityChatRoomButtonnDesign);
         ModifyBtn = findViewById(R.id.ContentActivityModifyBtnDesign);
 
+        View testView = findViewById(R.id.testView);
+
+
+
         ContentsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -158,6 +166,27 @@ public class ContentActivity extends AppCompatActivity {
             }
         });
 
+        ContentUserProfileImgImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Bitmap bitmap = ((BitmapDrawable) ContentUserProfileImgImageView.getDrawable()).getBitmap();
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                byte[] byteArray = stream.toByteArray();
+
+                Intent intent = new Intent(ContentActivity.this, PeekUserProfileActivity.class);
+                intent.putExtra("userProfileUID", contentUID);
+                intent.putExtra("userProfileImageByteArray", byteArray);
+
+                Pair[] pairs = new Pair[1];
+                pairs[0] = new Pair<View, String>(testView, "testView");
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(ContentActivity.this, pairs);
+
+                startActivity(intent, options.toBundle());
+                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+            }
+        });
 
         contentId = getIntent().getStringExtra("ContentId");
         try {

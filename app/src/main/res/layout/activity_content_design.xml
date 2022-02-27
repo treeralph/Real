@@ -22,6 +22,12 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <View
+                    android:id="@+id/testView"
+                    android:transitionName="testView"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"/>
+
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="400dp">
@@ -81,7 +87,8 @@
                         android:layout_width="45dp"
                         android:layout_height="45dp"
                         android:src="@drawable/push_img"
-                        app:civ_border_width="1.5dp"/>
+                        app:civ_border_width="1.5dp"
+                        android:transitionName="peekUserProfileActivityProfileImageImageView"/>
 
                     <TextView
                         android:id="@+id/designTestContentUserProfileNickNameTextView"
@@ -91,11 +98,11 @@
                         android:layout_marginLeft="15dp"
                         android:fontFamily="@font/simplehae"
                         android:text="UserNickName"
-
                         android:textColor="@color/black"
                         android:textSize="20dp"
                         android:textStyle="bold"
-                        android:layout_weight="1"/>
+                        android:layout_weight="1"
+                        android:transitionName="peekUserProfileActivityProfileNickNameTextView"/>
 
                     <ImageView
                         android:id="@+id/desingContentLikeFlicker"
@@ -103,7 +110,7 @@
                         android:layout_height="30dp"
                         android:layout_marginRight="20dp"
                         android:layout_gravity="center"
-                        android:src="@drawable/star_blank"/>
+                        android:src="@drawable/new_heart_empty"/>
 
                 </LinearLayout>
                 <TextView

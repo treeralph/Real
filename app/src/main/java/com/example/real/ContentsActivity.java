@@ -59,7 +59,7 @@ public class ContentsActivity extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         chatRoomBtn = findViewById(R.id.ContentsActivityChatRoomBtnDesign);
         userHistoryBtn = findViewById(R.id.ContentsActivityUserHistoryButton);
-        //swipeRefreshLayout = findViewById(R.id.ContentsActivitySwipeRefreshLayout);
+        swipeRefreshLayout = findViewById(R.id.ContentsActivitySwipeRefreshLayout);
 
         manager = new FirestoreManager(ContentsActivity.this, "Contents", user.getUid());
 
@@ -136,7 +136,7 @@ public class ContentsActivity extends AppCompatActivity {
         });
 
 
-        /*
+
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -156,7 +156,7 @@ public class ContentsActivity extends AppCompatActivity {
             }
         });
 
-         */
+
 
         makeContentBtn.setOnClickListener(new View.OnClickListener() {
             @Override

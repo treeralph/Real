@@ -54,7 +54,10 @@ public class FirestoreManager {
                 (String)dict.get("Description"),
                 (String)dict.get("UserLog"),
                 (String)dict.get("DeviceToken"),
-                (ArrayList<String>) dict.get("ChattingRoomID"));
+                (ArrayList<String>) dict.get("ChattingRoomID"),
+                (String)dict.get("Income"),
+                (String)dict.get("NumContent"),
+                (String)dict.get("Hierarchy"));
         return userProfile;
     };
 

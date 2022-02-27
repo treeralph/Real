@@ -17,6 +17,9 @@ public class UserProfile extends Data{
     private String UserLog;
     private String DeviceToken;
     private ArrayList<String> ChattingRoomID;
+    private String Income;
+    private String NumContent;
+    private String Hierarchy;
 
     public UserProfile(String rating, String nickName) {
         Rating = rating;
@@ -30,10 +33,13 @@ public class UserProfile extends Data{
         UserLog = "";
         DeviceToken = "";
         ChattingRoomID = new ArrayList<>();
+        Income = "0";
+        NumContent = "0";
+        Hierarchy = "";
     }
 
 
-    public UserProfile(String rating, String nickName, String registerTime, String bo, String so, String description, String userLog, String deviceToken, ArrayList<String> chattingRoomID){
+    public UserProfile(String rating, String nickName, String registerTime, String bo, String so, String description, String userLog, String deviceToken, ArrayList<String> chattingRoomID, String income, String numContent, String hierarchy){
         RegisterTime = registerTime;
         Rating = rating;
         NickName = nickName;
@@ -43,6 +49,9 @@ public class UserProfile extends Data{
         UserLog = userLog;
         DeviceToken = deviceToken;
         ChattingRoomID = chattingRoomID;
+        Income = income;
+        NumContent = numContent;
+        Hierarchy = hierarchy;
     }
 
     @Override
@@ -57,6 +66,9 @@ public class UserProfile extends Data{
         datum.put("UserLog", UserLog);
         datum.put("DeviceToken", DeviceToken);
         datum.put("ChattingRoomID", ChattingRoomID);
+        datum.put("Income", Income);
+        datum.put("NumContent", NumContent);
+        datum.put("Hierarchy", Hierarchy);
         return datum;
     }
 
@@ -130,5 +142,21 @@ public class UserProfile extends Data{
 
     public void setChattingRoomID(ArrayList<String> chattingRoomID) {
         ChattingRoomID = chattingRoomID;
+    }
+
+    public String getIncome() {
+        return Income;
+    }
+
+    public void setIncome(String income) {
+        Income = income;
+    }
+
+    public String getNumContent() {
+        return NumContent;
+    }
+
+    public void setNumContent(String numContent) {
+        NumContent = numContent;
     }
 }
