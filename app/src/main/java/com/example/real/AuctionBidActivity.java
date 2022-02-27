@@ -18,6 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 public class AuctionBidActivity extends AppCompatActivity {
@@ -89,6 +90,31 @@ public class AuctionBidActivity extends AppCompatActivity {
                             String userListItem = user.getUid() + "#" + bidPrice;
                             userList.add(userListItem);
                             // userList, bidPrice, priceGap
+                            // Start transaction for change bidprice, pricegap, userList
+                            List<Object> newFieldData = new ArrayList<>(); List<String> fieldPath = new ArrayList<>();
+                            newFieldData.add(bidPrice); newFieldData.add(priceGap);
+                            fieldPath.add("price"); fieldPath.add("priceGap");
+                            firestoreManagerForAuctionContent.transactionUpdate(newFieldData, "Content", contentId, fieldPath, new Callback() {
+                                @Override
+                                public void OnCallback(Object object) {
+                                    firestoreManagerForAuctionContent.update("Content", contentId, "auctionUserList", userList, new Callback() {
+                                        @Override
+                                        public void OnCallback(Object object) {
+                                            setResult(100);
+                                            Intent intent = new Intent(AuctionBidActivity.this, AuctionContentActivity.class);
+                                            intent.putExtra("ContentId", contentId);
+                                            startActivity(intent);
+                                            finish();
+                                        }
+                                    });
+                                }
+                            }, new Callback() {
+                                @Override
+                                public void OnCallback(Object object) {
+
+                                }
+                            });
+                            /*
                             firestoreManagerForAuctionContent.update("Content", contentId, "auctionUserList", userList, new Callback() {
                                 @Override
                                 public void OnCallback(Object object) {
@@ -98,17 +124,13 @@ public class AuctionBidActivity extends AppCompatActivity {
                                             firestoreManagerForAuctionContent.update("Content", contentId, "priceGap", priceGap, new Callback() {
                                                 @Override
                                                 public void OnCallback(Object object) {
-                                                    setResult(100);
-                                                    Intent intent = new Intent(AuctionBidActivity.this, AuctionContentActivity.class);
-                                                    intent.putExtra("ContentId", contentId);
-                                                    startActivity(intent);
-                                                    finish();
+
                                                 }
                                             });
                                         }
                                     });
                                 }
-                            });
+                            });*/
                         } else{ // print error message
                             Toast.makeText(AuctionBidActivity.this, "" +
                                     "Bid Price must be greater than minimum coast" + "(" + String.valueOf(threshold) + ")", Toast.LENGTH_SHORT).show();

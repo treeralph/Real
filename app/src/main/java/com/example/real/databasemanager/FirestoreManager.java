@@ -24,6 +24,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
@@ -33,6 +34,9 @@ import com.google.firebase.firestore.Transaction;
 import com.google.firestore.v1.StructuredQuery;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class FirestoreManager {
 
@@ -312,13 +316,17 @@ public class FirestoreManager {
         });
     }
 
-    public void transactionUpdate(String newFieldData, String collectionPath, String documentPath, String fieldPath, Callback callback1, Callback callback2){
+    public void transactionUpdate(List<Object> newFieldData, String collectionPath, String documentPath, List<String> fieldPath, Callback callback1, Callback callback2){
 
+        Map<String,Object> temp = new HashMap<>();
+        for (int i =0;i< newFieldData.size(); i++){
+            temp.put(fieldPath.get(i), newFieldData.get(i));
+        }
         DocumentReference ref = db.document(collectionPath + "/" + documentPath);
         db.runTransaction(new Transaction.Function<Object>() {
             @Override
             public Object apply(Transaction transaction) throws FirebaseFirestoreException {
-                transaction.update(ref, fieldPath, newFieldData);
+                transaction.update(ref, temp);
                 return "박강혁";
             }
         }).addOnSuccessListener(new OnSuccessListener<Object>() {
@@ -336,4 +344,5 @@ public class FirestoreManager {
             }
         });
     }
+
 }
