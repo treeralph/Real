@@ -97,7 +97,9 @@ public class AuctionBidActivity extends AppCompatActivity {
                             firestoreManagerForAuctionContent.transactionUpdate(newFieldData, "Content", contentId, fieldPath, new Callback() {
                                 @Override
                                 public void OnCallback(Object object) {
-                                    firestoreManagerForAuctionContent.update("Content", contentId, "auctionUserList", userList, new Callback() {
+                                    List<Object> temp0 = new ArrayList<>(); temp0.add(userList);
+                                    List<String> temp1 = new ArrayList<>(); temp1.add("auctionUserList");
+                                    firestoreManagerForAuctionContent.transactionUpdate(temp0, "Content", contentId, temp1, new Callback() {
                                         @Override
                                         public void OnCallback(Object object) {
                                             setResult(100);
@@ -105,6 +107,11 @@ public class AuctionBidActivity extends AppCompatActivity {
                                             intent.putExtra("ContentId", contentId);
                                             startActivity(intent);
                                             finish();
+                                        }
+                                    }, new Callback() {
+                                        @Override
+                                        public void OnCallback(Object object) {
+
                                         }
                                     });
                                 }
