@@ -5,6 +5,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.example.real.Callback;
 import com.example.real.data.AuctionContent;
@@ -19,13 +20,17 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Transaction;
+import com.google.firestore.v1.StructuredQuery;
 
 import java.util.ArrayList;
 
@@ -301,6 +306,31 @@ public class FirestoreManager {
                             Log.d(TAG, "Error getting document: ",task.getException());
                         }
                     }
-                });
+        });
+    }
+
+    public void transactionUpdate(String newFieldData, String collectionPath, String documentPath, String fieldPath, Callback callback1, Callback callback2){
+
+        DocumentReference ref = db.document(collectionPath + "/" + documentPath);
+        db.runTransaction(new Transaction.Function<Object>() {
+            @Override
+            public Object apply(Transaction transaction) throws FirebaseFirestoreException {
+                transaction.update(ref, fieldPath, newFieldData);
+                return "박강혁";
+            }
+        }).addOnSuccessListener(new OnSuccessListener<Object>() {
+            @Override
+            public void onSuccess(Object o) {
+                Log.d("Firebase:transactionUpdate", "Success");
+                callback1.OnCallback(o);
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(Exception e) {
+                Log.e("Firebase:transactionUpdate", "Failure");
+                callback2.OnCallback(null);
+            }
+        });
     }
 }
