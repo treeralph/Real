@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,6 +27,7 @@ import com.example.real.adapter.ExpandableListAdapter;
 import com.example.real.adapter.ViewPagerAdapter;
 import com.example.real.data.AuctionContent;
 import com.example.real.data.Comment;
+import com.example.real.data.Content;
 import com.example.real.data.UserProfile;
 import com.example.real.databasemanager.FirestoreManager;
 import com.example.real.databasemanager.StorageManager;
@@ -57,6 +59,7 @@ public class AuctionContentActivity extends AppCompatActivity {
 
     static final int FLICKERNEGATIVE = -1;
     static final int FLICKERPOSITIVE = 1;
+
     TextView AuctionContentTitleTextView;
     TextView AuctionContentUserProfileInfoTextView;
     TextView AuctionContentTimeTextView;
@@ -89,6 +92,7 @@ public class AuctionContentActivity extends AppCompatActivity {
     String userUID;
     String contentUID;
     String contentTime;
+    String contentId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +103,7 @@ public class AuctionContentActivity extends AppCompatActivity {
 
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        String contentId = getIntent().getStringExtra("ContentId");
+        contentId = getIntent().getStringExtra("ContentId");
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser(); userUID = user.getUid();
 
@@ -583,7 +587,6 @@ public class AuctionContentActivity extends AppCompatActivity {
                                 }
                             });
                             data_auction.add(new ExpandableListAdapter.Item(ExpandableListAdapter.BACHELOR, user.getUid(), contentUID, temp_comment.getTime(), temp_mention, "0"));
-
                             expandablelistadapterForAuction.notifyDataSetChanged();
                             AuctionComments_Recyclerview.setAdapter(expandablelistadapterForAuction);
 
@@ -656,11 +659,8 @@ public class AuctionContentActivity extends AppCompatActivity {
                             @Override
                             public void OnCallback(Object object) {
                                 ArrayList<Comment> Y = (ArrayList<Comment>) object;
-
                                 //data_auction.add(temp_header);
                                 for (Comment QuaryRecomment : Y) {
-
-
                                     int RecommentType = CHILD;
 
                                     if (count[0] == 0) {
@@ -684,9 +684,33 @@ public class AuctionContentActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==0){
-            if(resultCode==100){
-                finish();
-            }
+            FirestoreManager tempFirestoreManager = new FirestoreManager(
+                    this, "AuctionContent", userUID);
+
+            tempFirestoreManager.read("Content", contentId, new Callback() {
+                @Override
+                public void OnCallback(Object object) {
+                    AuctionContent tempContent = (AuctionContent) object;
+                    String newAuctionPrice = tempContent.getPrice();
+                    AuctionContentCurrentPriceTextView.setText(newAuctionPrice);
+
+                    if(resultCode == 100) {
+                        ArrayList<String> auctionUserList = tempContent.getAuctionUserList();
+                        String myBidPrice = data.getStringExtra("MyBidPrice");
+                        String auctionUserListFormat = userUID + "#" + myBidPrice;
+
+                        TextView textTextView = findViewById(R.id.TESTBOARD);
+                        Log.e("NULLNULLNULL", "\n@" + auctionUserListFormat + "\n" + auctionUserList.toString());
+                        textTextView.setText("\n@" + auctionUserListFormat + "\n" + auctionUserList.toString());
+
+                        if (auctionUserList.contains(auctionUserListFormat)) {
+                            Toast.makeText(AuctionContentActivity.this, "Your Bid is successful!", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(AuctionContentActivity.this, "Your Bid is failure!", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }
+            });
         }
     }
 
@@ -695,4 +719,5 @@ public class AuctionContentActivity extends AppCompatActivity {
         super.finish();
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
     }
+
 }

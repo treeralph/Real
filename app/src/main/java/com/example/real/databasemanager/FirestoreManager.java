@@ -7,6 +7,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.real.AuctionContentActivity;
 import com.example.real.Callback;
 import com.example.real.data.AuctionContent;
 import com.example.real.data.Comment;
@@ -32,6 +33,9 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
 import com.google.firestore.v1.StructuredQuery;
+import com.google.firestore.v1.TransactionOptions;
+import com.google.firestore.v1.TransactionOptionsOrBuilder;
+import com.google.protobuf.MessageLite;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -327,6 +331,12 @@ public class FirestoreManager {
             @Override
             public Object apply(Transaction transaction) throws FirebaseFirestoreException {
                 transaction.update(ref, temp);
+                Log.e("TRANSATIONFAIL", transaction.toString());
+                /*
+                Toast.makeText(context, tempT.toString(), Toast.LENGTH_SHORT).show();
+                Log.d("TRANSACTION", tempT.toString());
+
+                 */
                 return "박강혁";
             }
         }).addOnSuccessListener(new OnSuccessListener<Object>() {
@@ -344,5 +354,4 @@ public class FirestoreManager {
             }
         });
     }
-
 }

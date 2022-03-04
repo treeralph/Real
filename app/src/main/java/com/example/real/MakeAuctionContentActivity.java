@@ -19,6 +19,7 @@ import com.example.real.data.Content;
 import com.example.real.data.Contents;
 import com.example.real.data.UserProfile;
 import com.example.real.databasemanager.FirestoreManager;
+import com.example.real.databasemanager.RealTimeDatabaseManager;
 import com.example.real.databasemanager.StorageManager;
 import com.example.real.fragment.ImgViewFromGalleryFragment;
 import com.example.real.tool.NumberingMachine;
@@ -57,6 +58,7 @@ public class MakeAuctionContentActivity extends AppCompatActivity {
 
         FirestoreManager firestoreManagerForContent = new FirestoreManager(MakeAuctionContentActivity.this, "AuctionContent", user.getUid());
         FirestoreManager firestoreManagerForContents = new FirestoreManager(MakeAuctionContentActivity.this, "Contents", user.getUid());
+        RealTimeDatabaseManager realTimeDatabaseManagerForAuctionContent = new RealTimeDatabaseManager(MakeAuctionContentActivity.this, "MutexLock", user.getUid());
         StorageManager storageManager = new StorageManager(MakeAuctionContentActivity.this, "Image", user.getUid());
 
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
@@ -131,6 +133,8 @@ public class MakeAuctionContentActivity extends AppCompatActivity {
                                                                         firestoreManagerForUserProfile.read("UserProfile", user.getUid(), new Callback() {
                                                                             @Override
                                                                             public void OnCallback(Object object) {
+                                                                                realTimeDatabaseManagerForAuctionContent.writeMutex(contentId);
+
                                                                                 UserProfile userprofile = (UserProfile) object;
                                                                                 String userlog = userprofile.getUserLog();
                                                                                 String address = "Content/" + contentId;
@@ -169,7 +173,6 @@ public class MakeAuctionContentActivity extends AppCompatActivity {
                                                                                                 }
                                                                                             });
                                                                                 }
-
                                                                             }
                                                                         });
                                                                     }

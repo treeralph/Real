@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import com.example.real.Callback;
 import com.example.real.data.Message;
 import com.example.real.data.MessageTransmission;
+import com.example.real.data.MutexLock;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -176,6 +177,22 @@ public class RealTimeDatabaseManager {
         });
     }
 
+    public void writeMutex(String path){ //
 
+        DatabaseReference ref = db.getReference(rootPath + "/" + path);
+        MutexLock mutexLock = new MutexLock("0");
+        ref.setValue(mutexLock).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.d(TAG, "DATA_SETVALUE_IS_COMPLETE");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e(TAG, e.getMessage());
+                e.printStackTrace();
+            }
+        });
+    }
 
 }

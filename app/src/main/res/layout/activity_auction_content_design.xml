@@ -208,6 +208,13 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:background="@color/grey1">
+                    <TextView
+                        android:id="@+id/TESTBOARD"
+                        android:layout_width="match_parent"
+                        android:layout_height="500dp"
+                        android:text="TESTBOARD"
+                        android:textColor="@color/red"
+                        android:background="@color/black"/>
 
                     <TextView
                         android:layout_width="match_parent"
