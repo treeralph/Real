@@ -12,6 +12,7 @@ import android.widget.TimePicker;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.datepicker.MaterialDatePicker;
 import com.r0adkll.slidr.Slidr;
 import com.r0adkll.slidr.model.SlidrConfig;
 import com.r0adkll.slidr.model.SlidrInterface;
@@ -49,6 +50,7 @@ public class ScheduleActivity extends AppCompatActivity {
         confirmbtn = findViewById(R.id.ScheduleActivityConfirmBtn);
 
         year = LocalDateTime.now().getYear(); month = LocalDateTime.now().getMonthValue(); day = LocalDateTime.now().getDayOfMonth();
+
         datePicker.init(year, month, day, new DatePicker.OnDateChangedListener() {
             @Override
             public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
