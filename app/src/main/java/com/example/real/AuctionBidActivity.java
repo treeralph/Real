@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.real.data.AuctionContent;
 import com.example.real.data.MutexLock;
+import com.example.real.data.UserProfile;
 import com.example.real.databasemanager.FirestoreManager;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -55,7 +56,6 @@ public class AuctionBidActivity extends AppCompatActivity {
 
     final DateTimeFormatter formatter = new DateTimeFormatterBuilder().appendPattern("yyyyMMddHHmmss").appendValue(ChronoField.MILLI_OF_SECOND, 3).toFormatter();
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,12 +77,13 @@ public class AuctionBidActivity extends AppCompatActivity {
             }
         });
 
+
         String contentId = getIntent().getStringExtra("contentId");
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        FirestoreManager firestoreManagerForAuctionContent =
-                new FirestoreManager(AuctionBidActivity.this, "AuctionContent", user.getUid());
+        FirestoreManager firestoreManagerForAuctionContent = new FirestoreManager(AuctionBidActivity.this, "AuctionContent", user.getUid());
+        FirestoreManager firestoreManagerForUserProfile = new FirestoreManager(AuctionBidActivity.this, "UserProfile", user.getUid());
 
         AuctionPriceEditText = findViewById(R.id.AuctionBidActivityBiddingPriceEditText);
         AuctionPriceBidBtn = findViewById(R.id.AuctionBidActivityBidButton);
@@ -98,7 +99,6 @@ public class AuctionBidActivity extends AppCompatActivity {
                 AuctionPriceEditText.setText(String.valueOf(bidPrice));
                 AuctionCurrentPriceTextView.setText(auctionContent.getPrice());
                 AuctionPriceGapTextView.setText(auctionContent.getPriceGap());
-
             }
         });
 
@@ -108,9 +108,9 @@ public class AuctionBidActivity extends AppCompatActivity {
                 firestoreManagerForAuctionContent.read("Content", contentId, new Callback() {
                     @Override
                     public void OnCallback(Object object) {
+
                         AuctionContent auctionContent = (AuctionContent) object;
                         ArrayList<String> userList = auctionContent.getAuctionUserList();
-
                         AuctionContent tempAuctionContent = null;
                         try {
                             tempAuctionContent = (AuctionContent) auctionContent.clone();
@@ -126,127 +126,135 @@ public class AuctionBidActivity extends AppCompatActivity {
                         // minimum bidable price
                         int threshold = Integer.parseInt(auctionContent.getPrice()) + Integer.parseInt(auctionContent.getPriceGap());
                         if (Integer.parseInt(bidPrice) >= threshold) {
-                            String userListItem = user.getUid() + "#" + bidPrice;
 
-                            FirebaseDatabase mDatabase = FirebaseDatabase.getInstance("https://real-95e0b-default-rtdb.asia-southeast1.firebasedatabase.app/");
-                            DatabaseReference dRef = mDatabase.getReference("/MutexLock/" + contentId);
-                            dRef.runTransaction(new Transaction.Handler() {
-                                @NonNull
+                            firestoreManagerForUserProfile.read("UserProfile", user.getUid(), new Callback() {
                                 @Override
-                                public Transaction.Result doTransaction(@NonNull MutableData currentData) { // transaction retry at this function.
-                                    // todo: request to acquire mutex lock flag from real time database, then
-                                    Log.d("AuctionBidActivity_TEST_doTransaction", currentData.toString());
-                                    MutexLock mutexLock = currentData.getValue(MutexLock.class);
-                                    if (mutexLock == null) {
-                                        Log.d("AuctionBidActivity_TEST_doTransaction1", "Transaction error");
-                                        return Transaction.success(currentData);
-                                    }else {
-                                        String flag = mutexLock.getFlag();
-                                        String time = mutexLock.getTime();
-                                        LocalDateTime timeLocalDateTime = LocalDateTime.parse(time, formatter);
-                                        LocalDateTime now = LocalDateTime.now();
-                                        Duration duration = Duration.between(timeLocalDateTime, now);
-                                        int seconds = Math.abs((int) duration.getSeconds());
+                                public void OnCallback(Object object) {
+                                    UserProfile userProfile = (UserProfile) object;
+                                    String deviceToken = userProfile.getDeviceToken();
+                                    String userListItem = user.getUid() + "#" + deviceToken + "#" + bidPrice; // todo: append userDeviceToken
 
-                                        if (flag.equals("0") || (flag.equals("1") && seconds >= 15)) {
-                                            Log.d("AuctionBidActivity_TEST_doTransaction2", mutexLock.getFlag());
-                                            Log.d("AuctionBidActivity_TEST", "Mutex Acquire");
-                                            MutexLock tempMutexLock = new MutexLock();
+                                    FirebaseDatabase mDatabase = FirebaseDatabase.getInstance("https://real-95e0b-default-rtdb.asia-southeast1.firebasedatabase.app/");
+                                    DatabaseReference dRef = mDatabase.getReference("/MutexLock/" + contentId);
+                                    dRef.runTransaction(new Transaction.Handler() {
+                                        @NonNull
+                                        @Override
+                                        public Transaction.Result doTransaction(@NonNull MutableData currentData) { // transaction retry at this function.
+                                            // todo: request to acquire mutex lock flag from real time database, then
+                                            Log.d("AuctionBidActivity_TEST_doTransaction", currentData.toString());
+                                            MutexLock mutexLock = currentData.getValue(MutexLock.class);
+                                            if (mutexLock == null) {
+                                                Log.d("AuctionBidActivity_TEST_doTransaction1", "Transaction error");
+                                                return Transaction.success(currentData);
+                                            }else {
+                                                String flag = mutexLock.getFlag();
+                                                String time = mutexLock.getTime();
+                                                LocalDateTime timeLocalDateTime = LocalDateTime.parse(time, formatter);
+                                                LocalDateTime now = LocalDateTime.now();
+                                                Duration duration = Duration.between(timeLocalDateTime, now);
+                                                int seconds = Math.abs((int) duration.getSeconds());
 
-                                            tempMutexLock.setFlag("1");
-                                            tempMutexLock.setTime(now.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS")));
-                                            currentData.setValue(tempMutexLock);
-                                            return Transaction.success(currentData);
-                                        } else {
-                                            Log.d("AuctionBidActivity_TEST_doTransaction3", mutexLock.getFlag());
-                                            return Transaction.abort();
-                                        }
-                                    }
-                                }
-                                @Override
-                                public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
+                                                if (flag.equals("0") || (flag.equals("1") && seconds >= 15)) {
+                                                    Log.d("AuctionBidActivity_TEST_doTransaction2", mutexLock.getFlag());
+                                                    Log.d("AuctionBidActivity_TEST", "Mutex Acquire");
+                                                    MutexLock tempMutexLock = new MutexLock();
 
-                                    Log.d("AuctionBidActivity_TEST_onComplete", Boolean.toString(committed));
-                                    if(committed == true && currentData != null) {
-                                        Log.d("AuctionBidActivity_TEST_onComplete", currentData.toString());
-                                        FirebaseFirestore db = FirebaseFirestore.getInstance();
-                                        DocumentReference ref = db.document("Content/" + contentId);
-                                        db.runTransaction(new com.google.firebase.firestore.Transaction.Function<Object>() {
-                                            @Nullable
-                                            @Override
-                                            public Object apply(@NonNull com.google.firebase.firestore.Transaction transaction) throws FirebaseFirestoreException {
-                                                DocumentSnapshot snapshot = transaction.get(ref);
-
-                                                userList.add(userListItem);
-
-                                                Map<String, Object> map = new HashMap<>();
-                                                map.put("price", bidPrice);
-                                                map.put("priceGap", priceGap);
-                                                map.put("auctionUserList", userList);
-
-                                                transaction.update(ref, map);
-
-                                                // Success
-                                                return null;
+                                                    tempMutexLock.setFlag("1");
+                                                    tempMutexLock.setTime(now.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS")));
+                                                    currentData.setValue(tempMutexLock);
+                                                    return Transaction.success(currentData);
+                                                } else {
+                                                    Log.d("AuctionBidActivity_TEST_doTransaction3", mutexLock.getFlag());
+                                                    return Transaction.abort();
+                                                }
                                             }
-                                        }).addOnSuccessListener(new OnSuccessListener<Object>() {
-                                            @Override
-                                            public void onSuccess(Object o) {
-                                                Log.d("AuctionBidActivity_TEST_OnComplete_successListener", "AuctionContent price update is successful");
+                                        }
+                                        @Override
+                                        public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
+
+                                            Log.d("AuctionBidActivity_TEST_onComplete", Boolean.toString(committed));
+                                            if(committed == true && currentData != null) {
+                                                Log.d("AuctionBidActivity_TEST_onComplete", currentData.toString());
+                                                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                                                DocumentReference ref = db.document("Content/" + contentId);
+                                                db.runTransaction(new com.google.firebase.firestore.Transaction.Function<Object>() {
+                                                    @Nullable
+                                                    @Override
+                                                    public Object apply(@NonNull com.google.firebase.firestore.Transaction transaction) throws FirebaseFirestoreException {
+                                                        DocumentSnapshot snapshot = transaction.get(ref);
+
+                                                        userList.add(userListItem);
+
+                                                        Map<String, Object> map = new HashMap<>();
+                                                        map.put("price", bidPrice);
+                                                        map.put("priceGap", priceGap);
+                                                        map.put("auctionUserList", userList);
+
+                                                        transaction.update(ref, map);
+
+                                                        // Success
+                                                        return null;
+                                                    }
+                                                }).addOnSuccessListener(new OnSuccessListener<Object>() {
+                                                    @Override
+                                                    public void onSuccess(Object o) {
+                                                        Log.d("AuctionBidActivity_TEST_OnComplete_successListener", "AuctionContent price update is successful");
+                                                        Intent intent = new Intent(AuctionBidActivity.this, AuctionContentActivity.class);
+                                                        intent.putExtra("ContentId", contentId);
+                                                        intent.putExtra("MyBidPrice", bidPrice);
+                                                        setResult(100, intent);
+                                                        finish();
+
+                                                        FirebaseDatabase mDatabase = FirebaseDatabase.getInstance("https://real-95e0b-default-rtdb.asia-southeast1.firebasedatabase.app/");
+                                                        DatabaseReference dRef = mDatabase.getReference("/MutexLock/" + contentId);
+                                                        dRef.runTransaction(new Transaction.Handler() {
+                                                            @NonNull
+                                                            @Override
+                                                            public Transaction.Result doTransaction(@NonNull MutableData currentData) {
+
+                                                                Log.d("AuctionBidActivity_TEST_doTransaction", currentData.toString());
+                                                                MutexLock mutexLock = currentData.getValue(MutexLock.class);
+                                                                if (mutexLock == null) {
+                                                                    Log.d("AuctionBidActivity_TEST_doTransaction1", mutexLock.getFlag());
+                                                                    return Transaction.abort();
+                                                                }else {
+                                                                    if (mutexLock.getFlag().equals("1")) {
+                                                                        Log.d("AuctionBidActivity_TEST_doTransaction2", mutexLock.getFlag());
+                                                                        Log.d("AuctionBidActivity_TEST", "Mutex Acquire");
+                                                                        MutexLock tempMutexLock = new MutexLock();
+                                                                        tempMutexLock.setFlag("0");
+                                                                        tempMutexLock.setTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS")));
+                                                                        currentData.setValue(tempMutexLock);
+                                                                        return Transaction.success(currentData);
+                                                                    } else {
+                                                                        Log.d("AuctionBidActivity_TEST_doTransaction3", mutexLock.getFlag());
+                                                                        return Transaction.abort();
+                                                                    }
+                                                                }
+                                                            }
+                                                            @Override
+                                                            public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
+
+                                                            }
+                                                        });
+                                                    }
+                                                }).addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.e("AuctionBidActivity_TEST_OnComplete_failureListener", "AuctionContent price update is failure");
+                                                    }
+                                                });
+                                            }else{ // comitted == false
+
+                                                Toast.makeText(AuctionBidActivity.this, "bid failure", Toast.LENGTH_LONG).show();
                                                 Intent intent = new Intent(AuctionBidActivity.this, AuctionContentActivity.class);
                                                 intent.putExtra("ContentId", contentId);
                                                 intent.putExtra("MyBidPrice", bidPrice);
                                                 setResult(100, intent);
                                                 finish();
-
-                                                FirebaseDatabase mDatabase = FirebaseDatabase.getInstance("https://real-95e0b-default-rtdb.asia-southeast1.firebasedatabase.app/");
-                                                DatabaseReference dRef = mDatabase.getReference("/MutexLock/" + contentId);
-                                                dRef.runTransaction(new Transaction.Handler() {
-                                                    @NonNull
-                                                    @Override
-                                                    public Transaction.Result doTransaction(@NonNull MutableData currentData) {
-
-                                                        Log.d("AuctionBidActivity_TEST_doTransaction", currentData.toString());
-                                                        MutexLock mutexLock = currentData.getValue(MutexLock.class);
-                                                        if (mutexLock == null) {
-                                                            Log.d("AuctionBidActivity_TEST_doTransaction1", mutexLock.getFlag());
-                                                            return Transaction.abort();
-                                                        }else {
-                                                            if (mutexLock.getFlag().equals("1")) {
-                                                                Log.d("AuctionBidActivity_TEST_doTransaction2", mutexLock.getFlag());
-                                                                Log.d("AuctionBidActivity_TEST", "Mutex Acquire");
-                                                                MutexLock tempMutexLock = new MutexLock();
-                                                                tempMutexLock.setFlag("0");
-                                                                tempMutexLock.setTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS")));
-                                                                currentData.setValue(tempMutexLock);
-                                                                return Transaction.success(currentData);
-                                                            } else {
-                                                                Log.d("AuctionBidActivity_TEST_doTransaction3", mutexLock.getFlag());
-                                                                return Transaction.abort();
-                                                            }
-                                                        }
-                                                    }
-                                                    @Override
-                                                    public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
-
-                                                    }
-                                                });
                                             }
-                                        }).addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Log.e("AuctionBidActivity_TEST_OnComplete_failureListener", "AuctionContent price update is failure");
-                                            }
-                                        });
-                                    }else{ // comitted == false
-
-                                        Toast.makeText(AuctionBidActivity.this, "bid failure", Toast.LENGTH_LONG).show();
-                                        Intent intent = new Intent(AuctionBidActivity.this, AuctionContentActivity.class);
-                                        intent.putExtra("ContentId", contentId);
-                                        intent.putExtra("MyBidPrice", bidPrice);
-                                        setResult(100, intent);
-                                        finish();
-                                    }
+                                        }
+                                    });
                                 }
                             });
                         } else {

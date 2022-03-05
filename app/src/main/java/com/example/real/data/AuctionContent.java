@@ -73,6 +73,11 @@ public class AuctionContent extends Content implements Cloneable{
         AuctionDuration = auctionDuration;
         AuctionStartTime = Time;
 
+        System.out.println("TIME: " + Time);
+        System.out.println("TIME: " + Time);
+        System.out.println("TIME: " + Time);
+        System.out.println("TIME: " + Time);
+
         LocalDateTime tempTime = LocalDateTime.parse(Time, formatter);
         LocalDateTime tempTime2 = tempTime.plusDays(Integer.parseInt(AuctionDuration));
         AuctionEndTime = tempTime2.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
