@@ -18,7 +18,8 @@
         <DatePicker
             android:id="@+id/ScheduleActivitydataPicker"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:theme="@style/MyDatePicker"/>
         <TextView
             android:id="@+id/SchduleActivityScheduleTextView"
             android:layout_width="match_parent"
@@ -26,7 +27,8 @@
         <TimePicker
             android:id="@+id/ScheduleActivityTimePicker"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:theme="@style/MyDatePicker"/>
         <TextView
             android:id="@+id/SchduleActivityTimeTextView"
             android:layout_width="match_parent"
