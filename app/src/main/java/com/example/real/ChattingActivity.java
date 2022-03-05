@@ -1,5 +1,6 @@
 package com.example.real;
 
+import android.app.ActivityOptions;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -9,6 +10,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.telecom.Call;
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -52,6 +54,7 @@ public class ChattingActivity extends AppCompatActivity {
     ImageView finishBtn;
     TextView moveContentBtn;
     ImageView scheduleBtn;
+    View emptyview;
 
     FirebaseUser user;
 
@@ -102,6 +105,7 @@ public class ChattingActivity extends AppCompatActivity {
         messageRecyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         messageRecyclerView.setLayoutManager(layoutManager);
+        emptyview = findViewById(R.id.ChattingActivityEmptyView);
 
         messageEditText = findViewById(R.id.ChattingActivityMessageEditTextDesign);
         messageSendBtn = findViewById(R.id.ChattingActivitySendButtonDesign);
@@ -129,7 +133,14 @@ public class ChattingActivity extends AppCompatActivity {
         scheduleBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent(ChattingActivity.this, ScheduleActivity.class);
 
+
+                Pair[] pairs = new Pair[1];
+                pairs[0] = new Pair<View, String>(emptyview, "testView");
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(ChattingActivity.this, pairs);
+                startActivityForResult(intent,1,options.toBundle());
+                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
             }
         });
 
@@ -311,6 +322,10 @@ public class ChattingActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
+        }
+        if(requestCode == 1){
+            String X = data.getStringExtra("TEXTEDSCHEDULE");
+            messageEditText.setText(X);
         }
     }
 
