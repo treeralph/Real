@@ -29,6 +29,7 @@
             android:name=".PopUpActivity"
             android:exported="false"
             android:theme="@style/TESTSTYLE" />
+
         <activity android:name=".UserhistoryActivity" />
         <activity
             android:name=".ChattingRoomActivity"
