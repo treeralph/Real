@@ -31,6 +31,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
 
+        Log.d("FCM_Service", "Done?");
         String title = remoteMessage.getNotification().getTitle();
         String body = remoteMessage.getNotification().getBody();
         final String CHANNEL_ID = "HEADS_UP_NOTIFICATION";
@@ -108,6 +109,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 }
             });
         } else if(flag.equals("ExistUpperBidUser")){
+            Log.d("FCM_Service", "Done?");
             sendNotificationForExistUpperBidUser(payload.get("contentId"));
         } else{
 
