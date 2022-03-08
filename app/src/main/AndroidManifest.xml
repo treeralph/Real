@@ -5,11 +5,10 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
-
     <application
         android:name=".RealApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/push_img"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -45,7 +44,10 @@
             android:exported="false" />
         <activity android:name=".SetUserProfileActivity" />
         <activity android:name=".AuctionBidActivity" />
-        <activity android:name=".AuctionContentActivity" />
+        <activity
+            android:name=".AuctionContentActivity"
+            android:parentActivityName=".ContentsActivity">
+        </activity>
         <activity android:name=".MakeLiveAuctionContentActivity" />
         <activity android:name=".MakeAuctionContentActivity" />
         <activity android:name=".ChattingActivity" />
@@ -56,11 +58,13 @@
         <activity android:name=".MakeContentActivity" />
         <activity android:name=".ContentActivity" />
         <activity android:name=".RegisterActivity" />
-        <activity android:name=".LoginActivity" />
+        <activity
+            android:name=".LoginActivity"
+            android:parentActivityName=".IntroActivity">
+        </activity>
         <activity android:name=".IntroActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

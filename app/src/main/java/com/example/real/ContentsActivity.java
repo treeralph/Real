@@ -54,6 +54,19 @@ public class ContentsActivity extends AppCompatActivity {
         //setContentView(R.layout.activity_contents);
         setContentView(R.layout.activity_contents_design);
 
+        try{
+            String FCM_intent_to_auctionContent = getIntent().getStringExtra("FCM_contentId");
+            Log.d("WOWMACHINE_ContentsActivity", FCM_intent_to_auctionContent);
+
+            Intent intent = new Intent(ContentsActivity.this, AuctionContentActivity.class);
+            intent.putExtra("ContentId", FCM_intent_to_auctionContent);
+            startActivity(intent);
+
+        } catch(Exception e){
+
+
+        }
+
         recyclerView = findViewById(R.id.ContentsActivityRecyclerViewDesign);
         makeContentBtn = findViewById(R.id.ContentsMakeContentBtnDesign);
         user = FirebaseAuth.getInstance().getCurrentUser();

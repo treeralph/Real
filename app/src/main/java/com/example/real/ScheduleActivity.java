@@ -35,13 +35,13 @@ public class ScheduleActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule);
+
         SlidrConfig config = new SlidrConfig.Builder()
                 .position(SlidrPosition.BOTTOM)
                 .scrimStartAlpha(0f)
                 .scrimEndAlpha(0f)
                 .build();
-        slidr = Slidr.attach(this, config);
-
+        Slidr.attach(this, config);
 
         datePicker = findViewById(R.id.ScheduleActivitydataPicker);
         timePicker = findViewById(R.id.ScheduleActivityTimePicker);

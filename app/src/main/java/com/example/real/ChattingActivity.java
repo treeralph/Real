@@ -135,7 +135,6 @@ public class ChattingActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(ChattingActivity.this, ScheduleActivity.class);
 
-
                 Pair[] pairs = new Pair[1];
                 pairs[0] = new Pair<View, String>(emptyview, "testView");
                 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(ChattingActivity.this, pairs);

@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
@@ -75,6 +76,25 @@ public class LoginActivity extends AppCompatActivity {
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         mAuth = FirebaseAuth.getInstance();
+
+        if (mAuth.getCurrentUser() != null) {
+            // User is signed in (getCurrentUser() will be null if not signed in)
+            try{
+                String FCM_intent_to_auctionContent = getIntent().getStringExtra("FCM_contentId");
+                Log.d("WOWMACHINE", FCM_intent_to_auctionContent);
+
+                Intent intent = new Intent(LoginActivity.this, ContentsActivity.class);
+                intent.putExtra("FCM_contentId", FCM_intent_to_auctionContent);
+                startActivity(intent);
+                finish();
+
+            } catch(Exception e){
+                Intent intent = new Intent(LoginActivity.this, ContentsActivity.class);
+                startActivity(intent);
+                finish();
+
+            }
+        }
 
         gglLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
