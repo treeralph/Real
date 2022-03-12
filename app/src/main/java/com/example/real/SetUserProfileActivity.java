@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.real.data.UserProfile;
 import com.example.real.databasemanager.FirestoreManager;
@@ -38,7 +39,7 @@ public class SetUserProfileActivity extends AppCompatActivity {
 
     EditText setuserprofile2nickname;
     ImageView setuserprofile2userprofileimage;
-    EditText setuserprofile2registertime;
+    TextView setuserprofile2registertime;
     EditText setuserprofile2description;
     Button setuserprofile2setbutton;
 
@@ -48,7 +49,7 @@ public class SetUserProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_set_user_profile2);
+        setContentView(R.layout.activity_set_user_profile_design);
 
         user = FirebaseAuth.getInstance().getCurrentUser();
 

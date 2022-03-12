@@ -315,6 +315,20 @@ public class RecyclerViewAdapterForHistory extends RecyclerView.Adapter<Recycler
                         });
                     }
                 });
+                contentViewHolder2.logitemforcontent_Mainlayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Bitmap bitmap = ((BitmapDrawable) contentViewHolder2.logitemforcontent_ContentImg.getDrawable()).getBitmap();
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        byte[] byteArray = stream.toByteArray();
+                        Intent intent = new Intent(context, ContentActivity.class);
+                        intent.putExtra("ContentId", contentId);
+                        intent.putExtra("ImageBitmap", byteArray);
+
+                        context.startActivity(intent);
+                    }
+                });
                 break;
             default:
                 Log.e("RECYCLERVIEWADAPTERFORHISTORY_ONBINDVIEWHOLDER", "NON_CASE_ERROR");

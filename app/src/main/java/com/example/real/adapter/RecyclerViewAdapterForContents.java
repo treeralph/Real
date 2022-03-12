@@ -23,8 +23,10 @@ import com.example.real.AuctionContentActivity;
 import com.example.real.Callback;
 import com.example.real.ContentActivity;
 import com.example.real.R;
+import com.example.real.data.Comment;
 import com.example.real.data.Content;
 import com.example.real.data.Contents;
+import com.example.real.data.Data;
 import com.example.real.data.UserProfile;
 import com.example.real.databasemanager.FirestoreManager;
 import com.example.real.databasemanager.StorageManager;
@@ -225,6 +227,7 @@ public class RecyclerViewAdapterForContents extends RecyclerView.Adapter<Recycle
         });
 
         FirestoreManager firestoreManagerForContent = new FirestoreManager(context, "Content", user.getUid());
+        FirestoreManager firestoreManagerForComment = new FirestoreManager(context,"Comment",user.getUid());
         firestoreManagerForContent.read("Content", contentId, new Callback() {
             @Override
             public void OnCallback(Object object) {
@@ -294,6 +297,23 @@ public class RecyclerViewAdapterForContents extends RecyclerView.Adapter<Recycle
                         });
                     }
                 });
+                // NumComments
+                firestoreManagerForComment.read("Content/" + contentId + "/Comments", new Callback() {
+                    @Override
+                    public void OnCallback(Object object) {
+                        ArrayList<Data> EmptyList = new ArrayList<>();
+                        if(object.equals(EmptyList)|| object==null){}
+                        else{
+                            int numcomment = 0;
+                            ArrayList<Comment> commentList = (ArrayList<Comment>)object;
+                            for(Comment comment : commentList){
+                                int temp = 1 + Integer.parseInt(comment.getRecomment_token());
+                                numcomment += temp;
+                            }
+                            myViewHolder.NumCommentsTextview.setText(String.valueOf(numcomment));
+                        }
+                    }
+                });
             }
         });
     }
@@ -314,6 +334,7 @@ public class RecyclerViewAdapterForContents extends RecyclerView.Adapter<Recycle
         TextView ContentProfileTextView;
         TextView ContentTimeTextView;
         ImageView ContentLikeFlicker;
+        TextView NumCommentsTextview;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -325,6 +346,7 @@ public class RecyclerViewAdapterForContents extends RecyclerView.Adapter<Recycle
             ContentProfileTextView = itemView.findViewById(R.id.itemProfileInfoTextViewDesign);
             ContentTimeTextView = itemView.findViewById(R.id.itemTimeTextViewDesign);
             ContentLikeFlicker = itemView.findViewById(R.id.itemLikeFlickerDesign);
+            NumCommentsTextview = itemView.findViewById(R.id.itemNumCommentsDesign);
         }
     }
 }
