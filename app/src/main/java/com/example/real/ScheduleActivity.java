@@ -1,17 +1,26 @@
 package com.example.real;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 
+import com.example.real.adapter.ViewPagerAdapter;
+import com.example.real.fragment.DatepickerFragment;
+import com.example.real.fragment.TimepickerFragment;
+import com.example.real.tool.MeasuredViewPager;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.r0adkll.slidr.Slidr;
 import com.r0adkll.slidr.model.SlidrConfig;
@@ -23,14 +32,18 @@ import java.util.Calendar;
 
 public class ScheduleActivity extends AppCompatActivity {
 
+    MeasuredViewPager viewPager;
+    ViewPagerAdapter viewPagerAdapter;
+
     private SlidrInterface slidr;
     DatePicker datePicker;
     TimePicker timePicker;
-    TextView scheduletextview;
-    TextView timetextview;
     Button confirmbtn;
-    int year ; int month ; int day;
-
+    String confirmeddate;
+    Button successbtn;
+    String confirmedtime;
+    DatepickerFragment datepickerFragment;
+    TimepickerFragment timepickerFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +56,56 @@ public class ScheduleActivity extends AppCompatActivity {
                 .build();
         Slidr.attach(this, config);
 
+        viewPager = findViewById(R.id.SchduleActivityViewPager);
+        datepickerFragment = new DatepickerFragment(new Callback() {
+            @Override
+            public void OnCallback(Object object) {
+                View v = (View) object;
+                datePicker = v.findViewById(R.id.FragmentDatePicker);
+                confirmbtn = v.findViewById(R.id.FragmentConfirmBtn);
+                confirmbtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        confirmeddate = datePicker.getYear() + "/" + String.valueOf(datePicker.getMonth()+1) + "/" + datePicker.getDayOfMonth();
+                        Toast.makeText(ScheduleActivity.this, confirmeddate, Toast.LENGTH_SHORT).show();
+                        viewPager.setCurrentItem(1,true);
+                    }
+                });
+            }
+        });
+        timepickerFragment = new TimepickerFragment(new Callback() {
+            @Override
+            public void OnCallback(Object object) {
+                View v = (View) object;
+                timePicker = v.findViewById(R.id.FragmentTimePicker);
+                successbtn = v.findViewById(R.id.FragmentSuccessBtn);
+                successbtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        confirmedtime = timePicker.getHour() + "/" + timePicker.getMinute();
+                        Intent intent = new Intent();
+                        intent.putExtra("CONFIRMED",confirmeddate+confirmedtime);
+                        setResult(69,intent);
+                        finish();
+                    }
+                });
+            }
+        });
+        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        viewPagerAdapter.addItem(datepickerFragment);
+        viewPagerAdapter.addItem(timepickerFragment);
+        viewPager.setAdapter(viewPagerAdapter);
+
+
+
+
+
+
+
+
+
+
+        /*
         datePicker = findViewById(R.id.ScheduleActivitydataPicker);
         timePicker = findViewById(R.id.ScheduleActivityTimePicker);
         scheduletextview = findViewById(R.id.SchduleActivityScheduleTextView);
@@ -76,7 +139,8 @@ public class ScheduleActivity extends AppCompatActivity {
                 finish();
             }
         });
-
+        */
 
     }
+
 }

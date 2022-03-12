@@ -4,9 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".ScheduleActivity"
-    android:background="#00ffffff">
+    android:background="@color/transparent">
 
     <LinearLayout
         android:id="@+id/SchduleActivityLinearLayout"
@@ -14,37 +14,10 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@color/white">
-
-        <DatePicker
-            android:id="@+id/ScheduleActivitydataPicker"
+        <com.example.real.tool.MeasuredViewPager
+            android:id="@+id/SchduleActivityViewPager"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:theme="@style/MyDatePicker"
-            android:layout_gravity="center"/>
-        <TextView
-            android:id="@+id/SchduleActivityScheduleTextView"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"/>
-        <TimePicker
-            android:id="@+id/ScheduleActivityTimePicker"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:theme="@style/MyDatePicker"/>
-        <TextView
-            android:id="@+id/SchduleActivityTimeTextView"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"/>
-        <Button
-            android:text="Confirm"
-            android:textSize="15dp"
-            android:id="@+id/ScheduleActivityConfirmBtn"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"/>
-
+            android:layout_height="wrap_content"/>
     </LinearLayout>
-    <TextView
-        android:id="@+id/ScheduleActivityEmptySpace"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/SchduleActivityLinearLayout"/>
+
 </RelativeLayout>
