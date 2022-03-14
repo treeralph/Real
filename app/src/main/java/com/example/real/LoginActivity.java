@@ -101,7 +101,7 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         }
-        
+
          */
 
         gglLoginBtn.setOnClickListener(new View.OnClickListener() {

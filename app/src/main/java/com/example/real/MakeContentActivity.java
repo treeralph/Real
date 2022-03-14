@@ -53,7 +53,7 @@ public class MakeContentActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_make_content);
+        setContentView(R.layout.activity_make_content_design);
 
         numberingMachine = new NumberingMachine();
         user = FirebaseAuth.getInstance().getCurrentUser();

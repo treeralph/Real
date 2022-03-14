@@ -38,6 +38,7 @@
             android:id="@+id/setuserprofile2userprofileimage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:src="@drawable/push_img"
             android:layout_weight="10"/>
         <EditText
             android:id="@+id/setuserprofile2registertime"

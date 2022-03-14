@@ -413,8 +413,10 @@ public class ChattingActivity extends AppCompatActivity {
             }
         }
         if(requestCode == 1){
-            String X = data.getStringExtra("TEXTEDSCHEDULE");
-            messageEditText.setText(X);
+            if(resultCode == 69){
+
+                messageEditText.setText(data.getExtras().getString("CONFIRMED"));
+            }
         }
     }
 

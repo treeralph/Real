@@ -62,6 +62,15 @@ public class LoadingActivity extends Activity {
                 startActivity(intent);
                 overridePendingTransition(R.anim.fadein, R.anim.fadeout);
             }
+            else if(tempText.equals("UserProfileMakingDone")){
+                Toast.makeText(getApplicationContext(), tempText, Toast.LENGTH_SHORT).show();
+                overridePendingTransition(R.anim.fadeout, R.anim.fadein);
+                setResult(1001);
+                Intent intent = new Intent(LoadingActivity.this, ContentsActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                finish();
+            }
 
 
         }

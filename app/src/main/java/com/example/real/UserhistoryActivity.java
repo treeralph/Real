@@ -307,6 +307,24 @@ public class UserhistoryActivity extends AppCompatActivity {
             }
         });
 
+        LoversBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (LIST_DATASET.equals(LIST_LOVERS)){
+                    LIST_DATASET.clear();
+                    AdapterForHistory.notifyDataSetChanged();
+                    recyclerView.setAdapter(AdapterForHistory);
+                    LoversBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.white));
+                }else{
+                    LIST_DATASET.clear();
+                    LIST_DATASET.addAll(LIST_LOVERS);
+                    LoversBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.grey1));
+                    AdapterForHistory.notifyDataSetChanged();
+                    recyclerView.setAdapter(AdapterForHistory);
+                }
+            }
+        });
+
         setuserprofilenickname.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

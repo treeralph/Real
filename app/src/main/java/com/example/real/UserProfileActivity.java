@@ -13,6 +13,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.util.Log;
+import android.os.Message;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -39,7 +40,7 @@ public class UserProfileActivity extends AppCompatActivity {
     TextView textView;
     Button imgSelectBtn;
     Button checkBtn;
-
+    Thread thread;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,47 +71,60 @@ public class UserProfileActivity extends AppCompatActivity {
         checkBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                String tempNickName = editText.getText().toString();
-
-                FirestoreManager firestoreManagerForUserProfile = new FirestoreManager(UserProfileActivity.this, "UserProfile", user.getUid());
-                firestoreManagerForUserProfile.search("UserProfile", "nickname", tempNickName, new Callback() {
+                thread = new Thread(new Runnable() {
                     @Override
-                    public void OnCallback(Object object) {
-                        try {
-                            ArrayList<UserProfile> UserProfileList = (ArrayList<UserProfile>) object;
-                            UserProfile errorCheck = UserProfileList.get(0);
-                            textView.setText("The NickName Already exist. Try new NickName.");
+                    public void run() {
+                        String tempNickName = editText.getText().toString();
+                        FirestoreManager firestoreManagerForUserProfile = new FirestoreManager(UserProfileActivity.this, "UserProfile", user.getUid());
+                        firestoreManagerForUserProfile.search("UserProfile", "nickname", tempNickName, new Callback() {
+                            @Override
+                            public void OnCallback(Object object) {
+                                try {
+                                    ArrayList<UserProfile> UserProfileList = (ArrayList<UserProfile>) object;
+                                    UserProfile errorCheck = UserProfileList.get(0);
+                                    textView.setText("The NickName Already exist. Try new NickName.");
 
-                        } catch(Exception e){
-                            UserProfile userProfile = new UserProfile("0", tempNickName);
-                            firestoreManagerForUserProfile.write(userProfile, "UserProfile", user.getUid(), new Callback() {
-                                @Override
-                                public void OnCallback(Object object) {
-
-                                    imageView.setDrawingCacheEnabled(true);
-                                    imageView.buildDrawingCache();
-                                    Bitmap bitmapImage = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
-
-                                    StorageManager storageManager = new StorageManager(UserProfileActivity.this, "UserProfile", user.getUid());
-                                    storageManager.upload("UserProfileImage" + "/" + user.getUid(), bitmapImage,50, new Callback() {
+                                } catch(Exception e){
+                                    UserProfile userProfile = new UserProfile("0", tempNickName);
+                                    firestoreManagerForUserProfile.write(userProfile, "UserProfile", user.getUid(), new Callback() {
                                         @Override
                                         public void OnCallback(Object object) {
-                                            String check = (String)object;
-                                            if(check.equals("0")){
-                                                Intent intent = new Intent(UserProfileActivity.this, ContentsActivity.class);
-                                                startActivity(intent);
-                                                finish();
-                                            } else{
-                                                // upload failure
-                                            }
+
+                                            imageView.setDrawingCacheEnabled(true);
+                                            imageView.buildDrawingCache();
+                                            Bitmap bitmapImage = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
+
+                                            StorageManager storageManager = new StorageManager(UserProfileActivity.this, "UserProfile", user.getUid());
+                                            storageManager.upload("UserProfileImage" + "/" + user.getUid(), bitmapImage,50, new Callback() {
+                                                @Override
+                                                public void OnCallback(Object object) {
+                                                    // Handler Message
+                                                    Message message = Message.obtain();
+                                                    message.obj = "UserProfileMakingDone";
+                                                    LoadingActivity.LoadingHandler handler = ((LoadingActivity)LoadingActivity.LoadingContext).handler;
+                                                    handler.sendMessage(message);
+
+                                                    String check = (String)object;
+                                                    if(check.equals("0")){
+                                                        Intent intent = new Intent(UserProfileActivity.this, ContentsActivity.class);
+                                                        startActivity(intent);
+                                                        finish();
+                                                    } else{
+                                                        // upload failure
+                                                    }
+                                                }
+                                            });
                                         }
                                     });
                                 }
-                            });
-                        }
+                            }
+                        });
                     }
                 });
+                thread.start();
+                Intent intent = new Intent(UserProfileActivity.this, LoadingActivity.class);
+                startActivityForResult(intent, 999);
+                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
             }
         });
     }
@@ -131,6 +145,11 @@ public class UserProfileActivity extends AppCompatActivity {
                 }catch(Exception e){
 
                 }
+            }
+        }else if(requestCode==999){
+            if(resultCode==1001){
+                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                finish();
             }
         }
     }
