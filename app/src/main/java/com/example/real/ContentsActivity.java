@@ -34,6 +34,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class ContentsActivity extends AppCompatActivity {
 
@@ -142,6 +143,7 @@ public class ContentsActivity extends AppCompatActivity {
             @Override
             public void OnCallback(Object object) {
                 ArrayList<Contents> contentsList = (ArrayList<Contents>)object;
+                Collections.reverse(contentsList);
 
                 RecyclerViewAdapterForContents adapter = new RecyclerViewAdapterForContents(contentsList, ContentsActivity.this);
                 recyclerView.setAdapter(adapter);
@@ -160,6 +162,7 @@ public class ContentsActivity extends AppCompatActivity {
                     public void OnCallback(Object object) {
                         ArrayList<Contents> contentsList = (ArrayList<Contents>)object;
 
+                        Collections.reverse(contentsList);
                         // Actually, we don't clear our dataset but create new adapter with same name
                         RecyclerViewAdapterForContents adapter = new RecyclerViewAdapterForContents(contentsList, ContentsActivity.this);
                         recyclerView.setAdapter(adapter);
@@ -190,6 +193,8 @@ public class ContentsActivity extends AppCompatActivity {
                     @Override
                     public void OnCallback(Object object) {
                         ArrayList<Contents> contentsList = (ArrayList<Contents>)object;
+                        Collections.reverse(contentsList);
+
                         RecyclerViewAdapterForContents adapter = new RecyclerViewAdapterForContents(contentsList, ContentsActivity.this);
                         recyclerView.setAdapter(adapter);
                     }

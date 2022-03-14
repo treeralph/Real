@@ -77,6 +77,7 @@ public class LoginActivity extends AppCompatActivity {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         mAuth = FirebaseAuth.getInstance();
 
+        /*
         if (mAuth.getCurrentUser() != null) {
             // User is signed in (getCurrentUser() will be null if not signed in)
             try{
@@ -95,6 +96,8 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         }
+
+         */
 
         gglLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
