@@ -1,11 +1,17 @@
 package com.example.real;
 
+import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.Dialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import com.example.real.data.Comment;
 import com.example.real.data.UserProfile;
@@ -112,7 +118,38 @@ public class RecommentActivity extends AppCompatActivity {
             }
         });
     }
+    @Override
+    public void onBackPressed() {
+        ActivityManager activityManager = (ActivityManager) getApplication().getSystemService( Activity.ACTIVITY_SERVICE );
+        ActivityManager.RunningTaskInfo task = activityManager.getRunningTasks( 10 ).get(0);
+        Log.d("TOPTOPTOP", task.toString());
+        if(task.numActivities == 1){
 
+            Dialog dialog = new Dialog(this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.exit_check_dialog);
+
+            CardView yesBtn = dialog.findViewById(R.id.exitCheckDialogYesButton);
+            yesBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    finish();
+                }
+            });
+            CardView noBtn = dialog.findViewById(R.id.exitCheckDialogNoButton);
+            noBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                }
+            });
+
+            dialog.show();
+
+        }else{
+            finish();
+        }
+    }
 
 
 }

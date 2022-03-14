@@ -1,5 +1,7 @@
 package com.example.real;
 
+import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.ActivityOptions;
 import android.app.Dialog;
 import android.content.Intent;
@@ -13,6 +15,7 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -22,6 +25,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -45,6 +49,8 @@ import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 
 public class ChattingActivity extends AppCompatActivity {
+
+    final String TAG = "ChattingActivity";
 
     ScrollView scrollView;
     RecyclerView messageRecyclerView;
@@ -83,8 +89,7 @@ public class ChattingActivity extends AppCompatActivity {
 
     RecyclerViewAdapterForMessages adapter;
 
-    Button chooseImageButton;
-    Button sendImageButton;
+    CardView sendImageButton;
     ImageView imagePreviewImageView;
     Bitmap img;
     String imageUri;
@@ -160,13 +165,10 @@ public class ChattingActivity extends AppCompatActivity {
                 LayoutInflater inflater = dialog.getLayoutInflater();
                 View dialogView = inflater.inflate(R.layout.activity_chatting_additional_functions, null);
 
-                chooseImageButton = dialogView.findViewById(R.id.ChattingActivityAdditionalFunctionsImageButton);
                 sendImageButton = dialogView.findViewById(R.id.ChattingActivityAdditionalFunctionsSendButton);
                 imagePreviewImageView = dialogView.findViewById(R.id.ChattingActivityAdditionalFunctionsImagePreviewImageView);
 
-                Log.d("TESTTESTTEST", chooseImageButton.toString());
-
-                chooseImageButton.setOnClickListener(new View.OnClickListener() {
+                imagePreviewImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent();
@@ -197,7 +199,7 @@ public class ChattingActivity extends AppCompatActivity {
                         LocalDateTime now = LocalDateTime.now();
                         String nowString = now.format(formatter);
 
-                        imageUri = "MessageImage/" + fromUserUid + "/" + nowString;
+                        imageUri = databasePath + "/" + nowString;
                         storageManagerForMessageImage = new StorageManager(ChattingActivity.this, "MessageImage", user.getUid());
                         storageManagerForMessageImage.upload(imageUri, img, new Callback() {
                             @Override
@@ -208,6 +210,50 @@ public class ChattingActivity extends AppCompatActivity {
                             }
                         });
                         dialog.dismiss();
+
+                        firestoreManagerForUserProfile.read("UserProfile", fromUserUid, new Callback() {
+                            @Override
+                            public void OnCallback(Object object) {
+                                UserProfile fromUser = (UserProfile) object;
+                                ArrayList<String> ChattingRoomID = fromUser.getChattingRoomID();
+                                if (ChattingRoomID.contains(databasePath) == false) {
+                                    ChattingRoomID.add(databasePath);
+                                    firestoreManagerForUserProfile.update("UserProfile", fromUserUid, "ChattingRoomID", ChattingRoomID, new Callback() {
+                                        @Override
+                                        public void OnCallback(Object object) {
+                                            int LogMessage = (int) object;
+                                            if (LogMessage == 0) {
+                                                Log.d(TAG, "ISSUCCESSFUL");
+                                            } else {
+                                                Log.d(TAG, "ISFAILURE");
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                        });
+
+                        firestoreManagerForUserProfile.read("UserProfile", toUserUid, new Callback() {
+                            @Override
+                            public void OnCallback(Object object) {
+                                UserProfile fromUser = (UserProfile) object;
+                                ArrayList<String> ChattingRoomID = fromUser.getChattingRoomID();
+                                if (ChattingRoomID.contains(databasePath) == false) {
+                                    ChattingRoomID.add(databasePath);
+                                    firestoreManagerForUserProfile.update("UserProfile", toUserUid, "ChattingRoomID", ChattingRoomID, new Callback() {
+                                        @Override
+                                        public void OnCallback(Object object) {
+                                            int LogMessage = (int) object;
+                                            if (LogMessage == 0) {
+                                                Log.d(TAG, "ISSUCCESSFUL");
+                                            } else {
+                                                Log.d(TAG, "ISFAILURE");
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                        });
                     }
 
                 });
@@ -219,7 +265,6 @@ public class ChattingActivity extends AppCompatActivity {
         messageSendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
 
                 String msg = messageEditText.getText().toString();
                 if(!msg.isEmpty()) {
@@ -238,6 +283,51 @@ public class ChattingActivity extends AppCompatActivity {
                     Message message = new Message(fromUserUid, toUserUid, msg, fromUserToken, toUserToken, "");
                     realTimeDatabaseManager.writeMessage(databasePath, message);
                     messageEditText.setText("");
+
+                    firestoreManagerForUserProfile.read("UserProfile", fromUserUid, new Callback() {
+                        @Override
+                        public void OnCallback(Object object) {
+                            UserProfile fromUser = (UserProfile) object;
+                            ArrayList<String> ChattingRoomID = fromUser.getChattingRoomID();
+                            if (ChattingRoomID.contains(databasePath) == false) {
+                                ChattingRoomID.add(databasePath);
+                                firestoreManagerForUserProfile.update("UserProfile", fromUserUid, "ChattingRoomID", ChattingRoomID, new Callback() {
+                                    @Override
+                                    public void OnCallback(Object object) {
+                                        int LogMessage = (int) object;
+                                        if (LogMessage == 0) {
+                                            Log.d(TAG, "ISSUCCESSFUL");
+                                        } else {
+                                            Log.d(TAG, "ISFAILURE");
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    });
+
+                    firestoreManagerForUserProfile.read("UserProfile", toUserUid, new Callback() {
+                        @Override
+                        public void OnCallback(Object object) {
+                            UserProfile fromUser = (UserProfile) object;
+                            ArrayList<String> ChattingRoomID = fromUser.getChattingRoomID();
+                            if (ChattingRoomID.contains(databasePath) == false) {
+                                ChattingRoomID.add(databasePath);
+                                firestoreManagerForUserProfile.update("UserProfile", toUserUid, "ChattingRoomID", ChattingRoomID, new Callback() {
+                                    @Override
+                                    public void OnCallback(Object object) {
+                                        int LogMessage = (int) object;
+                                        if (LogMessage == 0) {
+                                            Log.d(TAG, "ISSUCCESSFUL");
+                                        } else {
+                                            Log.d(TAG, "ISFAILURE");
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    });
+
                 }
             }
         });
@@ -332,5 +422,38 @@ public class ChattingActivity extends AppCompatActivity {
     public void finish() {
         super.finish();
         overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+    }
+
+    @Override
+    public void onBackPressed() {
+        ActivityManager activityManager = (ActivityManager) getApplication().getSystemService( Activity.ACTIVITY_SERVICE );
+        ActivityManager.RunningTaskInfo task = activityManager.getRunningTasks( 10 ).get(0);
+        Log.d("TOPTOPTOP", task.toString());
+        if(task.numActivities == 1){
+
+            Dialog dialog = new Dialog(this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.exit_check_dialog);
+
+            CardView yesBtn = dialog.findViewById(R.id.exitCheckDialogYesButton);
+            yesBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    finish();
+                }
+            });
+            CardView noBtn = dialog.findViewById(R.id.exitCheckDialogNoButton);
+            noBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                }
+            });
+
+            dialog.show();
+
+        }else{
+            finish();
+        }
     }
 }

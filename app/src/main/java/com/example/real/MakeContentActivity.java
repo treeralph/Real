@@ -1,16 +1,22 @@
 package com.example.real;
 
+import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.real.adapter.ViewPagerAdapter;
@@ -94,7 +100,8 @@ public class MakeContentActivity extends AppCompatActivity {
                             public void OnCallback(Object object) {
                                 String contentId = (String)object;
                                 String contentType = content.getContentType();
-                                Contents contents = new Contents(contentId, contentType);
+                                String contentTitle = content.getTitle();
+                                Contents contents = new Contents(contentId, contentType, contentTitle, "");
                                 firestoreManagerForContents.write(contents, "Contents", content.getTime(), new Callback() {
                                     @Override
                                     public void OnCallback(Object object) {
@@ -213,6 +220,39 @@ public class MakeContentActivity extends AppCompatActivity {
                 } catch (Exception e) {
                 }
             }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        ActivityManager activityManager = (ActivityManager) getApplication().getSystemService( Activity.ACTIVITY_SERVICE );
+        ActivityManager.RunningTaskInfo task = activityManager.getRunningTasks( 10 ).get(0);
+        Log.d("TOPTOPTOP", task.toString());
+        if(task.numActivities == 1){
+
+            Dialog dialog = new Dialog(this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.exit_check_dialog);
+
+            CardView yesBtn = dialog.findViewById(R.id.exitCheckDialogYesButton);
+            yesBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    finish();
+                }
+            });
+            CardView noBtn = dialog.findViewById(R.id.exitCheckDialogNoButton);
+            noBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                }
+            });
+
+            dialog.show();
+
+        }else{
+            finish();
         }
     }
 }

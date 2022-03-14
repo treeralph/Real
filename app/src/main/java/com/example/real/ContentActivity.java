@@ -4,7 +4,9 @@ package com.example.real;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.ActivityOptions;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,6 +17,7 @@ import android.transition.Transition;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -25,6 +28,7 @@ import androidx.annotation.ContentView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
@@ -680,6 +684,38 @@ public class ContentActivity extends AppCompatActivity {
                 setResult(CONTENTDELETEDCODE);
                 finish();
             }
+        }
+    }
+    @Override
+    public void onBackPressed() {
+        ActivityManager activityManager = (ActivityManager) getApplication().getSystemService( Activity.ACTIVITY_SERVICE );
+        ActivityManager.RunningTaskInfo task = activityManager.getRunningTasks( 10 ).get(0);
+        Log.d("TOPTOPTOP", task.toString());
+        if(task.numActivities == 1){
+
+            Dialog dialog = new Dialog(this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.exit_check_dialog);
+
+            CardView yesBtn = dialog.findViewById(R.id.exitCheckDialogYesButton);
+            yesBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    finish();
+                }
+            });
+            CardView noBtn = dialog.findViewById(R.id.exitCheckDialogNoButton);
+            noBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                }
+            });
+
+            dialog.show();
+
+        }else{
+            finish();
         }
     }
 }

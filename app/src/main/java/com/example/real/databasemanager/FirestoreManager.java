@@ -100,7 +100,9 @@ public class FirestoreManager {
     DataLambda ContentsType = dict -> {
         Contents contents = new Contents(
                 (String)dict.get("ContentId"),
-                (String)dict.get("ContentType"));
+                (String)dict.get("ContentType"),
+                (String)dict.get("ContentTitle"),
+                (String)dict.get("Category"));
         return contents;
     };
 

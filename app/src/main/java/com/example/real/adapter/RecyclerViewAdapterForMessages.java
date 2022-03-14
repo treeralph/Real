@@ -49,6 +49,8 @@ public class RecyclerViewAdapterForMessages extends RecyclerView.Adapter<Recycle
     private String userUID;
     private String contentUID;
 
+    private StorageManager storageManagerForMessageImage;
+
     public RecyclerViewAdapterForMessages(
             Context context,
             Bitmap contentUserProfileImageBitmap,
@@ -81,19 +83,40 @@ public class RecyclerViewAdapterForMessages extends RecyclerView.Adapter<Recycle
             anotherUserProfileImageBitmap = userProfileImageBitmap;
             anotherUserProfileNickName = userProfileNickName;
         }
+
+        this.storageManagerForMessageImage = new StorageManager(context, "MessageImage", user.getUid());
     }
 
     @Override
     public int getItemViewType(int position) {
 
         Message message = messageList.get(position);
+        String fUid = message.getFromUid();
+        String tUid = message.getToUid();
         String imageUri = message.getImageUri();
-        if(imageUri == null){
-            return 0;
-        }else if(imageUri.isEmpty()){
-            return 0;
+
+        if(imageUri == null || imageUri.isEmpty()){
+            if(user.getUid().equals(fUid)){
+                Log.d("NOWNOWNOWNOW_VIEWTYPE", "1");
+                return 1;
+            }else if(user.getUid().equals(tUid)){
+                Log.d("NOWNOWNOWNOW_VIEWTYPE", "0");
+                return 0;
+            }else{
+                Log.d("NOWNOWNOWNOW_VIEWTYPE", "10");
+                return 10;
+            }
         }else{
-            return 1;
+            if(user.getUid().equals(fUid)){
+                Log.d("NOWNOWNOWNOW_VIEWTYPE", "3");
+                return 3;
+            }else if(user.getUid().equals(tUid)){
+                Log.d("NOWNOWNOWNOW_VIEWTYPE", "2");
+                return 2;
+            }else{
+                Log.d("NOWNOWNOWNOW_VIEWTYPE", "10");
+                return 10;
+            }
         }
     }
 
@@ -101,11 +124,25 @@ public class RecyclerViewAdapterForMessages extends RecyclerView.Adapter<Recycle
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         switch (viewType){
-            case 0: return new MessageViewHolder(
-                    LayoutInflater.from(parent.getContext()).inflate(R.layout.message_item, parent, false));
-            case 1: return new ImageViewHolder(
-                    LayoutInflater.from(parent.getContext()).inflate(R.layout.message_item_for_image, parent, false));
-            default: return null;
+            case 0:
+                Log.d("NOWNOWNOWNOW_VIEWHOLDERTYPE", "0");
+                return new MessageForAnotherViewHolder(
+                    LayoutInflater.from(parent.getContext()).inflate(R.layout.message_item_design_for_another, parent, false));
+            case 1:
+                Log.d("NOWNOWNOWNOW_VIEWHOLDERTYPE", "1");
+                return new MessageForUserViewHolder(
+                    LayoutInflater.from(parent.getContext()).inflate(R.layout.message_item_design_for_user, parent, false));
+            case 2:
+                Log.d("NOWNOWNOWNOW_VIEWHOLDERTYPE", "2");
+                return new ImageForAnotherViewHolder(
+                    LayoutInflater.from(parent.getContext()).inflate(R.layout.message_item_for_image_for_another, parent, false));
+            case 3:
+                Log.d("NOWNOWNOWNOW_VIEWHOLDERTYPE", "3");
+                return new ImageForUserViewHolder(
+                        LayoutInflater.from(parent.getContext()).inflate(R.layout.message_item_for_image_for_user, parent, false));
+            default:
+                Log.d("NOWNOWNOWNOW_VIEWHOLDERTYPE", "null");
+                return null;
         }
 
         /*
@@ -117,117 +154,65 @@ public class RecyclerViewAdapterForMessages extends RecyclerView.Adapter<Recycle
     @Override
     public void onBindViewHolder(@NonNull  RecyclerView.ViewHolder holder, int position) {
 
+        Log.d("NOWNOWNOWNOW_MESSAGE", messageList.get(position).toString());
+
+        Message msg = messageList.get(position);
+        String message = msg.getMessage();
+        String time = msg.getTime();
+        String uri = msg.getImageUri();
+
+        TimeTextTool mTimeTextTool = new TimeTextTool(time);
+        String refinedTime = mTimeTextTool.Time2Text();
+
         // holder.getItemViewType()
         switch(getItemViewType(position)) {
             case 0:
-                Message mMessage = messageList.get(position);
+                Log.d("NOWNOWNOWNOW_MESSAGETYPE", "0");
 
-                String mUid = mMessage.getFromUid();
-                String mMsg = mMessage.getMessage();
-                String mTime = mMessage.getTime();
+                MessageForAnotherViewHolder m_viewHolder = (MessageForAnotherViewHolder) holder;
+                m_viewHolder.MessageForAnotherUserProfileImgView.setImageBitmap(anotherUserProfileImageBitmap);
+                m_viewHolder.MessageForAnotherTextView.setText(message);
+                m_viewHolder.MessageForAnotherTimeTextView.setText(refinedTime);
+                break;
 
-                TimeTextTool mTimeTextTool = new TimeTextTool(mTime);
-                String mRefinedTime = mTimeTextTool.Time2Text();
-
-                if (mMsg.isEmpty() == false && mMsg != null) {
-                    MessageViewHolder messageViewHolder = (MessageViewHolder) holder;
-
-                    if (user.getUid().equals(mUid)) {
-                        messageViewHolder.MessageLinearLayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-                        messageViewHolder.MessageTextView.setText(mMsg);
-                        messageViewHolder.MessageTimeTextView.setText(mRefinedTime);
-                        messageViewHolder.MessageUserProfileNameTextView.setText(currentUserProfileNickName);
-                        messageViewHolder.MessageUserProfileImgView.setImageBitmap(currentUserProfileImageBitmap);
-                    } else {
-                        messageViewHolder.MessageLinearLayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
-                        messageViewHolder.MessageTextView.setText(mMsg);
-                        messageViewHolder.MessageTimeTextView.setText(mRefinedTime);
-                        messageViewHolder.MessageUserProfileNameTextView.setText(anotherUserProfileNickName);
-                        messageViewHolder.MessageUserProfileImgView.setImageBitmap(anotherUserProfileImageBitmap);
-                    }
-
-                }
             case 1:
-                StorageManager storageManagerForMessageImg = new StorageManager(holder.itemView.getContext(), "MessageImage", user.getUid());
+                Log.d("NOWNOWNOWNOW_MESSAGETYPE", "1");
 
-                Message iMessage = messageList.get(position);
+                MessageForUserViewHolder u_viewHolder = (MessageForUserViewHolder) holder;
+                u_viewHolder.MessageForUserTextView.setText(message);
+                u_viewHolder.MessageForUserTimeTextView.setText(refinedTime);
+                break;
 
-                String iUid = iMessage.getFromUid();
-                String iMsg = iMessage.getMessage();
-                String iTime = iMessage.getTime();
-                String iImagePath = iMessage.getImageUri();
+            case 2:
+                Log.d("NOWNOWNOWNOW_MESSAGETYPE", "2");
 
-                TimeTextTool iTimeTextTool = new TimeTextTool(iTime);
-                String iRefinedTime = iTimeTextTool.Time2Text();
-
-                if (iImagePath.isEmpty() == false && iImagePath != null) {
-                    ImageViewHolder imageViewHolder = (ImageViewHolder) holder;
-
-                    if (user.getUid().equals(iUid)) {
-                        imageViewHolder.ImageLinearLayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-                        imageViewHolder.ImageTimeTextView.setText(iRefinedTime);
-                        imageViewHolder.ImageUserProfileNameTextView.setText(currentUserProfileNickName);
-                        imageViewHolder.ImageUserProfileImgView.setImageBitmap(currentUserProfileImageBitmap);
-                        storageManagerForMessageImg.downloadImg2View(iImagePath, imageViewHolder.ImageImageView, new Callback() {
-                            @Override
-                            public void OnCallback(Object object) {
-                            }
-                        });
-                    } else {
-                        imageViewHolder.ImageLinearLayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
-                        imageViewHolder.ImageTimeTextView.setText(iRefinedTime);
-                        imageViewHolder.ImageUserProfileNameTextView.setText(anotherUserProfileNickName);
-                        imageViewHolder.ImageUserProfileImgView.setImageBitmap(anotherUserProfileImageBitmap);
-                        storageManagerForMessageImg.downloadImg2View(iImagePath, imageViewHolder.ImageImageView, new Callback() {
-                            @Override
-                            public void OnCallback(Object object) {
-                                imageViewHolder.ImageImageView.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-
-                                    }
-                                });
-                            }
-                        });
+                ImageForAnotherViewHolder im_viewHolder = (ImageForAnotherViewHolder) holder;
+                im_viewHolder.ImageForAnotherProfileImageView.setImageBitmap(anotherUserProfileImageBitmap);
+                im_viewHolder.ImageForAnotherTimeTextView.setText(refinedTime);
+                storageManagerForMessageImage.downloadImg2View(uri, im_viewHolder.ImageForAnotherImageImageView, new Callback() {
+                    @Override
+                    public void OnCallback(Object object) {
+                        return;
                     }
+                });
 
-                }
+            case 3:
+                Log.d("NOWNOWNOWNOW_MESSAGETYPE", "3");
+
+                ImageForUserViewHolder iu_viewHolder = (ImageForUserViewHolder) holder;
+                iu_viewHolder.ImageForUserTimeTextView.setText(refinedTime);
+                storageManagerForMessageImage.downloadImg2View(uri, iu_viewHolder.ImageForUserImageImageView, new Callback() {
+                    @Override
+                    public void OnCallback(Object object) {
+                        return;
+                    }
+                });
+
             default:
+                Log.d("NOWNOWNOWNOW_MESSAGETYPE", "default");
+                break;
 
         }
-
-        /*
-        Message tempMessage = messageList.get(position);
-
-        String uid = tempMessage.getFromUid();
-        String message = tempMessage.getMessage();
-        String time = tempMessage.getTime();
-
-        TimeTextTool timeTextTool = new TimeTextTool(time);
-        Log.d("MESSAGE_RECYCLERVIEW_ADAPTER/TIME", time);
-        String refinedTime = timeTextTool.Time2Text();
-        Log.d("MESSAGE_RECYCLERVIEW_ADAPTER/REFINEDTIME", refinedTime);
-
-        if(message.isEmpty()==false && message!=null) {
-            messageViewHolder messageViewHolder = (messageViewHolder) holder;
-
-            if (user.getUid().equals(uid)) {
-                messageViewHolder.MessageLinearLayout.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-                messageViewHolder.MessageTextView.setText(message);
-                messageViewHolder.MessageTimeTextView.setText(refinedTime);
-                messageViewHolder.MessageUserProfileNameTextView.setText(currentUserProfileNickName);
-                messageViewHolder.MessageUserProfileImgView.setImageBitmap(currentUserProfileImageBitmap);
-            } else {
-                messageViewHolder.MessageLinearLayout.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
-                messageViewHolder.MessageTextView.setText(message);
-                messageViewHolder.MessageTimeTextView.setText(refinedTime);
-                messageViewHolder.MessageUserProfileNameTextView.setText(anotherUserProfileNickName);
-                messageViewHolder.MessageUserProfileImgView.setImageBitmap(anotherUserProfileImageBitmap);
-            }
-
-        }
-         */
-
     }
 
     public void addItem(Message message){
@@ -239,41 +224,67 @@ public class RecyclerViewAdapterForMessages extends RecyclerView.Adapter<Recycle
         return messageList.size();
     }
 
-    public static class MessageViewHolder extends RecyclerView.ViewHolder{
+    public static class MessageForAnotherViewHolder extends RecyclerView.ViewHolder{
 
-        LinearLayout MessageLinearLayout;
-        ImageView MessageUserProfileImgView;
-        TextView MessageUserProfileNameTextView;
-        TextView MessageTextView;
-        TextView MessageTimeTextView;
+        LinearLayout MessageForAnotherLinearLayout;
+        ImageView MessageForAnotherUserProfileImgView;
+        TextView MessageForAnotherTextView;
+        TextView MessageForAnotherTimeTextView;
 
-        public MessageViewHolder(@NonNull View itemView) {
+        public MessageForAnotherViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            MessageLinearLayout = itemView.findViewById(R.id.messageItemLinearLayout);
-            MessageUserProfileImgView = itemView.findViewById(R.id.messageItemProfileImageView);
-            MessageUserProfileNameTextView = itemView.findViewById(R.id.messageItemProfileNickNameTextView);
-            MessageTextView = itemView.findViewById(R.id.messageItemMessageTextView);
-            MessageTimeTextView = itemView.findViewById(R.id.messageItemTimeTextView);
+            MessageForAnotherLinearLayout = itemView.findViewById(R.id.messageItemForAnotherLinearLayoutDesign);
+            MessageForAnotherUserProfileImgView = itemView.findViewById(R.id.messageItemForAnotherProfileImageViewDesign);
+            MessageForAnotherTextView = itemView.findViewById(R.id.messageItemForAnotherMessageTextViewDesign);
+            MessageForAnotherTimeTextView = itemView.findViewById(R.id.messageItemForAnotherTimeTextViewDesign);
         }
     }
 
-    public static class ImageViewHolder extends RecyclerView.ViewHolder{
+    public static class MessageForUserViewHolder extends RecyclerView.ViewHolder{
 
-        LinearLayout ImageLinearLayout;
-        ImageView ImageUserProfileImgView;
-        TextView ImageUserProfileNameTextView;
-        ImageView ImageImageView;
-        TextView ImageTimeTextView;
+        LinearLayout MessageForUserLinearLayout;
+        TextView MessageForUserTextView;
+        TextView MessageForUserTimeTextView;
 
-        public ImageViewHolder(@NonNull View itemView) {
+        public MessageForUserViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            ImageLinearLayout = itemView.findViewById(R.id.messageItemForImageLinearLayout);
-            ImageUserProfileImgView = itemView.findViewById(R.id.messageItemForImageProfileImageView);
-            ImageUserProfileNameTextView = itemView.findViewById(R.id.messageItemForImageProfileNickNameTextView);
-            ImageImageView = itemView.findViewById(R.id.messageItemForImageImageView);
-            ImageTimeTextView = itemView.findViewById(R.id.messageItemForImageTimeTextView);
+            MessageForUserLinearLayout = itemView.findViewById(R.id.messageItemForUserLinearLayoutDesign);
+            MessageForUserTextView = itemView.findViewById(R.id.messageItemForUserMessageTextViewDesign);
+            MessageForUserTimeTextView = itemView.findViewById(R.id.messageItemForUserTimeTextViewDesign);
+        }
+    }
+
+    public static class ImageForAnotherViewHolder extends RecyclerView.ViewHolder{
+
+        LinearLayout ImageForAnotherLinearLayout;
+        ImageView ImageForAnotherProfileImageView;
+        ImageView ImageForAnotherImageImageView;
+        TextView ImageForAnotherTimeTextView;
+
+        public ImageForAnotherViewHolder(@NonNull View itemView) {
+            super(itemView);
+
+            ImageForAnotherLinearLayout = itemView.findViewById(R.id.messageItemForImageForAnotherLinearLayoutDesign);
+            ImageForAnotherProfileImageView = itemView.findViewById(R.id.messageItemForImageForAnotherProfileImageViewDesign);
+            ImageForAnotherImageImageView = itemView.findViewById(R.id.messageItemForImageForAnotherImageImageView);
+            ImageForAnotherTimeTextView = itemView.findViewById(R.id.messageItemForImageForAnotherTimeTextViewDesign);
+        }
+    }
+
+    public static class ImageForUserViewHolder extends RecyclerView.ViewHolder{
+
+        LinearLayout ImageForUserLinearLayout;
+        ImageView ImageForUserImageImageView;
+        TextView ImageForUserTimeTextView;
+
+        public ImageForUserViewHolder(@NonNull View itemView) {
+            super(itemView);
+
+            ImageForUserLinearLayout = itemView.findViewById(R.id.messageItemForImageForUserLinearLayoutDesign);
+            ImageForUserImageImageView = itemView.findViewById(R.id.messageItemForImageForUserImageImageView);
+            ImageForUserTimeTextView = itemView.findViewById(R.id.messageItemForImageForUserTimeTextViewDesign);
         }
     }
 }

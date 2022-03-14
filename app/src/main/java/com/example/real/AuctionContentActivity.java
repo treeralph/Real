@@ -1,5 +1,7 @@
 package com.example.real;
 
+import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -99,7 +101,6 @@ public class AuctionContentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_auction_content);
         setContentView(R.layout.activity_auction_content_design);
-
 
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
@@ -270,8 +271,6 @@ public class AuctionContentActivity extends AppCompatActivity {
 
                                         }
                                     });
-
-
                         }
                     });
 
@@ -698,10 +697,6 @@ public class AuctionContentActivity extends AppCompatActivity {
                         ArrayList<String> auctionUserList = tempContent.getAuctionUserList();
                         String myBidPrice = data.getStringExtra("MyBidPrice");
                         String auctionUserListFormat = userUID + "#" + myBidPrice;
-
-                        TextView textTextView = findViewById(R.id.TESTBOARD);
-                        Log.e("NULLNULLNULL", "\n@" + auctionUserListFormat + "\n" + auctionUserList.toString());
-                        textTextView.setText("\n@" + auctionUserListFormat + "\n" + auctionUserList.toString());
 
                         if (auctionUserList.contains(auctionUserListFormat)) {
                             Toast.makeText(AuctionContentActivity.this, "Your Bid is successful!", Toast.LENGTH_LONG).show();
