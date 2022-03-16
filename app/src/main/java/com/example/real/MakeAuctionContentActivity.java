@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 
 import com.example.real.adapter.ViewPagerAdapter;
 import com.example.real.data.AuctionContent;
@@ -39,8 +40,8 @@ import java.io.InputStream;
 
 public class MakeAuctionContentActivity extends AppCompatActivity {
 
-    Button MakeContentBtn;
-    Button ChooseImgBtn;
+    CardView MakeContentBtn;
+    FrameLayout ChooseImgBtn;
     EditText editTextTitle;
     EditText editTextContent;
     EditText editTextAuctionPrice;
@@ -69,13 +70,13 @@ public class MakeAuctionContentActivity extends AppCompatActivity {
 
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        MakeContentBtn = findViewById(R.id.makeAuctionContentMakeBtn);
-        ChooseImgBtn = findViewById(R.id.makeAuctionContentImgSelectBtn);
-        editTextTitle = findViewById(R.id.makeAuctionContentEditTextTitle);
-        editTextContent = findViewById(R.id.makeAuctionContentEditTextContent);
-        editTextAuctionPrice = findViewById(R.id.makeAuctionContentEditTextAuctionPrice);
-        editTextAuctionDuration = findViewById(R.id.makeAuctionContentSelectDeadLine);
-        viewPager = findViewById(R.id.makeAuctionContentViewPager);
+        MakeContentBtn = findViewById(R.id.makeAuctionContentMakeButtonDesign);
+        ChooseImgBtn = findViewById(R.id.makeAuctionContentImageSelectButton);
+        editTextTitle = findViewById(R.id.makeAuctionContentTitleEditTextDesign);
+        editTextContent = findViewById(R.id.makeAuctionContentDescriptionEditTextDesign);
+        editTextAuctionPrice = findViewById(R.id.makeAuctionContentPriceEditTextDesign);
+        editTextAuctionDuration = findViewById(R.id.makeAuctionContentDurationEditTextDesign);
+        viewPager = findViewById(R.id.makeAuctionContentViewPagerDesign);
 
         ChooseImgBtn.setOnClickListener(new View.OnClickListener() {
             @Override

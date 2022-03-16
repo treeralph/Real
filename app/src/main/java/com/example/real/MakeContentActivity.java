@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,8 +39,8 @@ import java.io.InputStream;
 
 public class MakeContentActivity extends AppCompatActivity {
 
-    Button MakeContentBtn;
-    Button ChooseImgBtn;
+    CardView MakeContentBtn;
+    FrameLayout ChooseImgBtn;
     EditText editTextTitle;
     EditText editTextContent;
     ViewPager viewPager;
@@ -64,11 +65,11 @@ public class MakeContentActivity extends AppCompatActivity {
 
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        MakeContentBtn = findViewById(R.id.makeContentMakeBtn);
-        ChooseImgBtn = findViewById(R.id.makeContentImgSelectBtn);
-        editTextTitle = findViewById(R.id.makeContentEditTextTitle);
-        editTextContent = findViewById(R.id.makeContentEditTextContent);
-        viewPager = findViewById(R.id.makeContentViewPager);
+        MakeContentBtn = findViewById(R.id.makeContentMakeButtonDesign);
+        ChooseImgBtn = findViewById(R.id.makeContentImageSelectButtonDesign);
+        editTextTitle = findViewById(R.id.makeContentTitleEditTextDesign);
+        editTextContent = findViewById(R.id.makeContentDescriptionEditTextDesign);
+        viewPager = findViewById(R.id.makeContentViewPagerDesign);
 
         ChooseImgBtn.setOnClickListener(new View.OnClickListener() {
             @Override

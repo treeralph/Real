@@ -20,18 +20,17 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <FrameLayout
+                    android:id="@+id/makeAuctionContentImageSelectButton"
                     android:layout_width="match_parent"
                     android:layout_height="400dp">
                     <ImageView
-                        android:id="@+id/designTestViewPagerBackgroundImageView"
-                        android:transitionName="contentsItemImageCardView"
                         android:layout_width="match_parent"
                         android:layout_height="400dp"
                         android:scaleType="centerCrop"
                         android:background="@color/yellow"/>
 
                     <androidx.viewpager.widget.ViewPager
-                        android:id="@+id/designTestContentImageViewPager"
+                        android:id="@+id/makeAuctionContentViewPagerDesign"
                         android:layout_width="match_parent"
                         android:layout_height="400dp"
                         android:background="#00ffffff"/>
@@ -56,11 +55,13 @@
                     android:layout_marginRight="20dp"
                     android:background="@drawable/bottomlineborder">
                     <EditText
+                        android:id="@+id/makeAuctionContentTitleEditTextDesign"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
-                        android:text="TITLE"
-                        android:textColor="@color/grey1"
+                        android:hint="TITLE"
+                        android:textColorHint="@color/grey1"
+                        android:textColor="@color/black"
                         android:textSize="30dp"
                         android:textStyle="bold"
                         android:fontFamily="@font/simplehae"/>
@@ -68,14 +69,16 @@
 
 
                 <EditText
+                    android:id="@+id/makeAuctionContentDescriptionEditTextDesign"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginBottom="10dp"
-                    android:text="DESCRIPTION"
-                    android:textColor="@color/grey1"
+                    android:hint="DESCRIPTION"
+                    android:textColorHint="@color/grey1"
+                    android:textColor="@color/black"
                     android:textSize="20dp"
                     android:textStyle="bold"
                     android:fontFamily="@font/simplehae"/>
@@ -93,7 +96,8 @@
                         android:layout_marginTop="20dp"
                         android:text="Auction setting"
                         android:textColor="@color/black"
-                        android:textSize="25dp"
+                        android:textStyle="bold"
+                        android:textSize="20dp"
                         android:fontFamily="@font/simplehae"/>
 
                     <LinearLayout
@@ -109,16 +113,20 @@
                             android:layout_height="wrap_content"
                             android:text="Price :"
                             android:textColor="@color/black"
-                            android:textSize="25dp"
+                            android:textSize="20dp"
                             android:fontFamily="@font/simplehae"/>
                         <EditText
+                            android:id="@+id/makeAuctionContentPriceEditTextDesign"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="20dp"
-                            android:text="Price"
-                            android:textColor="@color/grey"
-                            android:textSize="25dp"
+                            android:hint="Price"
+                            android:textColorHint="@color/grey"
+                            android:textColor="@color/black"
+                            android:textSize="20dp"
                             android:fontFamily="@font/simplehae"
+                            android:inputType="number"
+                            android:digits="0123456789"
                             android:layout_weight="1"
                             android:backgroundTint="@color/grey2"/>
                     </LinearLayout>
@@ -135,16 +143,20 @@
                             android:layout_height="wrap_content"
                             android:text="Duration :"
                             android:textColor="@color/black"
-                            android:textSize="25dp"
+                            android:textSize="20dp"
                             android:fontFamily="@font/simplehae"/>
                         <EditText
+                            android:id="@+id/makeAuctionContentDurationEditTextDesign"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="20dp"
-                            android:text="Duration"
-                            android:textColor="@color/grey"
-                            android:textSize="25dp"
+                            android:hint="Duration"
+                            android:textColorHint="@color/grey"
+                            android:textColor="@color/black"
+                            android:textSize="20dp"
                             android:fontFamily="@font/simplehae"
+                            android:inputType="number"
+                            android:digits="0123456789"
                             android:layout_weight="1"
                             android:backgroundTint="@color/grey2"/>
                     </LinearLayout>
@@ -152,6 +164,7 @@
             </LinearLayout>
         </ScrollView>
         <androidx.cardview.widget.CardView
+            android:id="@+id/makeAuctionContentMakeButtonDesign"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"

@@ -20,18 +20,17 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <FrameLayout
+                    android:id="@+id/makeContentImageSelectButtonDesign"
                     android:layout_width="match_parent"
                     android:layout_height="400dp">
                     <ImageView
-                        android:id="@+id/designTestViewPagerBackgroundImageView"
-                        android:transitionName="contentsItemImageCardView"
                         android:layout_width="match_parent"
                         android:layout_height="400dp"
                         android:scaleType="centerCrop"
                         android:background="@color/yellow"/>
 
                     <androidx.viewpager.widget.ViewPager
-                        android:id="@+id/designTestContentImageViewPager"
+                        android:id="@+id/makeContentViewPagerDesign"
                         android:layout_width="match_parent"
                         android:layout_height="400dp"
                         android:background="#00ffffff"/>
@@ -56,24 +55,28 @@
                     android:layout_marginRight="20dp"
                     android:background="@drawable/bottomlineborder">
                     <EditText
+                        android:id="@+id/makeContentTitleEditTextDesign"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
-                        android:text="TITLE"
-                        android:textColor="@color/grey1"
+                        android:hint="TITLE"
+                        android:textColorHint="@color/grey1"
+                        android:textColor="@color/black"
                         android:textSize="30dp"
                         android:textStyle="bold"
                         android:fontFamily="@font/simplehae"/>
                 </FrameLayout>
                 <EditText
+                    android:id="@+id/makeContentDescriptionEditTextDesign"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginBottom="10dp"
-                    android:text="DESCRIPTION"
-                    android:textColor="@color/grey1"
+                    android:hint="DESCRIPTION"
+                    android:textColorHint="@color/grey1"
+                    android:textColor="@color/black"
                     android:textSize="20dp"
                     android:textStyle="bold"
                     android:fontFamily="@font/simplehae"/>
@@ -81,6 +84,7 @@
             </LinearLayout>
         </ScrollView>
         <androidx.cardview.widget.CardView
+            android:id="@+id/makeContentMakeButtonDesign"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"

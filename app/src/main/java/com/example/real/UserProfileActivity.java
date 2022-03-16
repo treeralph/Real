@@ -7,6 +7,7 @@ import androidx.cardview.widget.CardView;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Dialog;
+import android.app.Notification;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -38,25 +39,26 @@ public class UserProfileActivity extends AppCompatActivity {
     ImageView imageView;
     EditText editText;
     TextView textView;
-    Button imgSelectBtn;
-    Button checkBtn;
+    TextView iTextView;
+    CardView checkBtn;
     Thread thread;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_profile);
+        setContentView(R.layout.activity_user_profile_design);
 
-        imageView = (ImageView)findViewById(R.id.UserProfileProfileImageView);
-        editText = (EditText)findViewById(R.id.UserProfileNickNameEditText);
-        textView = (TextView)findViewById(R.id.UserProfileCommunicationTextView);
-        imgSelectBtn = (Button)findViewById(R.id.UserProfileProfileImageSelectBtn);
-        checkBtn = (Button)findViewById(R.id.UserProfileCheckBtn);
+        imageView = (ImageView)findViewById(R.id.userProfileProfileImageImageViewDesign);
+        editText = (EditText)findViewById(R.id.userProfileProfileNicknameTextViewDesign);
+        textView = (TextView)findViewById(R.id.UserProfileCommunicationTextViewDesign);
+        iTextView = (TextView)findViewById(R.id.userProfileProfileImageTextViewDesign);
+        checkBtn = (CardView) findViewById(R.id.userProfileMakeProfileButtonDesign);
 
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         editText.setText(user.getUid());
 
-        imgSelectBtn.setOnClickListener(new View.OnClickListener() {
+        imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
@@ -141,7 +143,7 @@ public class UserProfileActivity extends AppCompatActivity {
                     in.close();
 
                     imageView.setImageBitmap(img);
-
+                    iTextView.setText("");
                 }catch(Exception e){
 
                 }

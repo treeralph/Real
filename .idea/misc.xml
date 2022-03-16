@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../layout/custom_preview.xml" value="0.375" />
         <entry key="app/src/main/res/drawable/bottomlineborder.xml" value="0.3441025641025641" />
         <entry key="app/src/main/res/drawable/bronze_gradient_color.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/challenger_gradient_color.xml" value="0.12407407407407407" />
@@ -39,15 +40,17 @@
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.3333333333333333" />
         <entry key="app/src/main/res/layout/activity_login_design.xml" value="0.335" />
         <entry key="app/src/main/res/layout/activity_make_auction_content.xml" value="0.2857789855072464" />
-        <entry key="app/src/main/res/layout/activity_make_auction_content_design.xml" value="0.45" />
+        <entry key="app/src/main/res/layout/activity_make_auction_content_design.xml" value="0.3336831059811123" />
         <entry key="app/src/main/res/layout/activity_make_content.xml" value="0.2803442028985507" />
-        <entry key="app/src/main/res/layout/activity_make_content_design.xml" value="0.45" />
+        <entry key="app/src/main/res/layout/activity_make_content_design.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_peek_user_profile.xml" value="0.3683559950556242" />
         <entry key="app/src/main/res/layout/activity_pop_up.xml" value="0.5" />
         <entry key="app/src/main/res/layout/activity_pop_up_for_contents.xml" value="0.5" />
         <entry key="app/src/main/res/layout/activity_schedule.xml" value="0.3333333333333333" />
         <entry key="app/src/main/res/layout/activity_set_user_profile.xml" value="0.2957427536231884" />
         <entry key="app/src/main/res/layout/activity_set_user_profile2.xml" value="0.2957427536231884" />
+        <entry key="app/src/main/res/layout/activity_user_profile.xml" value="0.45" />
+        <entry key="app/src/main/res/layout/activity_user_profile_design.xml" value="0.375" />
         <entry key="app/src/main/res/layout/activity_userhistory_design.xml" value="0.4658753709198813" />
         <entry key="app/src/main/res/layout/chatting_room_item.xml" value="0.45" />
         <entry key="app/src/main/res/layout/chatting_room_item_design.xml" value="0.55" />
@@ -85,5 +88,12 @@
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.335" />
+      </ProjectState>
+    </option>
   </component>
 </project>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/userProfileProfileImageImageViewDesign"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                app:civ_border_width="2dp"
+                app:civ_border_color="@color/black"
+                android:layout_gravity="center"
+                android:src="@color/yellow"/>
+
+            <TextView
+                android:id="@+id/userProfileProfileImageTextViewDesign"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="TOUCH TO UPLOAD IMAGE"
+                android:textSize="19dp"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:fontFamily="@font/simplehae"
+                android:gravity="center"/>
+        </FrameLayout>
+
+        <EditText
+            android:id="@+id/userProfileProfileNicknameTextViewDesign"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="60dp"
+            android:gravity="center"
+            android:hint="NICKNAME"
+            android:textColorHint="@color/grey1"
+            android:textColor="@color/black"
+            android:fontFamily="@font/simplehae"
+            android:textSize="30dp"
+            android:backgroundTint="@color/black"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/UserProfileCommunicationTextViewDesign"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:textColor="@color/black"
+            android:textSize="15dp"
+            android:fontFamily="@font/simplehae"
+            android:gravity="center"/>
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/userProfileMakeProfileButtonDesign"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            app:contentPadding="10dp"
+            app:cardCornerRadius="15dp"
+            app:cardBackgroundColor="@color/black">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="MAKE PROFILE"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:textColor="@color/white"
+                android:fontFamily="@font/simplehae"
+                android:gravity="center"/>
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+
+</RelativeLayout>
