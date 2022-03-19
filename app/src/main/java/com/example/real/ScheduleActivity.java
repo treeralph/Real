@@ -84,9 +84,22 @@ public class ScheduleActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         confirmedtime = timePicker.getHour() + "/" + timePicker.getMinute();
                         Intent intent = new Intent();
-                        intent.putExtra("CONFIRMED",confirmeddate+confirmedtime);
-                        setResult(69,intent);
-                        finish();
+                        if(timePicker.getHour()<12){
+                            String X = "오전 ";
+                            String refined = String.valueOf(datePicker.getMonth()+1)+ "월 " + datePicker.getDayOfMonth() + "일, " +
+                                    X + timePicker.getHour() + "시 " + timePicker.getMinute()+"분";
+                            intent.putExtra("CONFIRMED",refined);
+                            setResult(69,intent);
+                            finish();}
+                        else{
+                            String X = "오후 ";
+                            String refined = String.valueOf(datePicker.getMonth()+1)+ "월 " + datePicker.getDayOfMonth() + "일, " +
+                                    X + timePicker.getHour() + "시 " + timePicker.getMinute()+"분";
+                            intent.putExtra("CONFIRMED",refined);
+                            setResult(69,intent);
+                            finish(); }
+
+
                     }
                 });
             }

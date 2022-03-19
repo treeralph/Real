@@ -17,6 +17,10 @@ public class Message extends Data{
     private String toToken;
     private String imageUri;
 
+    private String ReservedTime;
+    private String location;
+    private Boolean isconfirmed;
+
     public Message(){
 
     }
@@ -42,6 +46,16 @@ public class Message extends Data{
         this.fromToken = fromToken;
         this.toToken = toToken;
         this.imageUri = imageUri;
+    }
+    public Message(String ReservedTime, String Location, Boolean isConfirmed){
+
+        Date date_now = new Date(System.currentTimeMillis());
+        SimpleDateFormat date_format = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+        this.time = date_format.format(date_now);
+        this.ReservedTime = ReservedTime;
+        this.location = Location;
+        this.isconfirmed = isConfirmed;
+
     }
 
     @NonNull
@@ -111,4 +125,16 @@ public class Message extends Data{
     public void setImageUri(String imageUri) {
         this.imageUri = imageUri;
     }
+
+    public String getLocation() { return location; }
+
+    public void setLocation(String location) { this.location = location; }
+
+    public Boolean getIsconfirmed() { return isconfirmed; }
+
+    public void setIsconfirmed(Boolean isconfirmed) { this.isconfirmed = isconfirmed; }
+
+    public String getReservedTime() { return ReservedTime; }
+
+    public void setReservedTime(String reservedTime) { ReservedTime = reservedTime; }
 }
