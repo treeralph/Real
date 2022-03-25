@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+
     <application
         android:name=".RealApplication"
         android:allowBackup="true"
@@ -13,10 +14,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
+        <activity android:name=".PaddleCustomActivity"></activity>
         <activity
             android:name=".ScheduleActivity"
             android:exported="false"
-            android:theme="@style/Theme.AppCompat.Transparent.NoActionBar"/>
+            android:theme="@style/Theme.AppCompat.Transparent.NoActionBar" />
         <activity
             android:name=".PeekUserProfileActivity"
             android:exported="false"
@@ -29,7 +31,6 @@
             android:name=".PopUpActivity"
             android:exported="false"
             android:theme="@style/TESTSTYLE" />
-
         <activity android:name=".UserhistoryActivity" />
         <activity
             android:name=".ChattingRoomActivity"
@@ -47,8 +48,7 @@
         <activity android:name=".AuctionBidActivity" />
         <activity
             android:name=".AuctionContentActivity"
-            android:parentActivityName=".ContentsActivity">
-        </activity>
+            android:parentActivityName=".ContentsActivity"></activity>
         <activity android:name=".MakeLiveAuctionContentActivity" />
         <activity android:name=".MakeAuctionContentActivity" />
         <activity android:name=".ChattingActivity" />
@@ -61,11 +61,11 @@
         <activity android:name=".RegisterActivity" />
         <activity
             android:name=".LoginActivity"
-            android:parentActivityName=".IntroActivity">
-        </activity>
+            android:parentActivityName=".IntroActivity"></activity>
         <activity android:name=".IntroActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

@@ -7,23 +7,31 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.real.Callback;
 import com.example.real.ChattingActivity;
 import com.example.real.R;
 import com.example.real.data.Message;
+import com.example.real.data.UserProfile;
+import com.example.real.databasemanager.FirestoreManager;
+import com.example.real.databasemanager.RealTimeDatabaseManager;
 import com.example.real.databasemanager.StorageManager;
 import com.example.real.tool.TimeTextTool;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
+
+import static com.example.real.adapter.RecyclerViewAdapterForChattingRoom.TAG;
 
 public class RecyclerViewAdapterForMessages extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -40,6 +48,7 @@ public class RecyclerViewAdapterForMessages extends RecyclerView.Adapter<Recycle
     private Bitmap userProfileImageBitmap;
     private String contentUserProfileNickName;
     private String userProfileNickName;
+    private String databasePath;
 
     private Bitmap currentUserProfileImageBitmap;
     private Bitmap anotherUserProfileImageBitmap;
@@ -58,7 +67,8 @@ public class RecyclerViewAdapterForMessages extends RecyclerView.Adapter<Recycle
             String contentUserProfileNickName,
             String userProfileNickName,
             String userUID,
-            String contentUID) {
+            String contentUID,
+            String databasePath) {
 
         this.messageList = new ArrayList<>();
         this.context = context;
@@ -69,7 +79,7 @@ public class RecyclerViewAdapterForMessages extends RecyclerView.Adapter<Recycle
         this.userProfileNickName = userProfileNickName;
         this.userUID = userUID;
         this.contentUID = contentUID;
-
+        this.databasePath = databasePath;
         user = FirebaseAuth.getInstance().getCurrentUser();
 
         if(user.getUid().equals(userUID)){
@@ -91,6 +101,18 @@ public class RecyclerViewAdapterForMessages extends RecyclerView.Adapter<Recycle
     public int getItemViewType(int position) {
 
         Message message = messageList.get(position);
+        if(message.getFromUid() == null || message.getFromUid().isEmpty()){
+            if(message.getIsconfirmed() == Boolean.FALSE){
+                // Not yet Confirmed
+                Log.d("NOWNOWNOWNOW_VIEWTYPE", "100");
+                return 100;
+            }
+            else{
+                // Confirmed
+                Log.d("NOWNOWNOWNOW_VIEWTYPE", "101");
+                return 101;
+            }
+        }
         String fUid = message.getFromUid();
         String tUid = message.getToUid();
         String imageUri = message.getImageUri();
@@ -140,6 +162,14 @@ public class RecyclerViewAdapterForMessages extends RecyclerView.Adapter<Recycle
                 Log.d("NOWNOWNOWNOW_VIEWHOLDERTYPE", "3");
                 return new ImageForUserViewHolder(
                         LayoutInflater.from(parent.getContext()).inflate(R.layout.message_item_for_image_for_user, parent, false));
+            case 100:
+                Log.d("NOWNOWNOWNOW_VIEWHOLDERTYPE", "100");
+                return new AppointmentViewHolder(
+                        LayoutInflater.from(parent.getContext()).inflate(R.layout.message_item_for_appointment, parent, false));
+            case 101:
+                Log.d("NOWNOWNOWNOW_VIEWHOLDERTYPE", "101");
+                return new ConfirmedAppointmentViewHolder(
+                        LayoutInflater.from(parent.getContext()).inflate(R.layout.message_item_for_confirmed_appointment, parent, false));
             default:
                 Log.d("NOWNOWNOWNOW_VIEWHOLDERTYPE", "null");
                 return null;
@@ -158,11 +188,13 @@ public class RecyclerViewAdapterForMessages extends RecyclerView.Adapter<Recycle
 
         Message msg = messageList.get(position);
         String message = msg.getMessage();
-        String time = msg.getTime();
+
         String uri = msg.getImageUri();
 
+        String time = msg.getTime();
         TimeTextTool mTimeTextTool = new TimeTextTool(time);
         String refinedTime = mTimeTextTool.Time2Text();
+
 
         // holder.getItemViewType()
         switch(getItemViewType(position)) {
@@ -207,7 +239,137 @@ public class RecyclerViewAdapterForMessages extends RecyclerView.Adapter<Recycle
                         return;
                     }
                 });
+            case 100:
+                Log.d("NOWNOWNOWNOW_MESSAGETYPE", "100");
 
+                AppointmentViewHolder ap_viewHolder = (AppointmentViewHolder) holder;
+                ap_viewHolder.MessageForAppointmentTimeTextView.setText(msg.getReservedTime());
+                ap_viewHolder.MessageForAppointmentLocationTextView.setText(msg.getLocation());
+                ap_viewHolder.MessageForAppointmentPositiveBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Upload data to firebase where chatting room exists
+                        Message message = new Message(msg.getReservedTime(), msg.getLocation(),true);
+                        RealTimeDatabaseManager realTimeDatabaseManager = new RealTimeDatabaseManager(context, "Messages", user.getUid());
+                        realTimeDatabaseManager.writeMessage(databasePath, message);
+                        FirestoreManager firestoreManagerForUserProfile = new FirestoreManager(context, "UserProfile", user.getUid());
+                        if (user.getUid().equals(userUID)) {
+                            String fromUserUid = userUID;
+                            String toUserUid = contentUID;
+                            firestoreManagerForUserProfile.read("UserProfile", fromUserUid, new Callback() {
+                                @Override
+                                public void OnCallback(Object object) {
+                                    UserProfile fromUser = (UserProfile) object;
+                                    ArrayList<String> ChattingRoomID = fromUser.getChattingRoomID();
+                                    if (ChattingRoomID.contains(databasePath) == false) {
+                                        ChattingRoomID.add(databasePath);
+                                        firestoreManagerForUserProfile.update("UserProfile", fromUserUid, "ChattingRoomID", ChattingRoomID, new Callback() {
+                                            @Override
+                                            public void OnCallback(Object object) {
+                                                int LogMessage = (int) object;
+                                                if (LogMessage == 0) {
+                                                    Log.d(TAG, "ISSUCCESSFUL");
+                                                } else {
+                                                    Log.d(TAG, "ISFAILURE");
+                                                }
+                                                firestoreManagerForUserProfile.read("UserProfile", toUserUid, new Callback() {
+                                                    @Override
+                                                    public void OnCallback(Object object) {
+                                                        UserProfile fromUser = (UserProfile) object;
+                                                        ArrayList<String> ChattingRoomID = fromUser.getChattingRoomID();
+                                                        if (ChattingRoomID.contains(databasePath) == false) {
+                                                            ChattingRoomID.add(databasePath);
+                                                            firestoreManagerForUserProfile.update("UserProfile", toUserUid, "ChattingRoomID", ChattingRoomID, new Callback() {
+                                                                @Override
+                                                                public void OnCallback(Object object) {
+                                                                    int LogMessage = (int) object;
+                                                                    if (LogMessage == 0) {
+                                                                        Log.d(TAG, "ISSUCCESSFUL");
+                                                                    } else {
+                                                                        Log.d(TAG, "ISFAILURE");
+                                                                    }
+                                                                }
+                                                            });
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    }
+                                }
+                            });
+                        } else {
+                            String fromUserUid = contentUID;
+                            String toUserUid = userUID;
+                            firestoreManagerForUserProfile.read("UserProfile", fromUserUid, new Callback() {
+                                @Override
+                                public void OnCallback(Object object) {
+                                    UserProfile fromUser = (UserProfile) object;
+                                    ArrayList<String> ChattingRoomID = fromUser.getChattingRoomID();
+                                    if (ChattingRoomID.contains(databasePath) == false) {
+                                        ChattingRoomID.add(databasePath);
+                                        firestoreManagerForUserProfile.update("UserProfile", fromUserUid, "ChattingRoomID", ChattingRoomID, new Callback() {
+                                            @Override
+                                            public void OnCallback(Object object) {
+                                                int LogMessage = (int) object;
+                                                if (LogMessage == 0) {
+                                                    Log.d(TAG, "ISSUCCESSFUL");
+                                                } else {
+                                                    Log.d(TAG, "ISFAILURE");
+                                                }
+                                                firestoreManagerForUserProfile.read("UserProfile", toUserUid, new Callback() {
+                                                    @Override
+                                                    public void OnCallback(Object object) {
+                                                        UserProfile fromUser = (UserProfile) object;
+                                                        ArrayList<String> ChattingRoomID = fromUser.getChattingRoomID();
+                                                        if (ChattingRoomID.contains(databasePath) == false) {
+                                                            ChattingRoomID.add(databasePath);
+                                                            firestoreManagerForUserProfile.update("UserProfile", toUserUid, "ChattingRoomID", ChattingRoomID, new Callback() {
+                                                                @Override
+                                                                public void OnCallback(Object object) {
+                                                                    int LogMessage = (int) object;
+                                                                    if (LogMessage == 0) {
+                                                                        Log.d(TAG, "ISSUCCESSFUL");
+                                                                    } else {
+                                                                        Log.d(TAG, "ISFAILURE");
+                                                                    }
+                                                                }
+                                                            });
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                        // and then, delete this item from recyclerview
+                        messageList.remove(position);
+                        notifyItemRemoved(position);
+                        // and then, add item without server to get Appointment
+                        Toast.makeText(context, "asdf", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                ap_viewHolder.MessageForAppointmentNegativeBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Jst delete this item from recyclerview
+                        messageList.remove(position);
+                        notifyItemRemoved(position);
+                        // and then , refresh recyclerview to check item deleted
+                        Toast.makeText(context, "qwer", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                break;
+            case 101:
+                Log.d("NOWNOWNOWNOW_MESSAGETYPE", "101");
+
+                ConfirmedAppointmentViewHolder ca_viewHolder = (ConfirmedAppointmentViewHolder) holder;
+                ca_viewHolder.messageItemForConfirmedAppointmentTTextView.setText(msg.getReservedTime());
+                ca_viewHolder.messageItemForConfirmedAppointmentLocationTextView.setText(msg.getLocation());
+                ca_viewHolder.messageItemForConfirmedAppointmentTimeTextView.setText(refinedTime);
+                break;
             default:
                 Log.d("NOWNOWNOWNOW_MESSAGETYPE", "default");
                 break;
@@ -285,6 +447,35 @@ public class RecyclerViewAdapterForMessages extends RecyclerView.Adapter<Recycle
             ImageForUserLinearLayout = itemView.findViewById(R.id.messageItemForImageForUserLinearLayoutDesign);
             ImageForUserImageImageView = itemView.findViewById(R.id.messageItemForImageForUserImageImageView);
             ImageForUserTimeTextView = itemView.findViewById(R.id.messageItemForImageForUserTimeTextViewDesign);
+        }
+    }
+    public static class AppointmentViewHolder extends RecyclerView.ViewHolder{
+
+        TextView MessageForAppointmentTimeTextView;
+        TextView MessageForAppointmentLocationTextView;
+        CardView MessageForAppointmentPositiveBtn;
+        CardView MessageForAppointmentNegativeBtn;
+        public AppointmentViewHolder(@NonNull View itemView) {
+            super(itemView);
+            MessageForAppointmentTimeTextView = itemView.findViewById(R.id.messageItemForAppointmentTimeTextViewDesign);
+            MessageForAppointmentLocationTextView = itemView.findViewById(R.id.messageItemForAppointmentLocationTextView2Design);
+            MessageForAppointmentPositiveBtn = itemView.findViewById(R.id.messageItemForAppointmentPositiveBtn);
+            MessageForAppointmentNegativeBtn = itemView.findViewById(R.id.messageItemForAppointmentNegativeBtn);
+
+
+        }
+    }
+    public static class ConfirmedAppointmentViewHolder extends RecyclerView.ViewHolder{
+
+        TextView messageItemForConfirmedAppointmentTTextView;
+        TextView messageItemForConfirmedAppointmentLocationTextView;
+        TextView messageItemForConfirmedAppointmentTimeTextView;
+        public ConfirmedAppointmentViewHolder(@NonNull View itemView) {
+            super(itemView);
+
+            messageItemForConfirmedAppointmentTTextView = itemView.findViewById(R.id.messageItemForConfirmedAppointmentTTextViewDesign);
+            messageItemForConfirmedAppointmentLocationTextView = itemView.findViewById(R.id.messageItemForConfirmedAppointmentLocationTextView2Design);
+            messageItemForConfirmedAppointmentTimeTextView = itemView.findViewById(R.id.messageItemForConfirmedAppointmentTimeTextViewDesign);
         }
     }
 }

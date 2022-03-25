@@ -24,15 +24,17 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:cardBackgroundColor="#FF7979"
+                app:cardBackgroundColor="#D1C4E9"
                 app:cardCornerRadius="8dp"
                 app:contentPadding="6dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
                     android:orientation="vertical">
                     <TextView
-                        android:id="@+id/messageItemForUserMessageTextViewDesign"
+                        android:id="@+id/messageItemForAppointmentTimeTextViewDesign"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="4dp"
@@ -41,8 +43,35 @@
                         android:layout_marginBottom="5dp"
                         android:maxWidth="250dp"
                         android:fontFamily="@font/simplehae"
-                        android:text="4월 23일, 오후 7시 30분\n수지구청역 1번 출구 앞"
-                        android:textSize="18dp"
+                        android:text="1월 1일, 오후 1시 1분"
+                        android:textSize="12dp"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:id="@+id/messageItemForAppointmentLocationTextView2Design"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="4dp"
+                        android:layout_marginBottom="5dp"
+                        android:maxWidth="250dp"
+                        android:fontFamily="@font/simplehae"
+                        android:text="쑤찌꾸청"
+                        android:textSize="12dp"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginRight="4dp"
+                        android:layout_marginBottom="5dp"
+                        android:maxWidth="250dp"
+                        android:fontFamily="@font/simplehae"
+                        android:text="Would u make reservation?"
+                        android:textSize="12dp"
                         android:textColor="@color/black"
                         android:textStyle="bold"/>
 
@@ -53,66 +82,67 @@
                         android:orientation="horizontal"
                         android:weightSum="1">
 
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"/>
                         <androidx.cardview.widget.CardView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
                             app:cardBackgroundColor="@color/black"
                             app:cardCornerRadius="10dp"
-                            app:contentPadding="1.5dp">
+                            app:contentPadding="1dp">
 
                             <androidx.cardview.widget.CardView
+                                android:id="@+id/messageItemForAppointmentPositiveBtn"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                app:cardBackgroundColor="#FF7979"
-                                app:cardCornerRadius="8dp"
-                                app:contentPadding="6dp">
+                                app:cardBackgroundColor="#C5CAE9"
+                                app:cardCornerRadius="8dp">
 
 
                                 <TextView
-                                    android:layout_width="60dp"
+                                    android:layout_width="35dp"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="2dp"
                                     android:fontFamily="@font/simplehae"
-                                    android:text="예"
-                                    android:textSize="18dp"
                                     android:gravity="center"
+                                    android:text="예"
                                     android:textColor="@color/black"
-                                    android:textStyle="bold"/>
+                                    android:textSize="10dp"
+                                    android:textStyle="bold" />
 
 
                             </androidx.cardview.widget.CardView>
                         </androidx.cardview.widget.CardView>
 
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"/>
 
                         <androidx.cardview.widget.CardView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginRight="10dp"
+                            android:layout_marginLeft="2dp"
+                            android:layout_marginRight="5dp"
                             app:cardBackgroundColor="@color/black"
                             app:cardCornerRadius="10dp"
-                            app:contentPadding="1.5dp">
+                            app:contentPadding="1dp">
 
                             <androidx.cardview.widget.CardView
+                                android:id="@+id/messageItemForAppointmentNegativeBtn"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                app:cardBackgroundColor="#FF7979"
-                                app:cardCornerRadius="8dp"
-                                app:contentPadding="6dp">
+                                app:cardBackgroundColor="#F8BBD0"
+                                app:cardCornerRadius="8dp">
 
 
                                 <TextView
-                                    android:layout_width="60dp"
+                                    android:layout_width="35dp"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="2dp"
                                     android:fontFamily="@font/simplehae"
                                     android:text="아니오"
                                     android:gravity="center"
-                                    android:textSize="18dp"
+                                    android:textSize="10dp"
                                     android:textColor="@color/black"
                                     android:textStyle="bold"/>
 
@@ -126,16 +156,6 @@
             </androidx.cardview.widget.CardView>
         </androidx.cardview.widget.CardView>
 
-        <TextView
-            android:id="@+id/messageItemForUserTimeTextViewDesign"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_gravity="center"
-            android:text="0000.00.00 - 00:00"
-            android:textSize="10dp"
-            android:textColor="@color/black"
-            android:fontFamily="@font/simplehae"/>
 
     </LinearLayout>
 </RelativeLayout>

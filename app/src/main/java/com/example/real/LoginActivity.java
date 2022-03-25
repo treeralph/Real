@@ -82,8 +82,9 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
 
-        /*
-        if (mAuth.getCurrentUser() != null) {
+        GoogleSignInAccount gsa = GoogleSignIn.getLastSignedInAccount(this);
+
+        if (gsa != null) {
             // User is signed in (getCurrentUser() will be null if not signed in)
             try{
                 String FCM_intent_to_auctionContent = getIntent().getStringExtra("FCM_contentId");
@@ -102,7 +103,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
 
-         */
 
         gglLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override

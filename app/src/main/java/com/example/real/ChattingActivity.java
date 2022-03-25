@@ -377,7 +377,8 @@ public class ChattingActivity extends AppCompatActivity {
                                                         contentUserProfileNickName,
                                                         userProfileNickName,
                                                         userUID,
-                                                        contentUID
+                                                        contentUID,
+                                                        databasePath
                                                 );
                                                 for(Message message : messageList){
                                                     adapter.addItem(message);
@@ -415,7 +416,11 @@ public class ChattingActivity extends AppCompatActivity {
         if(requestCode == 1){
             if(resultCode == 69){
 
-                messageEditText.setText(data.getExtras().getString("CONFIRMED"));
+                //messageEditText.setText(data.getExtras().getString("CONFIRMED"));
+                Message message = new Message(data.getExtras().getString("CONFIRMED"),data.getExtras().getString("CONFIRMED_LOCATION"),false);
+                adapter.addItem(message);
+                messageRecyclerView.setAdapter(adapter);
+                messageRecyclerView.scrollToPosition(adapter.getItemCount() - 1);
             }
         }
     }
