@@ -48,6 +48,7 @@ public class SetUserProfileActivity extends AppCompatActivity {
     TextView setuserprofile2registertime;
     EditText setuserprofile2description;
     Button setuserprofile2setbutton;
+    ImageView getSetuserprofile2paddlebtn;
 
     FirebaseStorage tempstorage;
     StorageReference tempref;
@@ -64,6 +65,7 @@ public class SetUserProfileActivity extends AppCompatActivity {
         setuserprofile2registertime = findViewById(R.id.setuserprofile2registertime);
         setuserprofile2setbutton = findViewById(R.id.setuserprofile2setbutton);
         setuserprofile2description = findViewById(R.id.setuserprofile2userdescription);
+        getSetuserprofile2paddlebtn = findViewById(R.id.setuserprofile2paddle);
 
 
         FirestoreManager firestoreManagerForUserProfile = new FirestoreManager(
@@ -158,6 +160,14 @@ public class SetUserProfileActivity extends AppCompatActivity {
                         });
                     }
                 });
+            }
+        });
+
+        getSetuserprofile2paddlebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SetUserProfileActivity.this, PaddleCustomActivity.class);
+                startActivity(intent);
             }
         });
 
