@@ -30,6 +30,10 @@ android {
 }
 
 dependencies {
+
+    implementation 'com.naver.maps:map-sdk:3.14.0'
+    implementation 'com.google.android.gms:play-services-location:16.0.0'
+
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
     implementation 'com.airbnb.android:lottie:3.0.0'

@@ -10,14 +10,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.example.real.customview.CustomView
-            android:layout_width="match_parent"
-            android:layout_height="400dp">
-
-
-
-
-        </com.example.real.customview.CustomView>
     </LinearLayout>
 
 
