@@ -141,7 +141,7 @@ public class ChattingActivity extends AppCompatActivity {
                 Intent intent = new Intent(ChattingActivity.this, ScheduleActivity.class);
 
                 Pair[] pairs = new Pair[1];
-                pairs[0] = new Pair<View, String>(emptyview, "testView");
+                pairs[0] = new Pair<View, String>(emptyview, "ChattingActivityEmptyView");
                 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(ChattingActivity.this, pairs);
                 startActivityForResult(intent,1,options.toBundle());
                 overridePendingTransition(R.anim.fadein, R.anim.fadeout);

@@ -7,48 +7,113 @@
     android:background="@color/white"
     tools:context=".PaddleCustomActivity">
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <androidx.cardview.widget.CardView
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="40dp"
-            android:layout_weight="1"
-            app:cardBackgroundColor="@color/black"
-            app:cardCornerRadius="20dp"
-            app:contentPadding="2.5dp">
+            android:orientation="horizontal">
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
             <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:cardBackgroundColor="@color/grey1"
-                app:cardCornerRadius="20dp">
-                <ImageView
-                    android:id="@+id/PaddleCustomActivitypaddleIV"
-                    android:layout_width="305dp"
-                    android:layout_height="400dp"
-                    android:layout_margin="10dp"
-                    android:layout_gravity="center"/>
+                android:layout_margin="40dp"
+                android:layout_weight="10"
+                app:cardBackgroundColor="@color/black"
+                app:cardCornerRadius="20dp"
+                app:contentPadding="2.5dp"
+                android:layout_gravity="center">
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="@color/yellow"
+                    app:cardCornerRadius="20dp">
+                    <ImageView
+                        android:id="@+id/PaddleCustomActivitypaddleIV"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:layout_gravity="center"/>
+                </androidx.cardview.widget.CardView>
             </androidx.cardview.widget.CardView>
-        </androidx.cardview.widget.CardView>
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+
+
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center">
-            <ImageView
-                android:id="@+id/PaddleCustomActivityPreviewBackground"
-                android:layout_width="50dp"
-                android:layout_height="50dp"/>
-            <ImageView
-                android:id="@+id/PaddleCustomActivityPreviewCenter"
-                android:layout_width="50dp"
-                android:layout_height="50dp"/>
-            <ImageView
-                android:id="@+id/PaddleCustomActivityPreviewHandle"
-                android:layout_width="50dp"
-                android:layout_height="50dp"/>
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                app:cardBackgroundColor="@color/black"
+                app:cardCornerRadius="20dp"
+                app:contentPadding="2.5dp"
+                android:layout_gravity="center">
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="20dp">
+                    <ImageView
+                        android:id="@+id/PaddleCustomActivityPreviewBackground"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"/>
+                </androidx.cardview.widget.CardView>
+            </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                app:cardBackgroundColor="@color/black"
+                app:cardCornerRadius="20dp"
+                app:contentPadding="2.5dp"
+                android:layout_gravity="center">
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="20dp">
+                    <ImageView
+                        android:id="@+id/PaddleCustomActivityPreviewCenter"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"/>
+                </androidx.cardview.widget.CardView>
+            </androidx.cardview.widget.CardView><androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            app:cardBackgroundColor="@color/black"
+            app:cardCornerRadius="20dp"
+            app:contentPadding="2.5dp"
+            android:layout_gravity="center">
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="20dp">
+                <ImageView
+                    android:id="@+id/PaddleCustomActivityPreviewHandle"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"/>
+            </androidx.cardview.widget.CardView>
+        </androidx.cardview.widget.CardView>
+
+
 
         </LinearLayout>
 

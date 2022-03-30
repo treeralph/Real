@@ -17,7 +17,7 @@
         android:weightSum="1">
         <View
             android:id="@+id/ChattingActivityEmptyView"
-            android:transitionName="testView"
+            android:transitionName="ChattingActivityEmptyView"
             android:layout_width="match_parent"
             android:layout_height="0dp"/>
         <LinearLayout

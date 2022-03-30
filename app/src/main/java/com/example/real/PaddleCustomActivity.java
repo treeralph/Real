@@ -15,13 +15,16 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.example.real.tool.CreatePaddle;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 
 public class PaddleCustomActivity extends AppCompatActivity {
@@ -54,10 +57,12 @@ public class PaddleCustomActivity extends AppCompatActivity {
         PreviewHandle = findViewById(R.id.PaddleCustomActivityPreviewHandle);
 
         // Initial Setting
-        Paddle_Size_x = 300;
-        Bitmap InitialBG = BitmapFactory.decodeResource(this.getResources(), R.drawable.platinum);
-        Bitmap InitialCenter = BitmapFactory.decodeResource(this.getResources(), R.drawable.octopus);
-        Bitmap InitialHandle = BitmapFactory.decodeResource(this.getResources(), R.drawable.octopus_3);
+        Bitmap Test = Bitmap.createBitmap(100,100,Bitmap.Config.ARGB_8888);
+        Test.eraseColor(0xfffaeb87);
+        Bitmap InitialBG = Test;
+        //Bitmap InitialBG = BitmapFactory.decodeResource(this.getResources(), R.drawable.platinum);
+        Bitmap InitialCenter = BitmapFactory.decodeResource(this.getResources(), R.drawable.mango_flaticon_1032525);
+        Bitmap InitialHandle = BitmapFactory.decodeResource(this.getResources(), R.drawable.aucto1);
 
         UserBackground = InitialBG;
         UserCenter = InitialCenter;
@@ -67,11 +72,23 @@ public class PaddleCustomActivity extends AppCompatActivity {
         PreviewCenter.setImageBitmap(Bitmap.createScaledBitmap(UserCenter,50,50,true));
         PreviewHandle.setImageBitmap(Bitmap.createScaledBitmap(UserHandle,50,50,true));
 
+        paddleimageview.post(new Runnable() {
+            @Override
+            public void run() {
+                Paddle_Size_x = paddleimageview.getWidth();
+                createPaddle = new CreatePaddle();
+                Bitmap InitialPaddle = createPaddle.createPaddle(UserBackground,UserCenter,UserHandle,Paddle_Size_x);
 
-        createPaddle = new CreatePaddle();
-        Bitmap InitialPaddle = createPaddle.createPaddle(UserBackground,UserCenter,UserHandle,Paddle_Size_x);
+                paddleimageview.setScaleType(ImageView.ScaleType.FIT_XY);
+                paddleimageview.setAdjustViewBounds(true);
+                paddleimageview.setImageBitmap(InitialPaddle);
+            }
+        });
 
-        paddleimageview.setImageBitmap(InitialPaddle);
+
+
+
+
 
         // Click listeners
         PreviewBackground.setOnClickListener(new View.OnClickListener() {
@@ -117,11 +134,22 @@ public class PaddleCustomActivity extends AppCompatActivity {
             if (requestCode == REQUESTBACKGROUND){
 
                 // Set UserBackground = Bitmap;
+
+                Uri uri = data.getData();
+                try {
+                    UserBackground = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                /*
                 try{
                     InputStream in = getContentResolver().openInputStream(data.getData());
                     UserBackground = BitmapFactory.decodeStream(in);
                     in.close();
                 }catch(Exception e){ }
+
+                 */
                 // Make Paddle & Set on View
                 Bitmap NewPaddle = createPaddle.createPaddle(UserBackground,UserCenter,UserHandle,Paddle_Size_x);
                 paddleimageview.setImageBitmap(NewPaddle);
@@ -133,11 +161,20 @@ public class PaddleCustomActivity extends AppCompatActivity {
             else if(requestCode == REQUESTCENTER){
 
                 // Set UserCenter = Bitmap;
+                Uri uri = data.getData();
+                try {
+                    UserCenter = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                /*
                 try{
                     InputStream in = getContentResolver().openInputStream(data.getData());
                     UserCenter = BitmapFactory.decodeStream(in);
                     in.close();
                 }catch(Exception e){ }
+
+                 */
                 // Make Paddle & Set on View
                 Bitmap NewPaddle = createPaddle.createPaddle(UserBackground,UserCenter,UserHandle,Paddle_Size_x);
                 paddleimageview.setImageBitmap(NewPaddle);
