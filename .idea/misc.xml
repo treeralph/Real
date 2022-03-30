@@ -67,7 +67,9 @@
         <entry key="app/src/main/res/layout/exit_check_dialog.xml" value="0.45" />
         <entry key="app/src/main/res/layout/fragment_blank.xml" value="0.375" />
         <entry key="app/src/main/res/layout/fragment_callender.xml" value="0.31927083333333334" />
+        <entry key="app/src/main/res/layout/fragment_datepicker.xml" value="0.3333333333333333" />
         <entry key="app/src/main/res/layout/fragment_map.xml" value="0.31875" />
+        <entry key="app/src/main/res/layout/fragment_timepicker.xml" value="0.3333333333333333" />
         <entry key="app/src/main/res/layout/logitem_for_auctioncontent.xml" value="0.1" />
         <entry key="app/src/main/res/layout/logitem_for_comment.xml" value="0.1" />
         <entry key="app/src/main/res/layout/logitem_for_content.xml" value="0.2654320987654321" />

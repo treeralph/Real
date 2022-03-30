@@ -4,15 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragment.TimepickerFragment">
+    tools:context=".fragment.TimepickerFragment"
+    android:background="@color/white">
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <androidx.cardview.widget.CardView
             android:id="@+id/itemCardViewDesign"
             android:transitionName="contentsItemImageCardView"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardBackgroundColor="@color/grey1"
             app:cardCornerRadius="5dp"
@@ -23,23 +24,35 @@
                 app:cardCornerRadius="3dp">
                 <TimePicker
                     android:id="@+id/FragmentTimePicker"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:theme="@style/MyDatePicker"/>
             </androidx.cardview.widget.CardView>
         </androidx.cardview.widget.CardView>
-        <Button
+        <androidx.cardview.widget.CardView
             android:id="@+id/FragmentSuccessBtn"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Confirmed"
-            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
+            android:padding="10dp"
+            app:contentPadding="10dp"
+            app:cardCornerRadius="20dp"
+            app:cardBackgroundColor="@color/black">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="확 인"
+                android:textColor="@color/white"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:fontFamily="@font/simplehae"
+                android:gravity="center"/>
 
-            android:textSize="14dp"
-            android:textStyle="bold"
-            android:textColor="@color/black"
-            android:fontFamily="@font/simplehae"
-            />
+
+        </androidx.cardview.widget.CardView>
     </LinearLayout>
 
 

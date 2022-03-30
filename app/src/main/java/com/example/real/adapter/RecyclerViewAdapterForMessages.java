@@ -3,6 +3,7 @@ package com.example.real.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.Image;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +31,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.LogRecord;
 
 import static com.example.real.adapter.RecyclerViewAdapterForChattingRoom.TAG;
 
@@ -195,7 +198,6 @@ public class RecyclerViewAdapterForMessages extends RecyclerView.Adapter<Recycle
         TimeTextTool mTimeTextTool = new TimeTextTool(time);
         String refinedTime = mTimeTextTool.Time2Text();
 
-
         // holder.getItemViewType()
         switch(getItemViewType(position)) {
             case 0:
@@ -221,13 +223,14 @@ public class RecyclerViewAdapterForMessages extends RecyclerView.Adapter<Recycle
                 ImageForAnotherViewHolder im_viewHolder = (ImageForAnotherViewHolder) holder;
                 im_viewHolder.ImageForAnotherProfileImageView.setImageBitmap(anotherUserProfileImageBitmap);
                 im_viewHolder.ImageForAnotherTimeTextView.setText(refinedTime);
+
                 storageManagerForMessageImage.downloadImg2View(uri, im_viewHolder.ImageForAnotherImageImageView, new Callback() {
                     @Override
                     public void OnCallback(Object object) {
                         return;
                     }
                 });
-
+                break;
             case 3:
                 Log.d("NOWNOWNOWNOW_MESSAGETYPE", "3");
 
@@ -239,6 +242,7 @@ public class RecyclerViewAdapterForMessages extends RecyclerView.Adapter<Recycle
                         return;
                     }
                 });
+                break;
             case 100:
                 Log.d("NOWNOWNOWNOW_MESSAGETYPE", "100");
 
