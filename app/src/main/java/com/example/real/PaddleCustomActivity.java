@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.real.databasemanager.StorageManager;
 import com.example.real.tool.CreatePaddle;
@@ -30,6 +31,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class PaddleCustomActivity extends AppCompatActivity {
     String userUID;
@@ -82,25 +84,41 @@ public class PaddleCustomActivity extends AppCompatActivity {
         // }
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser(); userUID = user.getUid();
         StorageManager storageManagerForUserPaddle = new StorageManager(PaddleCustomActivity.this, "UserPaddleImage",user.getUid());
-        //storageManagerForUserPaddle.downloadforpaddle();
-
-
-                PreviewBackground.setImageBitmap(Bitmap.createScaledBitmap(UserBackground, 50, 50, true));
-        PreviewCenter.setImageBitmap(Bitmap.createScaledBitmap(UserCenter,50,50,true));
-        PreviewHandle.setImageBitmap(Bitmap.createScaledBitmap(UserHandle,50,50,true));
-
-        paddleimageview.post(new Runnable() {
+        storageManagerForUserPaddle.downloadforpaddle("UserPaddleImage/" + user.getUid(), new Callback() {
             @Override
-            public void run() {
-                Paddle_Size_x = paddleimageview.getWidth();
-                createPaddle = new CreatePaddle();
-                Bitmap InitialPaddle = createPaddle.createPaddle(UserBackground,UserCenter,UserHandle,Paddle_Size_x);
+            public void OnCallback(Object object) {
+                if(object == null){
+                }
+                else{ Map<String, Bitmap> Map = (java.util.Map<String, Bitmap>) object;
+                    for(String key : Map.keySet()){
+                        switch (key){
+                            case "Background" : UserBackground = Map.get("Background");break;
+                            case "Center" : UserCenter = Map.get("Center");break;
+                            case "Handle" : UserHandle = Map.get("Handle");break;
+                            default: Toast.makeText(PaddleCustomActivity.this, key, Toast.LENGTH_SHORT).show();break;
+                        }
+                    }}
+                PreviewBackground.setImageBitmap(Bitmap.createScaledBitmap(UserBackground, 50, 50, true));
+                PreviewCenter.setImageBitmap(Bitmap.createScaledBitmap(UserCenter,50,50,true));
+                PreviewHandle.setImageBitmap(Bitmap.createScaledBitmap(UserHandle,50,50,true));
 
-                paddleimageview.setScaleType(ImageView.ScaleType.FIT_XY);
-                paddleimageview.setAdjustViewBounds(true);
-                paddleimageview.setImageBitmap(InitialPaddle);
+                paddleimageview.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Paddle_Size_x = paddleimageview.getWidth();
+                        createPaddle = new CreatePaddle();
+                        Bitmap InitialPaddle = createPaddle.createPaddle(UserBackground,UserCenter,UserHandle,Paddle_Size_x);
+
+                        paddleimageview.setScaleType(ImageView.ScaleType.FIT_XY);
+                        paddleimageview.setAdjustViewBounds(true);
+                        paddleimageview.setImageBitmap(InitialPaddle);
+                    }
+                });
             }
         });
+
+
+
 
 
 
@@ -146,8 +164,28 @@ public class PaddleCustomActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // Check Current Bitmap is Initial one
-                // If not, Upload it
-                // To where?
+                if(UserBackground != InitialBG){
+                    storageManagerForUserPaddle.uploadforpaddle("Background","UserPaddleImage/" + user.getUid(), UserBackground, new Callback() {
+                        @Override
+                        public void OnCallback(Object object) {
+
+                        }
+                    });
+                }
+                if(UserCenter != InitialCenter){
+                    storageManagerForUserPaddle.uploadforpaddle("Center","UserPaddleImage/" + user.getUid(), UserCenter, new Callback() {
+                        @Override
+                        public void OnCallback(Object object) {
+                        }
+                    });
+                }
+                if(UserHandle != InitialHandle){
+                    storageManagerForUserPaddle.uploadforpaddle("Handle","UserPaddleImage/" + user.getUid(), UserHandle, new Callback() {
+                        @Override
+                        public void OnCallback(Object object) {
+                        }
+                    });
+                }
             }
         });
     }

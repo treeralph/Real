@@ -25,6 +25,8 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class StorageManager {
 
@@ -182,6 +184,7 @@ public class StorageManager {
     public void downloadforpaddle(String path, Callback callback){
 
         ArrayList<Bitmap> BitmapList = new ArrayList<>();
+        Map<String,Bitmap> Map = new HashMap<>();
 
         //StorageReference ref = storage.getReference();
         StorageReference cRef = ref.child(path);
@@ -192,28 +195,33 @@ public class StorageManager {
                     @Override
                     public void onSuccess(ListResult listResult) {
                         Log.d(TAG,  "Storage read Success");
-                        if(listResult.equals(null)){
+                        if(listResult.equals(null) || listResult.getItems().size() ==0){
                             callback.OnCallback(null);
-                        }else{for(StorageReference item : listResult.getItems()){
-                            String path = item.getPath();
-                            String type = path.split("/")[-1];
-                            item.getBytes(ONE_MEGABYTE)
-                                    .addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                                        @Override
-                                        public void onSuccess(byte[] bytes) {
-                                            Log.d(TAG,  "Storage download Success");
-                                            Bitmap tempBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                            BitmapList.add(tempBitmap);
-                                            callback.OnCallback(BitmapList);
-                                        }
-                                    })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Log.d(TAG, "Error downloading Storage data: " + e.getMessage());
-                                        }
-                                    });
-                        }}
+                        }else{
+                            StorageReference lastitem = listResult.getItems().get(listResult.getItems().size()-1);
+                            for(StorageReference item : listResult.getItems()){
+                                String[] split = item.getPath().split("/");
+                                String type = split[split.length-1];
+                                item.getBytes(ONE_MEGABYTE)
+                                        .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                            @Override
+                                            public void onSuccess(byte[] bytes) {
+                                                Log.d(TAG,  "Storage download Success");
+                                                Bitmap tempBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                                Map.put(type,tempBitmap);
+                                                if(Map.size() == listResult.getItems().size()){
+                                                    callback.OnCallback(Map);
+                                                }
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.d(TAG, "Error downloading Storage data: " + e.getMessage());
+                                            }
+                                        });
+                            }
+                        }
 
                     }
                 })
@@ -223,6 +231,31 @@ public class StorageManager {
                         Log.d(TAG, "Error getting Storage data: " + e.getMessage());
                     }
                 });
+    }
+    public void uploadforpaddle(String type, String path, Bitmap image, Callback callback){
+
+        //StorageReference ref = storage.getReference();
+        StorageReference mRef = ref.child(path +"/"+ type );
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.PNG, 100, baos);
+
+        byte[] data = baos.toByteArray();
+
+        UploadTask uploadTask = mRef.putBytes(data);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "Error getting Storage data: " + e.getMessage());
+                callback.OnCallback("1");
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Log.d(TAG,  "Storage write Success");
+                callback.OnCallback("0");
+            }
+        });
     }
     public void upload(String path, Bitmap image, int threshold, Callback callback){
 
