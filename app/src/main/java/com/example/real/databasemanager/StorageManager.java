@@ -179,7 +179,51 @@ public class StorageManager {
             }
         });
     }
+    public void downloadforpaddle(String path, Callback callback){
 
+        ArrayList<Bitmap> BitmapList = new ArrayList<>();
+
+        //StorageReference ref = storage.getReference();
+        StorageReference cRef = ref.child(path);
+
+        // Raise asynchronous issue in duplicated server access
+        cRef.listAll()
+                .addOnSuccessListener(new OnSuccessListener<ListResult>() {
+                    @Override
+                    public void onSuccess(ListResult listResult) {
+                        Log.d(TAG,  "Storage read Success");
+                        if(listResult.equals(null)){
+                            callback.OnCallback(null);
+                        }else{for(StorageReference item : listResult.getItems()){
+                            String path = item.getPath();
+                            String type = path.split("/")[-1];
+                            item.getBytes(ONE_MEGABYTE)
+                                    .addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                        @Override
+                                        public void onSuccess(byte[] bytes) {
+                                            Log.d(TAG,  "Storage download Success");
+                                            Bitmap tempBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                            BitmapList.add(tempBitmap);
+                                            callback.OnCallback(BitmapList);
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.d(TAG, "Error downloading Storage data: " + e.getMessage());
+                                        }
+                                    });
+                        }}
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "Error getting Storage data: " + e.getMessage());
+                    }
+                });
+    }
     public void upload(String path, Bitmap image, int threshold, Callback callback){
 
         ImageSizeTool imageSizeTool = new ImageSizeTool(threshold);

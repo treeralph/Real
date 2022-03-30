@@ -21,13 +21,19 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.example.real.databasemanager.StorageManager;
 import com.example.real.tool.CreatePaddle;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 public class PaddleCustomActivity extends AppCompatActivity {
+    String userUID;
+
     ImageView paddleimageview;
     CardView applybtn;
     CreatePaddle createPaddle;
@@ -68,7 +74,18 @@ public class PaddleCustomActivity extends AppCompatActivity {
         UserCenter = InitialCenter;
         UserHandle = InitialHandle;
 
-        PreviewBackground.setImageBitmap(Bitmap.createScaledBitmap(UserBackground,50,50,true));
+        // Overwrite Initial Bitmap
+        // FB.read{on callback
+        // if x1 != null{UserBackground = x1}
+        // if x2 != null{UserCenter = x2}
+        // if x3 != null{UserHandle = x3}
+        // }
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser(); userUID = user.getUid();
+        StorageManager storageManagerForUserPaddle = new StorageManager(PaddleCustomActivity.this, "UserPaddleImage",user.getUid());
+        //storageManagerForUserPaddle.downloadforpaddle();
+
+
+                PreviewBackground.setImageBitmap(Bitmap.createScaledBitmap(UserBackground, 50, 50, true));
         PreviewCenter.setImageBitmap(Bitmap.createScaledBitmap(UserCenter,50,50,true));
         PreviewHandle.setImageBitmap(Bitmap.createScaledBitmap(UserHandle,50,50,true));
 
@@ -122,6 +139,15 @@ public class PaddleCustomActivity extends AppCompatActivity {
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(intent, REQUESTHANDLE);
 
+            }
+        });
+
+        applybtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Check Current Bitmap is Initial one
+                // If not, Upload it
+                // To where?
             }
         });
     }
