@@ -2,8 +2,14 @@ package com.example.real;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.PointF;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.DragEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
@@ -15,38 +21,66 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.real.adapter.ViewPagerAdapter;
 import com.example.real.fragment.DatepickerFragment;
+import com.example.real.fragment.MapFragment;
 import com.example.real.fragment.TimepickerFragment;
 import com.example.real.tool.MeasuredViewPager;
 import com.google.android.material.datepicker.MaterialDatePicker;
+import com.naver.maps.geometry.LatLng;
+import com.naver.maps.geometry.LatLngBounds;
+import com.naver.maps.geometry.Tm128;
+import com.naver.maps.map.CameraUpdate;
+import com.naver.maps.map.NaverMap;
+import com.naver.maps.map.OnMapReadyCallback;
+import com.naver.maps.map.UiSettings;
+import com.naver.maps.map.overlay.InfoWindow;
+import com.naver.maps.map.overlay.Marker;
 import com.r0adkll.slidr.Slidr;
 import com.r0adkll.slidr.model.SlidrConfig;
 import com.r0adkll.slidr.model.SlidrInterface;
 import com.r0adkll.slidr.model.SlidrPosition;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class ScheduleActivity extends AppCompatActivity {
+
+    private final String TAG = "ScheduledActivity";
 
     MeasuredViewPager viewPager;
     ViewPagerAdapter viewPagerAdapter;
 
     private SlidrInterface slidr;
+
     DatePicker datePicker;
     TimePicker timePicker;
-    Button confirmbtn;
+
+    CardView confirmbtn;
     String confirmeddate;
-    Button successbtn;
+    CardView successbtn;
     String confirmedtime;
     String location;
     DatepickerFragment datepickerFragment;
     TimepickerFragment timepickerFragment;
-    EditText locationedittext;
+    MapFragment mapFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,23 +91,21 @@ public class ScheduleActivity extends AppCompatActivity {
                 .scrimStartAlpha(0f)
                 .scrimEndAlpha(0f)
                 .build();
-        Slidr.attach(this, config);
+        slidr =  Slidr.attach(this, config);
 
         viewPager = findViewById(R.id.SchduleActivityViewPager);
+
         datepickerFragment = new DatepickerFragment(new Callback() {
             @Override
             public void OnCallback(Object object) {
                 View v = (View) object;
                 datePicker = v.findViewById(R.id.FragmentDatePicker);
                 confirmbtn = v.findViewById(R.id.FragmentConfirmBtn);
-                locationedittext = v.findViewById(R.id.FragmentLocationEdittext);
                 confirmbtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         confirmeddate = datePicker.getYear() + "/" + String.valueOf(datePicker.getMonth()+1) + "/" + datePicker.getDayOfMonth();
-                        Toast.makeText(ScheduleActivity.this, confirmeddate, Toast.LENGTH_SHORT).show();
-                        location = locationedittext.getText().toString();
-                        viewPager.setCurrentItem(1,true);
+                        viewPager.setCurrentItem(2,true);
                     }
                 });
             }
@@ -110,56 +142,49 @@ public class ScheduleActivity extends AppCompatActivity {
                 });
             }
         });
+
+        mapFragment = new MapFragment(this, new Callback() {
+            @Override
+            public void OnCallback(Object object) {
+
+                MotionEvent event = (MotionEvent) object;
+                Log.w("ASDF", String.valueOf(event.getAction()));
+                if (isInside(mapFragment.getMapView(), event)) {
+                    Log.w("ASDF", "Is inside");
+                    slidr.lock();
+                }
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    Log.w("ASDF", "Is outside");
+                    slidr.unlock();
+                }
+            }
+        }, new Callback() {
+            @Override
+            public void OnCallback(Object object) {
+                View view = (View) object;
+                CardView cardView = view.findViewById(R.id.mapFragmentCheckButton);
+                cardView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        location = mapFragment.getFocusAddress();
+                        viewPager.setCurrentItem(1,true);
+                    }
+                });
+
+            }
+        });
+
+
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        viewPagerAdapter.addItem(mapFragment);
         viewPagerAdapter.addItem(datepickerFragment);
         viewPagerAdapter.addItem(timepickerFragment);
         viewPager.setAdapter(viewPagerAdapter);
-
-
-
-
-
-
-
-
-
-
-        /*
-        datePicker = findViewById(R.id.ScheduleActivitydataPicker);
-        timePicker = findViewById(R.id.ScheduleActivityTimePicker);
-        scheduletextview = findViewById(R.id.SchduleActivityScheduleTextView);
-        timetextview = findViewById(R.id.SchduleActivityTimeTextView);
-        confirmbtn = findViewById(R.id.ScheduleActivityConfirmBtn);
-
-        year = LocalDateTime.now().getYear(); month = LocalDateTime.now().getMonthValue(); day = LocalDateTime.now().getDayOfMonth();
-
-        datePicker.init(year, month, day, new DatePicker.OnDateChangedListener() {
-            @Override
-            public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                String date = year + "/" + monthOfYear + "/" + dayOfMonth;
-                scheduletextview.setText(date);
-                datePicker.setVisibility(View.GONE);
-            }
-        });
-        timePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
-            @Override
-            public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
-                String time = hourOfDay + "/" + minute;
-                timetextview.setText(time);
-                timePicker.setVisibility(View.GONE);
-            }
-        });
-        confirmbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.putExtra("TEXTEDSCHEDULE",scheduletextview.getText() + "/" + timetextview.getText());
-                setResult(RESULT_OK, intent);
-                finish();
-            }
-        });
-        */
-
     }
 
+    private boolean isInside(View v, MotionEvent e) {
+        return !(e.getX() < 0 || e.getY() < 0
+                || e.getX() > v.getMeasuredWidth()
+                || e.getY() > v.getMeasuredHeight());
+    }
 }
