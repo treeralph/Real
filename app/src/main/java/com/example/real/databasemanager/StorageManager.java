@@ -202,7 +202,7 @@ public class StorageManager {
                             for(StorageReference item : listResult.getItems()){
                                 String[] split = item.getPath().split("/");
                                 String type = split[split.length-1];
-                                item.getBytes(ONE_MEGABYTE)
+                                item.getBytes(ONE_MEGABYTE*10)
                                         .addOnSuccessListener(new OnSuccessListener<byte[]>() {
                                             @Override
                                             public void onSuccess(byte[] bytes) {
