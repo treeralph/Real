@@ -22,6 +22,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.lang.reflect.Array;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class RealTimeDatabaseManager {
@@ -105,6 +107,54 @@ public class RealTimeDatabaseManager {
             }
         });
     }
+
+    public void readBidder(String contentid, Callback callback){
+
+        DatabaseReference ref = db.getReference("AuctionContentBidder" + "/" + contentid);
+        ref.get().addOnSuccessListener(new OnSuccessListener<DataSnapshot>() {
+            @Override
+            public void onSuccess(DataSnapshot dataSnapshot) {
+                try {
+                    Log.d(TAG, dataSnapshot.toString());
+                    String lastTime = (String) dataSnapshot.getValue();
+                    callback.OnCallback(lastTime);
+                }catch (Exception e ){
+                    e.printStackTrace();
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+    }
+
+    public void readBidderLooper(String contentid, Callback callback){
+        DatabaseReference ref = db.getReference("AuctionContentBidder" + "/" + contentid);
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                Log.d(TAG, snapshot.toString());
+                Log.d(TAG, snapshot.toString());
+                Log.d(TAG, snapshot.toString());
+                Log.d(TAG, snapshot.toString());
+                try {
+                    Log.d(TAG, snapshot.toString());
+                    String lastTime = (String) snapshot.getValue();
+                    callback.OnCallback(lastTime);
+                }catch (Exception e ){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
     public void readMessageLooper(String path, String subPath, Callback callback){
 
         DatabaseReference ref = db.getReference(rootPath + "/" + path + "/" + subPath);
@@ -112,12 +162,15 @@ public class RealTimeDatabaseManager {
         ref.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                try {
+                try {System.out.println(snapshot.toString());
+                    System.out.println(snapshot.toString());System.out.println(snapshot.toString());
                     Log.d(TAG, snapshot.toString());
                     DataSnapshot tempSnapshot = snapshot.getChildren().iterator().next();
                     Message tempMessage = tempSnapshot.getValue(Message.class);
                     callback.OnCallback(tempMessage);
-                }catch(Exception e){
+                }catch(Exception e){System.out.println("snapshot.toString()");
+                    System.out.println("snapshot.toString()");
+                    System.out.println("snapshot.toString()");
                     e.printStackTrace();
                 }
             }
@@ -182,6 +235,24 @@ public class RealTimeDatabaseManager {
         DatabaseReference ref = db.getReference(rootPath + "/" + path);
         MutexLock mutexLock = new MutexLock("0");
         ref.setValue(mutexLock).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Log.d(TAG, "DATA_SETVALUE_IS_COMPLETE");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e(TAG, e.getMessage());
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public void writeBidder(String contentid){
+        LocalDateTime dateNow = LocalDateTime.now();
+        String Time = dateNow.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
+        DatabaseReference ref = db.getReference(rootPath + "/" + contentid);
+        ref.setValue(Time).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
                 Log.d(TAG, "DATA_SETVALUE_IS_COMPLETE");

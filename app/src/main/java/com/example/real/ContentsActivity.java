@@ -147,7 +147,7 @@ public class ContentsActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
 
         FirestoreManager manager = new FirestoreManager(ContentsActivity.this, "Contents", user.getUid());
-        manager.read("Contents", new Callback() {
+        manager.test("Contents", new Callback() {
             @Override
             public void OnCallback(Object object) {
                 ArrayList<Contents> contentsList = (ArrayList<Contents>)object;

@@ -32,9 +32,12 @@ import com.example.real.data.Comment;
 import com.example.real.data.Content;
 import com.example.real.data.UserProfile;
 import com.example.real.databasemanager.FirestoreManager;
+import com.example.real.databasemanager.RealTimeDatabaseManager;
 import com.example.real.databasemanager.StorageManager;
 import com.example.real.fragment.ImgViewFromGalleryFragment;
+import com.example.real.tool.CreatePaddle;
 import com.example.real.tool.NumberingMachine;
+import com.example.real.tool.TimeTextTool;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -54,6 +57,7 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static com.example.real.adapter.ExpandableListAdapter.CHILD;
 
@@ -96,6 +100,19 @@ public class AuctionContentActivity extends AppCompatActivity {
     String contentTime;
     String contentId;
 
+    ImageView AuctionContentUserPaddleImageView;
+    Bitmap UserBackground;
+    Bitmap UserCenter;
+    Bitmap UserHandle;
+    Bitmap TempBackground;
+    Bitmap TempCenter;
+    Bitmap TempHandle;
+    CreatePaddle createPaddle;
+    TextView LatestBidderTextview;
+    TextView LatestTimeTextView;
+    TextView LatestPriceTextView;
+    ImageView LatestBidderImageView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,6 +133,11 @@ public class AuctionContentActivity extends AppCompatActivity {
                 AuctionContentActivity.this, "Image", user.getUid());
         StorageManager storageManagerForUserProfile = new StorageManager(
                 AuctionContentActivity.this, "UserProfileImage", user.getUid());
+        StorageManager storageManagerForUserPaddle = new StorageManager(
+                AuctionContentActivity.this,"UserPaddleImage", user.getUid());
+        RealTimeDatabaseManager realTimeDatabaseManagerForLatestBidder = new RealTimeDatabaseManager(
+                AuctionContentActivity.this,"AuctionContentBidder",user.getUid());
+
 
         AuctionContentTitleTextView = findViewById(R.id.AuctionContentActivityTitleTextViewDesign);
         AuctionContentUserProfileInfoTextView = findViewById(R.id.AuctionContentActivityProfileInfoTextViewDesign);
@@ -131,7 +153,12 @@ public class AuctionContentActivity extends AppCompatActivity {
         AuctionContentCommentEditText = findViewById(R.id.AuctionContentActivityCommentEditTextDesign);
         AuctionContentCommentBtn = findViewById(R.id.AuctionContentActivityCommentButtonDesign);
         AuctionContentViewPagerBackgroudImageView = findViewById(R.id.AuctionContentActivityViewPagerBackgroudImageView);
+        AuctionContentUserPaddleImageView = findViewById(R.id.AuctionContentActivitypaddleIV);
         AuctionContentLikeFlicker = findViewById(R.id.desingAuctionContentLikeFlicker);
+        LatestBidderTextview = findViewById(R.id.AuctionContentActivityLatestBidderTextViewDesign);
+        LatestTimeTextView = findViewById(R.id.AuctionContentActivityLatestTimeTextViewDesign);
+        LatestPriceTextView = findViewById(R.id.AuctionContentActivityLatestPriceTextViewDesign);
+        LatestBidderImageView = findViewById(R.id.AuctionContentActivityLatestBidderImageViewDesign);
         srtbtn = findViewById(R.id.AuctionContentActivitySortingButtonDesign);
 
         ContentsBtn = findViewById(R.id.AuctionContentActivityContentsButtonDesign);
@@ -308,6 +335,171 @@ public class AuctionContentActivity extends AppCompatActivity {
                 }else{
                     Toast.makeText(AuctionContentActivity.this, "This content is expired", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        // Paddle Read
+        Bitmap Test = Bitmap.createBitmap(100,100,Bitmap.Config.ARGB_8888);
+        Test.eraseColor(0xfffaeb87);
+        Bitmap InitialBG = Test;
+        Bitmap InitialCenter = BitmapFactory.decodeResource(this.getResources(), R.drawable.mango_flaticon_1032525);
+        Bitmap InitialHandle = BitmapFactory.decodeResource(this.getResources(), R.drawable.aucto1);
+        UserBackground = InitialBG;
+        UserCenter = InitialCenter;
+        UserHandle = InitialHandle;
+        storageManagerForUserPaddle.downloadforpaddle("UserPaddleImage/" + user.getUid(), new Callback() {
+            @Override
+            public void OnCallback(Object object) {
+                if(object == null){
+                }
+                else{ Map<String, Bitmap> Map = (java.util.Map<String, Bitmap>) object;
+                    for(String key : Map.keySet()){
+                        switch (key){
+                            case "Background" : UserBackground = Map.get("Background");break;
+                            case "Center" : UserCenter = Map.get("Center");break;
+                            case "Handle" : UserHandle = Map.get("Handle");break;
+                            default: Toast.makeText(AuctionContentActivity.this, key, Toast.LENGTH_SHORT).show();break;
+                        }
+                    }}
+
+                AuctionContentUserPaddleImageView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        int Paddle_Size_x = AuctionContentUserPaddleImageView.getWidth();
+                        createPaddle = new CreatePaddle();
+                        Bitmap InitialPaddle = createPaddle.createPaddle(UserBackground,UserCenter,UserHandle,Paddle_Size_x);
+
+                        AuctionContentUserPaddleImageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                        AuctionContentUserPaddleImageView.setAdjustViewBounds(true);
+                        AuctionContentUserPaddleImageView.setImageBitmap(InitialPaddle);
+                    }
+                });
+            }
+        });
+
+        // Bidder Latest Read
+        realTimeDatabaseManagerForLatestBidder.readBidderLooper(contentId, new Callback() {
+            @Override
+            public void OnCallback(Object object) {
+                String lastTime = (String) object;
+                TimeTextTool TTT = new TimeTextTool(lastTime);
+                LatestTimeTextView.setText(TTT.Time2Text());
+                if(lastTime != null){
+                    LatestTimeTextView.setVisibility(View.VISIBLE);
+                    LatestPriceTextView.setVisibility(View.VISIBLE);
+                    LatestBidderTextview.setVisibility(View.VISIBLE);
+                    LatestBidderImageView.setVisibility(View.VISIBLE);
+                    firestoreManagerForAuctionContent.read("Content", contentId, new Callback() {
+                        @Override
+                        public void OnCallback(Object object) {
+                            AuctionContent tempAuctionContent = (AuctionContent)object;
+                            List<String> templist = tempAuctionContent.getAuctionUserList();
+                            String LatestData = templist.get(templist.size()-1);
+                            String LatestBidder = LatestData.split("#")[0];
+                            String LatestPrice = LatestData.split("#")[2];
+                            LatestBidderTextview.setText(LatestBidder);
+                            LatestPriceTextView.setText(LatestPrice);
+
+                            TempBackground = InitialBG;
+                            TempCenter = InitialCenter;
+                            TempHandle = InitialHandle;
+                            storageManagerForUserPaddle.downloadforpaddle("UserPaddleImage/" + LatestBidder, new Callback() {
+                                @Override
+                                public void OnCallback(Object object) {
+                                    if(object == null){
+                                    }
+                                    else{ Map<String, Bitmap> Map = (java.util.Map<String, Bitmap>) object;
+                                        for(String key : Map.keySet()){
+                                            switch (key){
+                                                case "Background" : TempBackground = Map.get("Background");break;
+                                                case "Center" : TempCenter = Map.get("Center");break;
+                                                case "Handle" : TempHandle = Map.get("Handle");break;
+                                                default: Toast.makeText(AuctionContentActivity.this, key, Toast.LENGTH_SHORT).show();break;
+                                            }
+                                        }}
+
+                                    LatestBidderImageView.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            int Paddle_Size_x = LatestBidderImageView.getWidth();
+                                            createPaddle = new CreatePaddle();
+                                            Bitmap InitialPaddle = createPaddle.createPaddle(TempBackground,TempCenter,TempHandle,Paddle_Size_x);
+
+                                            LatestBidderImageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                                            LatestBidderImageView.setAdjustViewBounds(true);
+                                            LatestBidderImageView.setImageBitmap(InitialPaddle);
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }else{
+                    LatestTimeTextView.setVisibility(View.GONE);
+                    LatestBidderTextview.setVisibility(View.GONE);
+                    LatestPriceTextView.setVisibility(View.GONE);
+                    LatestBidderImageView.setVisibility(View.GONE);}
+            }
+        });
+        realTimeDatabaseManagerForLatestBidder.readBidder(contentId, new Callback() {
+            @Override
+            public void OnCallback(Object object) {
+                String lastTIme = (String) object;
+                TimeTextTool TTT = new TimeTextTool(lastTIme);
+                LatestTimeTextView.setText(TTT.Time2Text());
+                if(lastTIme != null){
+                    firestoreManagerForAuctionContent.read("Content", contentId, new Callback() {
+                    @Override
+                    public void OnCallback(Object object) {
+                        AuctionContent tempAuctionContent = (AuctionContent)object;
+                        List<String> templist = tempAuctionContent.getAuctionUserList();
+                        String LatestData = templist.get(templist.size()-1);
+                        String LatestBidder = LatestData.split("#")[0];
+                        String LatestPrice = LatestData.split("#")[2];
+                        LatestBidderTextview.setText(LatestBidder);
+                        LatestPriceTextView.setText(LatestPrice);
+
+                        TempBackground = InitialBG;
+                        TempCenter = InitialCenter;
+                        TempHandle = InitialHandle;
+                        storageManagerForUserPaddle.downloadforpaddle("UserPaddleImage/" + LatestBidder, new Callback() {
+                            @Override
+                            public void OnCallback(Object object) {
+                                if(object == null){
+                                }
+                                else{ Map<String, Bitmap> Map = (java.util.Map<String, Bitmap>) object;
+                                    for(String key : Map.keySet()){
+                                        switch (key){
+                                            case "Background" : TempBackground = Map.get("Background");break;
+                                            case "Center" : TempCenter = Map.get("Center");break;
+                                            case "Handle" : TempHandle = Map.get("Handle");break;
+                                            default: Toast.makeText(AuctionContentActivity.this, key, Toast.LENGTH_SHORT).show();break;
+                                        }
+                                    }}
+
+                                LatestBidderImageView.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        int Paddle_Size_x = LatestBidderImageView.getWidth();
+                                        createPaddle = new CreatePaddle();
+                                        Bitmap InitialPaddle = createPaddle.createPaddle(TempBackground,TempCenter,TempHandle,Paddle_Size_x);
+
+                                        LatestBidderImageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                                        LatestBidderImageView.setAdjustViewBounds(true);
+                                        LatestBidderImageView.setImageBitmap(InitialPaddle);
+                                    }
+                                });
+                            }
+                        });
+                    }
+                    });
+                }else{
+                    LatestTimeTextView.setVisibility(View.GONE);
+                    LatestBidderTextview.setVisibility(View.GONE);
+                    LatestPriceTextView.setVisibility(View.GONE);
+                    LatestBidderImageView.setVisibility(View.GONE);
+                }
+
             }
         });
 

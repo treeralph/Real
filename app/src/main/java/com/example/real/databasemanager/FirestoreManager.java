@@ -242,6 +242,26 @@ public class FirestoreManager {
                     }
                 });
     }
+    public void test(String collectionPath, Callback callback){
+        ArrayList<Data> dataList = new ArrayList<>();
+        CollectionReference ref = db.collection(collectionPath);
+        ref.orderBy("time",Query.Direction.DESCENDING).get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            for(QueryDocumentSnapshot document : task.getResult()){
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+
+                                dataList.add(CurrentDataType.Constructor(document.getData()));
+                            }
+                            callback.OnCallback(dataList);
+                        } else{
+                            Log.d(TAG, "Error getting document: ",task.getException());
+                        }
+                    }
+                });
+    }
 
     public void read(String collectionPath, String documentPath, Callback successCallback, Callback failureCallback){ // DocumentReference - only Read one
         DocumentReference ref = db.document(collectionPath + "/" + documentPath);

@@ -109,6 +109,51 @@
                     android:textColor="@color/grey"
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="30dp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:orientation="horizontal"
+                android:weightSum="1"
+                android:layout_marginTop="10dp">
+                <ImageView
+                    android:id="@+id/AuctionContentActivityLatestBidderImageViewDesign"
+                    android:layout_width="50dp"
+                    android:layout_height="100dp"
+                    />
+                <TextView
+                    android:id="@+id/AuctionContentActivityLatestBidderTextViewDesign"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:text="Uid"
+                    android:textSize="20dp"
+                    android:textColor="@color/grey"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="30dp"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/AuctionContentActivityLatestPriceTextViewDesign"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Price"
+                        android:textSize="20dp"
+                        android:textColor="@color/grey"
+                        android:layout_marginLeft="20dp"/>
+                    <TextView
+                        android:id="@+id/AuctionContentActivityLatestTimeTextViewDesign"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Time"
+                        android:textSize="20dp"
+                        android:textColor="@color/grey"
+                        android:layout_marginLeft="20dp"/>
+                </LinearLayout>
+
+
+            </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -192,7 +237,12 @@
                             android:layout_height="match_parent"
                             app:cardCornerRadius="20dp"
                             app:cardBackgroundColor="@color/yellow">
-
+                            <ImageView
+                                android:id="@+id/AuctionContentActivitypaddleIV"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="10dp"
+                                android:layout_gravity="center"/>
 
                         </androidx.cardview.widget.CardView>
                     </androidx.cardview.widget.CardView>

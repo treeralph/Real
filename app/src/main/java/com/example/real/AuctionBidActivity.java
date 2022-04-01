@@ -9,6 +9,8 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -23,6 +25,9 @@ import com.example.real.data.AuctionContent;
 import com.example.real.data.MutexLock;
 import com.example.real.data.UserProfile;
 import com.example.real.databasemanager.FirestoreManager;
+import com.example.real.databasemanager.RealTimeDatabaseManager;
+import com.example.real.databasemanager.StorageManager;
+import com.example.real.tool.CreatePaddle;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -60,6 +65,11 @@ public class AuctionBidActivity extends AppCompatActivity {
 
     final DateTimeFormatter formatter = new DateTimeFormatterBuilder().appendPattern("yyyyMMddHHmmss").appendValue(ChronoField.MILLI_OF_SECOND, 3).toFormatter();
 
+    Bitmap UserBackground;
+    Bitmap UserCenter;
+    Bitmap UserHandle;
+    CreatePaddle createPaddle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +98,9 @@ public class AuctionBidActivity extends AppCompatActivity {
 
         FirestoreManager firestoreManagerForAuctionContent = new FirestoreManager(AuctionBidActivity.this, "AuctionContent", user.getUid());
         FirestoreManager firestoreManagerForUserProfile = new FirestoreManager(AuctionBidActivity.this, "UserProfile", user.getUid());
+        StorageManager storageManagerForUserPaddle = new StorageManager(
+                AuctionBidActivity.this,"UserPaddleImage", user.getUid());
+        RealTimeDatabaseManager realTimeDatabaseManagerForAuctionBidder = new RealTimeDatabaseManager(AuctionBidActivity.this,"AuctionContentBidder", user.getUid());
 
         AuctionPriceEditText = findViewById(R.id.AuctionBidActivityBiddingPriceEditText);
         AuctionPriceBidBtn = findViewById(R.id.AuctionBidActivityBidButton);
@@ -195,7 +208,7 @@ public class AuctionBidActivity extends AppCompatActivity {
                                                         map.put("auctionUserList", userList);
 
                                                         transaction.update(ref, map);
-
+                                                        realTimeDatabaseManagerForAuctionBidder.writeBidder(contentId);
                                                         // Success
                                                         return null;
                                                     }
@@ -265,6 +278,45 @@ public class AuctionBidActivity extends AppCompatActivity {
                             Toast.makeText(AuctionBidActivity.this, "" +
                                     "Bid Price must be greater than minimum coast" + "(" + String.valueOf(threshold) + ")", Toast.LENGTH_SHORT).show();
                         }
+                    }
+                });
+            }
+        });
+
+        // Paddle Read
+        Bitmap Test = Bitmap.createBitmap(100,100,Bitmap.Config.ARGB_8888);
+        Test.eraseColor(0xfffaeb87);
+        Bitmap InitialBG = Test;
+        Bitmap InitialCenter = BitmapFactory.decodeResource(this.getResources(), R.drawable.mango_flaticon_1032525);
+        Bitmap InitialHandle = BitmapFactory.decodeResource(this.getResources(), R.drawable.aucto1);
+        UserBackground = InitialBG;
+        UserCenter = InitialCenter;
+        UserHandle = InitialHandle;
+        storageManagerForUserPaddle.downloadforpaddle("UserPaddleImage/" + user.getUid(), new Callback() {
+            @Override
+            public void OnCallback(Object object) {
+                if(object == null){
+                }
+                else{ Map<String, Bitmap> Map = (java.util.Map<String, Bitmap>) object;
+                    for(String key : Map.keySet()){
+                        switch (key){
+                            case "Background" : UserBackground = Map.get("Background");break;
+                            case "Center" : UserCenter = Map.get("Center");break;
+                            case "Handle" : UserHandle = Map.get("Handle");break;
+                            default: Toast.makeText(AuctionBidActivity.this, key, Toast.LENGTH_SHORT).show();break;
+                        }
+                    }}
+
+                UserPaddleImageView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        int Paddle_Size_x = UserPaddleImageView.getWidth();
+                        createPaddle = new CreatePaddle();
+                        Bitmap InitialPaddle = createPaddle.createPaddle(UserBackground,UserCenter,UserHandle,Paddle_Size_x);
+
+                        UserPaddleImageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                        UserPaddleImageView.setAdjustViewBounds(true);
+                        UserPaddleImageView.setImageBitmap(InitialPaddle);
                     }
                 });
             }
