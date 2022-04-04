@@ -110,17 +110,18 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="30dp"/>
             <LinearLayout
+                android:id="@+id/AuctionContentActivityLatestLL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:orientation="horizontal"
                 android:weightSum="1"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="20dp"
+                >
                 <ImageView
                     android:id="@+id/AuctionContentActivityLatestBidderImageViewDesign"
                     android:layout_width="50dp"
-                    android:layout_height="100dp"
-                    />
+                    android:layout_height="100dp" />
                 <TextView
                     android:id="@+id/AuctionContentActivityLatestBidderTextViewDesign"
                     android:layout_width="0dp"
@@ -135,12 +136,19 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
                     <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Latest Bidder"
+                        android:textSize="20dp"
+                        android:textColor="@color/purple_500"
+                        android:layout_marginLeft="20dp"/>
+                    <TextView
                         android:id="@+id/AuctionContentActivityLatestPriceTextViewDesign"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Price"
                         android:textSize="20dp"
-                        android:textColor="@color/grey"
+                        android:textColor="@color/purple_700"
                         android:layout_marginLeft="20dp"/>
                     <TextView
                         android:id="@+id/AuctionContentActivityLatestTimeTextViewDesign"
@@ -148,7 +156,7 @@
                         android:layout_height="wrap_content"
                         android:text="Time"
                         android:textSize="20dp"
-                        android:textColor="@color/grey"
+                        android:textColor="@color/purple_200"
                         android:layout_marginLeft="20dp"/>
                 </LinearLayout>
 

@@ -232,13 +232,18 @@ public class StorageManager {
                     }
                 });
     }
-    public void uploadforpaddle(String type, String path, Bitmap image, Callback callback){
+    public void uploadforpaddle(String type, String path, Bitmap image, int threshold, Callback callback){
 
         //StorageReference ref = storage.getReference();
         StorageReference mRef = ref.child(path +"/"+ type );
+        ImageSizeTool imageSizeTool = new ImageSizeTool(threshold);
+        int compressRatio = imageSizeTool.getRatio(image);
+
+        int compressQuality = (int)(100/compressRatio);
+        if(compressQuality < 1){ compressQuality = 1; } else{ }
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        image.compress(Bitmap.CompressFormat.JPEG, (int)(100/compressRatio), baos);
 
         byte[] data = baos.toByteArray();
 

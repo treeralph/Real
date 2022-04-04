@@ -1,6 +1,8 @@
 package com.example.real.tool;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -9,15 +11,68 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.real.AuctionContentActivity;
+import com.example.real.Callback;
 import com.example.real.PaddleCustomActivity;
+import com.example.real.R;
+import com.example.real.databasemanager.StorageManager;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class CreatePaddle {
+    Context context;
+    String useruid;
+    Bitmap UserBackground; Bitmap UserCenter; Bitmap UserHandle;
 
-    public CreatePaddle() {
+
+    public CreatePaddle(){
+
     }
+
+    public CreatePaddle(Context context, String useruid) {
+        this.context = context;
+        this.useruid = useruid;
+    }
+    public void Initializer(String someoneuid , Callback callback){
+        // Input : Uid -> Output : Uid's 3 Paddle Bitmap
+        Bitmap Test = Bitmap.createBitmap(100,100,Bitmap.Config.ARGB_8888);
+        Test.eraseColor(0xfffaeb87);
+        Bitmap InitialBG = Test;
+        Bitmap InitialCenter = BitmapFactory.decodeResource(context.getResources(), R.drawable.mango_flaticon_1032525);
+        Bitmap InitialHandle = BitmapFactory.decodeResource(context.getResources(), R.drawable.aucto1);
+        UserBackground = InitialBG;
+        UserCenter = InitialCenter;
+        UserHandle = InitialHandle;
+        StorageManager storageManagerForUserPaddle = new StorageManager(context,"UserPaddleImage", useruid);
+        storageManagerForUserPaddle.downloadforpaddle("UserPaddleImage/" + useruid, new Callback() {
+            @Override
+            public void OnCallback(Object object) {
+                if(object == null){
+                }
+                else{ Map<String, Bitmap> Map = (java.util.Map<String, Bitmap>) object;
+                    for(String key : Map.keySet()){
+                        switch (key){
+                            case "Background" : UserBackground = Map.get("Background");break;
+                            case "Center" : UserCenter = Map.get("Center");break;
+                            case "Handle" : UserHandle = Map.get("Handle");break;
+                            default: Toast.makeText(context, key, Toast.LENGTH_SHORT).show();break;
+                        }}
+                }
+                List<Bitmap> bitmapList = new ArrayList<>();
+                bitmapList.add(UserBackground);bitmapList.add(UserCenter);bitmapList.add(UserHandle);
+                callback.OnCallback(bitmapList);
+            }
+        });
+
+    }
+
     public Bitmap createPaddle(Bitmap Background, Bitmap Center, Bitmap Handle, int Paddle_Size_x){
+        // Input : 3 Paddle Bitmap -> Output : 1 Paddlized Bitmap
 
         //Base Options
         int Sweep_Angle = 320;
@@ -35,7 +90,7 @@ public class CreatePaddle {
         int Background_Rad = Paddle_Size_x/2;
         Canvas Canvas_Paddle = new Canvas(Paddle);
         Canvas_Paddle.save();
-        Canvas_Paddle.rotate(0,Background_Rad,Background_Rad);
+        Canvas_Paddle.rotate(0,Background_Rad,Background_Rad); // rotator
         Canvas_Paddle.translate((float) (Padding*2),0);
 
 

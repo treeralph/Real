@@ -284,35 +284,17 @@ public class AuctionBidActivity extends AppCompatActivity {
         });
 
         // Paddle Read
-        Bitmap Test = Bitmap.createBitmap(100,100,Bitmap.Config.ARGB_8888);
-        Test.eraseColor(0xfffaeb87);
-        Bitmap InitialBG = Test;
-        Bitmap InitialCenter = BitmapFactory.decodeResource(this.getResources(), R.drawable.mango_flaticon_1032525);
-        Bitmap InitialHandle = BitmapFactory.decodeResource(this.getResources(), R.drawable.aucto1);
-        UserBackground = InitialBG;
-        UserCenter = InitialCenter;
-        UserHandle = InitialHandle;
-        storageManagerForUserPaddle.downloadforpaddle("UserPaddleImage/" + user.getUid(), new Callback() {
+
+        createPaddle = new CreatePaddle(AuctionBidActivity.this, user.getUid());
+        createPaddle.Initializer(user.getUid(), new Callback() {
             @Override
             public void OnCallback(Object object) {
-                if(object == null){
-                }
-                else{ Map<String, Bitmap> Map = (java.util.Map<String, Bitmap>) object;
-                    for(String key : Map.keySet()){
-                        switch (key){
-                            case "Background" : UserBackground = Map.get("Background");break;
-                            case "Center" : UserCenter = Map.get("Center");break;
-                            case "Handle" : UserHandle = Map.get("Handle");break;
-                            default: Toast.makeText(AuctionBidActivity.this, key, Toast.LENGTH_SHORT).show();break;
-                        }
-                    }}
-
+                List<Bitmap> bitmapList = (List<Bitmap>) object;
                 UserPaddleImageView.post(new Runnable() {
                     @Override
                     public void run() {
                         int Paddle_Size_x = UserPaddleImageView.getWidth();
-                        createPaddle = new CreatePaddle();
-                        Bitmap InitialPaddle = createPaddle.createPaddle(UserBackground,UserCenter,UserHandle,Paddle_Size_x);
+                        Bitmap InitialPaddle = createPaddle.createPaddle(bitmapList.get(0),bitmapList.get(1),bitmapList.get(2),Paddle_Size_x);
 
                         UserPaddleImageView.setScaleType(ImageView.ScaleType.FIT_XY);
                         UserPaddleImageView.setAdjustViewBounds(true);
@@ -321,6 +303,7 @@ public class AuctionBidActivity extends AppCompatActivity {
                 });
             }
         });
+
     }
 
     @Override

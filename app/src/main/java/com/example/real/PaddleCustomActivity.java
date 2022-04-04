@@ -24,9 +24,11 @@ import android.widget.Toast;
 
 import com.example.real.databasemanager.StorageManager;
 import com.example.real.tool.CreatePaddle;
+import com.example.real.tool.ImageSizeTool;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -106,7 +108,7 @@ public class PaddleCustomActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         Paddle_Size_x = paddleimageview.getWidth();
-                        createPaddle = new CreatePaddle();
+                        createPaddle = new CreatePaddle(PaddleCustomActivity.this, user.getUid());
                         Bitmap InitialPaddle = createPaddle.createPaddle(UserBackground,UserCenter,UserHandle,Paddle_Size_x);
 
                         paddleimageview.setScaleType(ImageView.ScaleType.FIT_XY);
@@ -165,7 +167,8 @@ public class PaddleCustomActivity extends AppCompatActivity {
             public void onClick(View view) {
                 // Check Current Bitmap is Initial one
                 if(UserBackground != InitialBG){
-                    storageManagerForUserPaddle.uploadforpaddle("Background","UserPaddleImage/" + user.getUid(), UserBackground, new Callback() {
+
+                    storageManagerForUserPaddle.uploadforpaddle("Background","UserPaddleImage/" + user.getUid(), UserBackground,1000,  new Callback() {
                         @Override
                         public void OnCallback(Object object) {
 
@@ -173,14 +176,15 @@ public class PaddleCustomActivity extends AppCompatActivity {
                     });
                 }
                 if(UserCenter != InitialCenter){
-                    storageManagerForUserPaddle.uploadforpaddle("Center","UserPaddleImage/" + user.getUid(), UserCenter, new Callback() {
+                    storageManagerForUserPaddle.uploadforpaddle("Center","UserPaddleImage/" + user.getUid(), UserCenter,800, new Callback() {
                         @Override
                         public void OnCallback(Object object) {
                         }
                     });
                 }
                 if(UserHandle != InitialHandle){
-                    storageManagerForUserPaddle.uploadforpaddle("Handle","UserPaddleImage/" + user.getUid(), UserHandle, new Callback() {
+
+                    storageManagerForUserPaddle.uploadforpaddle("Handle","UserPaddleImage/" + user.getUid(), UserHandle,800, new Callback() {
                         @Override
                         public void OnCallback(Object object) {
                         }
