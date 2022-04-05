@@ -181,7 +181,7 @@ public class ContentActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(ContentActivity.this, PeekUserProfileActivity.class);
                 intent.putExtra("userProfileUID", contentUID);
-                intent.putExtra("userProfileImageByteArray", byteArray);
+                //intent.putExtra("userProfileImageByteArray", byteArray);
 
                 Pair[] pairs = new Pair[1];
                 pairs[0] = new Pair<View, String>(testView, "testView");

@@ -80,6 +80,8 @@
         <entry key="app/src/main/res/layout/message_item_design_for_another.xml" value="0.5445103857566765" />
         <entry key="app/src/main/res/layout/message_item_design_for_user.xml" value="0.55" />
         <entry key="app/src/main/res/layout/message_item_for_appointment.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/message_item_for_bidend.xml" value="0.55" />
+        <entry key="app/src/main/res/layout/message_item_for_confirmed_appointment.xml" value="0.3333333333333333" />
         <entry key="app/src/main/res/layout/message_item_for_image.xml" value="0.45" />
         <entry key="app/src/main/res/layout/message_item_for_image_for_another.xml" value="0.55" />
         <entry key="app/src/main/res/layout/message_item_for_image_for_user.xml" value="0.55" />
