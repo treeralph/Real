@@ -90,9 +90,14 @@ public class PeekUserProfileActivity extends AppCompatActivity {
         starList.add(userReputationStar5);
 
         userProfileUID = getIntent().getStringExtra("userProfileUID"); // not current user UID
+
+        // todo: Do not get bitmap through intent, Do get bitmap from server
+        /*
         byte[] userProfileImageByteArrays = getIntent().getByteArrayExtra("userProfileImageByteArray");
         userProfileImageBitmap = BitmapFactory.decodeByteArray(userProfileImageByteArrays, 0, userProfileImageByteArrays.length);
         userProfileImageView.setImageBitmap(userProfileImageBitmap);
+
+         */
 
         firestoreManagerForUserProfile = new FirestoreManager(this, "UserProfile", currentUser.getUid());
         storageManagerForUserProfileImage = new StorageManager(this, "UserProfileImage", currentUser.getUid());
