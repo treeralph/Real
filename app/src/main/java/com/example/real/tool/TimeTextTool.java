@@ -65,4 +65,21 @@ public class TimeTextTool {
         }
     }
 
+    public String Time3Text(){
+        switch(flag){
+            case UNDERMINUTE:
+                return String.valueOf(period)+"초전";
+            case UNDERHOUR:
+                int temp_minute = (int) (period/60);
+                return String.valueOf(temp_minute) + "분전";
+            case UNDERDAY:
+                int temp_hour = (int) (period/3600);
+                return String.valueOf(temp_hour) + "시간전";
+            case DATE:
+                int temp_day = (int) (period/(3600*24));
+                return String.valueOf(temp_day) + "일전";
+            default:
+                return "";
+        }
+    }
 }

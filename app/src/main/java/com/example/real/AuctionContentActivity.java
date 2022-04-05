@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -369,7 +370,7 @@ public class AuctionContentActivity extends AppCompatActivity {
             public void OnCallback(Object object) {
                 String lastTime = (String) object;
                 TimeTextTool TTT = new TimeTextTool(lastTime);
-                LatestTimeTextView.setText(TTT.Time2Text());
+                LatestTimeTextView.setText(TTT.Time3Text());
                 if(lastTime != null){
                     LatestLL.setVisibility(View.VISIBLE);
                     firestoreManagerForAuctionContent.read("Content", contentId, new Callback() {
@@ -380,9 +381,15 @@ public class AuctionContentActivity extends AppCompatActivity {
                             String LatestData = templist.get(templist.size()-1);
                             String LatestBidder = LatestData.split("#")[0];
                             String LatestPrice = LatestData.split("#")[2];
-                            LatestBidderTextview.setText(LatestBidder);
                             LatestPriceTextView.setText(LatestPrice);
                             AuctionContentCurrentPriceTextView.setText(LatestPrice);
+                            firestoreManagerForUserProfile.read("UserProfile", LatestBidder, new Callback() {
+                                @Override
+                                public void OnCallback(Object object) {
+                                    UserProfile x = (UserProfile) object;
+                                    LatestBidderTextview.setText(x.getNickName());
+                                }
+                            });
                             createPaddle.Initializer(LatestBidder, new Callback() {
                                 @Override
                                 public void OnCallback(Object object) {
@@ -393,7 +400,7 @@ public class AuctionContentActivity extends AppCompatActivity {
 
                                             int Paddle_Size_x = LatestBidderImageView.getWidth();
                                             createPaddle = new CreatePaddle(AuctionContentActivity.this, user.getUid());
-                                            Bitmap InitialPaddle = createPaddle.createPaddle(bitmapList.get(0),bitmapList.get(1),bitmapList.get(2),Paddle_Size_x);
+                                            Bitmap InitialPaddle = createPaddle.createPaddle(bitmapList.get(0),bitmapList.get(1),bitmapList.get(2),Paddle_Size_x, 30);
 
                                             LatestBidderImageView.setScaleType(ImageView.ScaleType.FIT_XY);
                                             LatestBidderImageView.setAdjustViewBounds(true);
@@ -408,7 +415,7 @@ public class AuctionContentActivity extends AppCompatActivity {
             public void OnCallback(Object object) {
                 String lastTIme = (String) object;
                 TimeTextTool TTT = new TimeTextTool(lastTIme);
-                LatestTimeTextView.setText(TTT.Time2Text());
+                LatestTimeTextView.setText(TTT.Time3Text());
                 if(lastTIme != null){
                     LatestLL.setVisibility(View.VISIBLE);
 
@@ -431,7 +438,7 @@ public class AuctionContentActivity extends AppCompatActivity {
                                     public void run() {
                                         int Paddle_Size_x = LatestBidderImageView.getWidth();
                                         createPaddle = new CreatePaddle(AuctionContentActivity.this, user.getUid());
-                                        Bitmap InitialPaddle = createPaddle.createPaddle(bitmapList.get(0),bitmapList.get(1),bitmapList.get(2),Paddle_Size_x);
+                                        Bitmap InitialPaddle = createPaddle.createPaddle(bitmapList.get(0),bitmapList.get(1),bitmapList.get(2),Paddle_Size_x, 30);
 
                                         LatestBidderImageView.setScaleType(ImageView.ScaleType.FIT_XY);
                                         LatestBidderImageView.setAdjustViewBounds(true);
