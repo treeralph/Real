@@ -204,7 +204,7 @@ public class ChattingActivity extends AppCompatActivity {
                         storageManagerForMessageImage.upload(imageUri, img, new Callback() {
                             @Override
                             public void OnCallback(Object object) {
-                                Message message = new Message(fromUserUid, toUserUid, "", fromUserToken, toUserToken, imageUri);
+                                Message message = new Message(Message.imageMessageFlag, fromUserUid, toUserUid, "", fromUserToken, toUserToken, imageUri);
                                 realTimeDatabaseManager.writeMessage(databasePath, message);
                                 messageEditText.setText("");
                             }
@@ -280,7 +280,7 @@ public class ChattingActivity extends AppCompatActivity {
                         toUserUid = userUID;
                     }
 
-                    Message message = new Message(fromUserUid, toUserUid, msg, fromUserToken, toUserToken, "");
+                    Message message = new Message(Message.normalMessageFlag, fromUserUid, toUserUid, msg, fromUserToken, toUserToken, "");
                     realTimeDatabaseManager.writeMessage(databasePath, message);
                     messageEditText.setText("");
 
@@ -415,9 +415,20 @@ public class ChattingActivity extends AppCompatActivity {
         }
         if(requestCode == 1){
             if(resultCode == 69){
+                if (user.getUid().equals(userUID)) {
+                    fromUserToken = userUIDToken;
+                    fromUserUid = userUID;
+                    toUserToken = contentUIDToken;
+                    toUserUid = contentUID;
+                } else {
+                    fromUserToken = contentUIDToken;
+                    fromUserUid = contentUID;
+                    toUserToken = userUIDToken;
+                    toUserUid = userUID;
+                }
 
-                //messageEditText.setText(data.getExtras().getString("CONFIRMED"));
-                Message message = new Message(data.getExtras().getString("CONFIRMED"),data.getExtras().getString("CONFIRMED_LOCATION"),false);
+                String payload = data.getExtras().getString("CONFIRMED") + "/" + data.getExtras().getString("CONFIRMED_LOCATION") + "/false";
+                Message message = new Message(Message.appointmentMessageFlag, fromUserUid, toUserUid, payload, fromUserToken, toUserToken, "");
                 adapter.addItem(message);
                 messageRecyclerView.setAdapter(adapter);
                 messageRecyclerView.scrollToPosition(adapter.getItemCount() - 1);
