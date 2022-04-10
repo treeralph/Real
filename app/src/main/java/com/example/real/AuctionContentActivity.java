@@ -1,10 +1,15 @@
 package com.example.real;
 
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Path;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -164,6 +169,7 @@ public class AuctionContentActivity extends AppCompatActivity {
         LatestBidderImageView = findViewById(R.id.AuctionContentActivityLatestBidderImageViewDesign);
         LatestLL = findViewById(R.id.AuctionContentActivityLatestLL);
         srtbtn = findViewById(R.id.AuctionContentActivitySortingButtonDesign);
+
 
         ContentsBtn = findViewById(R.id.AuctionContentActivityContentsButtonDesign);
         UserhistoryBtn = findViewById(R.id.AuctionContentActivityUserHistoryButtonDesign);
@@ -354,10 +360,11 @@ public class AuctionContentActivity extends AppCompatActivity {
                     public void run() {
                         int Paddle_Size_x = AuctionContentUserPaddleImageView.getWidth();
                         Bitmap InitialPaddle = createPaddle.createPaddle(bitmapList.get(0),bitmapList.get(1),bitmapList.get(2),Paddle_Size_x);
-
                         AuctionContentUserPaddleImageView.setScaleType(ImageView.ScaleType.FIT_XY);
                         AuctionContentUserPaddleImageView.setAdjustViewBounds(true);
                         AuctionContentUserPaddleImageView.setImageBitmap(InitialPaddle);
+
+
                     }
                 });
             }
@@ -398,18 +405,30 @@ public class AuctionContentActivity extends AppCompatActivity {
                                         @Override
                                         public void run() {
 
+                                            LatestBidderImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                                             int Paddle_Size_x = LatestBidderImageView.getWidth();
                                             createPaddle = new CreatePaddle(AuctionContentActivity.this, user.getUid());
                                             Bitmap InitialPaddle = createPaddle.createPaddle(bitmapList.get(0),bitmapList.get(1),bitmapList.get(2),Paddle_Size_x, 30);
+                                            //LatestBidderImageView.setAdjustViewBounds(true);
 
-                                            LatestBidderImageView.setScaleType(ImageView.ScaleType.FIT_XY);
-                                            LatestBidderImageView.setAdjustViewBounds(true);
-                                            LatestBidderImageView.setImageBitmap(InitialPaddle);
+                                            Matrix matrix = new Matrix();
+                                            matrix.postTranslate(0,50);
+                                            Bitmap TopPaddingPaddle = Bitmap.createBitmap(InitialPaddle.getWidth(), InitialPaddle.getHeight(), Bitmap.Config.ARGB_8888);
+                                            Canvas canvas = new Canvas(TopPaddingPaddle);
+                                            canvas.drawBitmap(InitialPaddle,matrix,null);
+
+
+
+
+
+                                            LatestBidderImageView.setImageBitmap(TopPaddingPaddle);
+
+
                                         }});
                                 }});
                         }});
                 }}});
-
+        /*
         realTimeDatabaseManagerForLatestBidder.readBidder(contentId, new Callback() {
             @Override
             public void OnCallback(Object object) {
@@ -436,18 +455,23 @@ public class AuctionContentActivity extends AppCompatActivity {
                                 LatestBidderImageView.post(new Runnable() {
                                     @Override
                                     public void run() {
+                                        LatestBidderImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                                         int Paddle_Size_x = LatestBidderImageView.getWidth();
                                         createPaddle = new CreatePaddle(AuctionContentActivity.this, user.getUid());
                                         Bitmap InitialPaddle = createPaddle.createPaddle(bitmapList.get(0),bitmapList.get(1),bitmapList.get(2),Paddle_Size_x, 30);
 
-                                        LatestBidderImageView.setScaleType(ImageView.ScaleType.FIT_XY);
-                                        LatestBidderImageView.setAdjustViewBounds(true);
+                                        //LatestBidderImageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                                        //LatestBidderImageView.setAdjustViewBounds(true);
                                         LatestBidderImageView.setImageBitmap(InitialPaddle);
+
+
                                     }});
                             }});
                     }});
                 }}
         });
+
+         */
 
 
 

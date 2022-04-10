@@ -3,8 +3,10 @@ package com.example.real.tool;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PathEffect;
@@ -50,7 +52,7 @@ public class CreatePaddle {
         UserCenter = InitialCenter;
         UserHandle = InitialHandle;
         StorageManager storageManagerForUserPaddle = new StorageManager(context,"UserPaddleImage", useruid);
-        storageManagerForUserPaddle.downloadforpaddle("UserPaddleImage/" + useruid, new Callback() {
+        storageManagerForUserPaddle.downloadforpaddle("UserPaddleImage/" + someoneuid, new Callback() {
             @Override
             public void OnCallback(Object object) {
                 if(object == null){
@@ -124,6 +126,9 @@ public class CreatePaddle {
         Paint_Background_Shadow.setStrokeWidth((float) (Padding*1.5));
 
         //      Draw Path
+
+
+
         RectF RectF_Background_circle = new RectF(Padding,Padding,Padding + Paddle_Size_x,Padding + Paddle_Size_x);
         Path_Background.addArc(RectF_Background_circle,270-Sweep_Angle/2,Sweep_Angle);
 
@@ -137,7 +142,7 @@ public class CreatePaddle {
         Path_Background.lineTo(x1-Handle_Width,y1);
 
         RectF RectF_Background_bottom_circle = new RectF(
-                 x1-Handle_Width, y1+Handle_Length-Handle_Width/2, x1, y1+Handle_Length+Handle_Width/2);
+                x1-Handle_Width, y1+Handle_Length-Handle_Width/2, x1, y1+Handle_Length+Handle_Width/2);
         Path_Background.arcTo(RectF_Background_bottom_circle,0,180,true);
 
         //      Draw Stroke_Path
@@ -153,10 +158,11 @@ public class CreatePaddle {
         Paint_Background.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
         Canvas_Background.drawBitmap(Background, null, Rect_Paddle,Paint_Background);
 
+
         //      Paper_Background is Done So u can apply it by
         Paint_Background.reset();
 
-        // Shadow test
+        // 3D test
         Canvas_Paddle.save();
         Canvas_Paddle.translate(1,1);
         Canvas_Paddle.drawPath(Path_Background_Stroke,Paint_Background_Shadow);
@@ -171,6 +177,12 @@ public class CreatePaddle {
         Canvas_Paddle.restore();
         Canvas_Paddle.drawPath(Path_Background_Stroke,Paint_Background_Stroke);
         Canvas_Paddle.drawBitmap(Paper_Background,Rect_Paddle,Rect_Paddle,Paint_Background);
+
+
+
+
+
+
 
 
 
@@ -523,7 +535,8 @@ public class CreatePaddle {
         return Paddle;
     }
 
-    public Bitmap createBuringPaddle(Bitmap Background, Bitmap Center, Bitmap Handle, int Paddle_Size_x){
+
+    public Bitmap createBlurPaddle(Bitmap Background, Bitmap Center, Bitmap Handle, int Paddle_Size_x){
         // Input : 3 Paddle Bitmap -> Output : 1 Paddlized Bitmap
 
         //Base Options
@@ -533,9 +546,9 @@ public class CreatePaddle {
         float display_ratio = 1 + (float)Handle_Length/Paddle_Size_x + (float)BOTTom_Rad/(2*Paddle_Size_x); // X:Y ratio
 
 
-        int Padding = (int) (Paddle_Size_x*0.025);
-        Bitmap Paddle = Bitmap.createBitmap(Paddle_Size_x+10*Padding,
-                (int) (Paddle_Size_x*display_ratio+8*Padding), Bitmap.Config.ARGB_8888);
+        int Padding = (int) (Paddle_Size_x*0.01);
+        Bitmap Paddle = Bitmap.createBitmap(Paddle_Size_x+6*Padding,
+                (int) (Paddle_Size_x*display_ratio+4*Padding), Bitmap.Config.ARGB_8888);
         Rect Rect_Paddle = new Rect(0,0,Paddle_Size_x+2*Padding, (int) (Paddle_Size_x*display_ratio)+2*Padding);
         final int color = 0xff424242;
 
@@ -544,6 +557,7 @@ public class CreatePaddle {
         Canvas_Paddle.save();
         Canvas_Paddle.rotate(0,Background_Rad,Background_Rad); // rotator
         Canvas_Paddle.translate((float) (Padding*2),0);
+
 
 
         //  Case - Background
@@ -575,6 +589,9 @@ public class CreatePaddle {
         Paint_Background_Shadow.setStrokeWidth((float) (Padding*1.5));
 
         //      Draw Path
+
+
+
         RectF RectF_Background_circle = new RectF(Padding,Padding,Padding + Paddle_Size_x,Padding + Paddle_Size_x);
         Path_Background.addArc(RectF_Background_circle,270-Sweep_Angle/2,Sweep_Angle);
 
@@ -604,10 +621,22 @@ public class CreatePaddle {
         Paint_Background.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
         Canvas_Background.drawBitmap(Background, null, Rect_Paddle,Paint_Background);
 
+        // BlrMsk Test
+        Paint glowingPaint = new Paint();
+        glowingPaint.setAntiAlias(true);
+        glowingPaint.setColor(Color.BLUE);
+        glowingPaint.setMaskFilter(new BlurMaskFilter(20,
+                BlurMaskFilter.Blur.NORMAL));
+        glowingPaint.setStrokeWidth(20);
+        glowingPaint.setStyle(Paint.Style.STROKE);
+        Canvas_Paddle.drawPath(Path_Background,glowingPaint);
+        glowingPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        Canvas_Paddle.drawBitmap(Background,null,Rect_Paddle,glowingPaint);
+
         //      Paper_Background is Done So u can apply it by
         Paint_Background.reset();
 
-        // Shadow test
+        // 3D test
         Canvas_Paddle.save();
         Canvas_Paddle.translate(1,1);
         Canvas_Paddle.drawPath(Path_Background_Stroke,Paint_Background_Shadow);
@@ -622,6 +651,14 @@ public class CreatePaddle {
         Canvas_Paddle.restore();
         Canvas_Paddle.drawPath(Path_Background_Stroke,Paint_Background_Stroke);
         Canvas_Paddle.drawBitmap(Paper_Background,Rect_Paddle,Rect_Paddle,Paint_Background);
+
+
+
+
+
+
+
+
 
         //  Case - Center
 
@@ -745,5 +782,44 @@ public class CreatePaddle {
 
         return Paddle;
     }
+
+
+
+
+
+
+
+
+    public Path getBackgroundPath(int Paddle_Size_x){
+
+        int Sweep_Angle = 320;
+        int Padding = (int) (Paddle_Size_x*0.025);
+        int Background_Rad = Paddle_Size_x/2;
+        int Handle_Length = (int) (Paddle_Size_x*0.5);
+
+        //      Draw Path
+        Path Path_Background = new Path();
+        RectF RectF_Background_circle = new RectF(Padding,Padding,Padding + Paddle_Size_x,Padding + Paddle_Size_x);
+        Path_Background.addArc(RectF_Background_circle,270-Sweep_Angle/2,Sweep_Angle);
+
+        float Handle_Width = (float) ((float) Paddle_Size_x*Math.sin( Math.toRadians(180-Sweep_Angle/2)));
+        float x1 = (float) (Padding + Background_Rad+Background_Rad*Math.cos( Math.toRadians(Sweep_Angle/2-90) ));
+        float y1 = (float) (Padding + Background_Rad+Background_Rad*Math.sin( Math.toRadians(Sweep_Angle/2-90) ));
+        int Handle_Width_Int = (int) Handle_Width;
+        Path_Background.moveTo(x1,y1);
+        Path_Background.lineTo(x1,y1+Handle_Length);
+        RectF RectF_Background_bottom_circle = new RectF(
+                x1-Handle_Width, y1+Handle_Length-Handle_Width/2, x1, y1+Handle_Length+Handle_Width/2);
+        Path_Background.arcTo(RectF_Background_bottom_circle,0,180,true);
+
+        Path_Background.lineTo(x1-Handle_Width,y1);
+
+        Matrix matrix = new Matrix();
+        matrix.setTranslate(80,0);
+        Path_Background.transform(matrix);
+
+        return Path_Background;
+    }
+
 
 }
