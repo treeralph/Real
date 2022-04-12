@@ -9,6 +9,12 @@ import java.util.Map;
 
 public class Message extends Data{
 
+    public static final String normalMessageFlag = "0";
+    public static final String imageMessageFlag = "1";
+    public static final String appointmentMessageFlag = "2";
+    public static final String chickenWinnerMessageFlag = "3";
+
+    private String flag;
     private String fromUid;
     private String toUid;
     private String message;
@@ -21,14 +27,22 @@ public class Message extends Data{
     private String location;
     private Boolean isconfirmed;
 
+    private String chickenBidUserUid;
+    private String bidPrice;
+
     public Message(){
 
     }
 
-    public Message(String fromUid, String toUid, String message, String fromToken, String toToken, String imageUri) {
+    /**
+     * reservation message의 경우 message에 시간,장소 등의 정보를 담아서 전달한다. {reservedTime/Location/isConfirmed}
+     * chicken message의 경우 message에 낙찰자의 uid와 낙찰 가격등의 정보를 담아서 전달한다. {uid/price}
+     * */
+    public Message(String flag, String fromUid, String toUid, String message, String fromToken, String toToken, String imageUri) {
         Date date_now = new Date(System.currentTimeMillis());
         SimpleDateFormat date_format = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 
+        this.flag = flag;
         this.fromUid = fromUid;
         this.toUid = toUid;
         this.message = message;
@@ -38,7 +52,9 @@ public class Message extends Data{
         this.imageUri = imageUri;
     }
 
-    public Message(String fromUid, String toUid, String message, String time, String fromToken, String toToken, String imageUri) {
+    public Message(String flag, String fromUid, String toUid, String message, String time, String fromToken, String toToken, String imageUri) {
+
+        this.flag = flag;
         this.fromUid = fromUid;
         this.toUid = toUid;
         this.message = message;
@@ -46,16 +62,6 @@ public class Message extends Data{
         this.fromToken = fromToken;
         this.toToken = toToken;
         this.imageUri = imageUri;
-    }
-    public Message(String ReservedTime, String Location, Boolean isConfirmed){
-
-        Date date_now = new Date(System.currentTimeMillis());
-        SimpleDateFormat date_format = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-        this.time = date_format.format(date_now);
-        this.ReservedTime = ReservedTime;
-        this.location = Location;
-        this.isconfirmed = isConfirmed;
-
     }
 
     @NonNull
@@ -68,6 +74,14 @@ public class Message extends Data{
     public Map<String, Object> DataOut() {
         Map<String, Object> datum = new HashMap<>();
         return datum;
+    }
+
+    public String getFlag() {
+        return flag;
+    }
+
+    public void setFlag(String flag) {
+        this.flag = flag;
     }
 
     public String getFromUid() {
@@ -126,15 +140,4 @@ public class Message extends Data{
         this.imageUri = imageUri;
     }
 
-    public String getLocation() { return location; }
-
-    public void setLocation(String location) { this.location = location; }
-
-    public Boolean getIsconfirmed() { return isconfirmed; }
-
-    public void setIsconfirmed(Boolean isconfirmed) { this.isconfirmed = isconfirmed; }
-
-    public String getReservedTime() { return ReservedTime; }
-
-    public void setReservedTime(String reservedTime) { ReservedTime = reservedTime; }
 }

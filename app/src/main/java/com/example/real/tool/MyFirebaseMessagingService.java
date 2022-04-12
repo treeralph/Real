@@ -242,7 +242,63 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             }else if(dFlag.equals("Auctioneer")){
 
-            }else{
+                Log.d("FCM_Service", "ScheduledAlarm/Auctioneer");
+
+                String tempTitle = descriptionSplit[1];
+                String tempBody = descriptionSplit[2];
+                String[] intentExtraList = descriptionSplit[3].split("/");
+
+                String chattingRoomPath = intentExtraList[0];
+                String contentId = intentExtraList[1];
+                String clientUid = intentExtraList[2];
+                String contentUID= intentExtraList[3];
+
+                Intent intent = new Intent(this, ChattingActivity.class);
+                intent.putExtra("databasePath", chattingRoomPath);
+                intent.putExtra("contentId", contentId);
+                intent.putExtra("userUID", clientUid);
+                intent.putExtra("contentUID", contentUID);
+
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+                stackBuilder.addNextIntentWithParentStack(intent);
+                PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                NotificationCompat.Builder notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+                        .setContentTitle(tempTitle)
+                        .setContentText(tempBody)
+                        .setSmallIcon(R.drawable.push_img)
+                        .setContentIntent(resultPendingIntent)
+                        .setAutoCancel(true);
+                NotificationManagerCompat.from(this).notify(1, notification.build());
+
+            }else if(dFlag.equals("NonChicken")){
+
+                Log.d("FCM_Service", "ScheduledAlarm/NonChicken");
+
+                String tempTitle = descriptionSplit[1];
+                String tempBody = descriptionSplit[2];
+                String intentExtra = descriptionSplit[3];
+
+                Intent intent = new Intent(this, AuctionContentActivity.class);
+                intent.putExtra("ContentId", intentExtra);
+
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+                stackBuilder.addNextIntentWithParentStack(intent);
+                PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                NotificationCompat.Builder notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+                        .setContentTitle(tempTitle)
+                        .setContentText(tempBody)
+                        .setSmallIcon(R.drawable.push_img)
+                        .setContentIntent(resultPendingIntent)
+                        .setAutoCancel(true);
+                NotificationManagerCompat.from(this).notify(1, notification.build());
+            }
+            else{
 
             }
 

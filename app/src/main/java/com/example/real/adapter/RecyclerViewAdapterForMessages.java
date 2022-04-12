@@ -21,16 +21,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.real.Callback;
 import com.example.real.ChattingActivity;
 import com.example.real.R;
+import com.example.real.data.Alarm;
 import com.example.real.data.Message;
 import com.example.real.data.UserProfile;
 import com.example.real.databasemanager.FirestoreManager;
 import com.example.real.databasemanager.RealTimeDatabaseManager;
 import com.example.real.databasemanager.StorageManager;
+import com.example.real.tool.CreatePaddle;
 import com.example.real.tool.TimeTextTool;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.LogRecord;
 
@@ -62,6 +65,9 @@ public class RecyclerViewAdapterForMessages extends RecyclerView.Adapter<Recycle
     private String contentUID;
 
     private StorageManager storageManagerForMessageImage;
+    private RealTimeDatabaseManager realTimeDatabaseManagerForMessage;
+    private RealTimeDatabaseManager realTimeDatabaseManagerForScheduledTask;
+    private FirestoreManager firestoreManagerForUserProfile;
 
     public RecyclerViewAdapterForMessages(
             Context context,
@@ -98,50 +104,69 @@ public class RecyclerViewAdapterForMessages extends RecyclerView.Adapter<Recycle
         }
 
         this.storageManagerForMessageImage = new StorageManager(context, "MessageImage", user.getUid());
+        this.realTimeDatabaseManagerForMessage = new RealTimeDatabaseManager(context, "Messages", user.getUid());
+        this.realTimeDatabaseManagerForScheduledTask = new RealTimeDatabaseManager(context, "ScheduledTask", user.getUid());
+        this.firestoreManagerForUserProfile = new FirestoreManager(context, "UserProfile", user.getUid());
     }
 
     @Override
     public int getItemViewType(int position) {
 
         Message message = messageList.get(position);
-        if(message.getFromUid() == null || message.getFromUid().isEmpty()){
-            if(message.getIsconfirmed() == Boolean.FALSE){
-                // Not yet Confirmed
-                Log.d("NOWNOWNOWNOW_VIEWTYPE", "100");
-                return 100;
-            }
-            else{
-                // Confirmed
-                Log.d("NOWNOWNOWNOW_VIEWTYPE", "101");
-                return 101;
-            }
-        }
+
         String fUid = message.getFromUid();
         String tUid = message.getToUid();
         String imageUri = message.getImageUri();
+        String msg = message.getMessage();
 
-        if(imageUri == null || imageUri.isEmpty()){
-            if(user.getUid().equals(fUid)){
-                Log.d("NOWNOWNOWNOW_VIEWTYPE", "1");
-                return 1;
-            }else if(user.getUid().equals(tUid)){
-                Log.d("NOWNOWNOWNOW_VIEWTYPE", "0");
-                return 0;
-            }else{
-                Log.d("NOWNOWNOWNOW_VIEWTYPE", "10");
+        String flag = message.getFlag();
+        switch(flag){
+
+            case Message.normalMessageFlag:
+                if(user.getUid().equals(fUid)){
+                    Log.d("NOWNOWNOWNOW_VIEWTYPE", "1");
+                    return 1;
+                }else if(user.getUid().equals(tUid)){
+                    Log.d("NOWNOWNOWNOW_VIEWTYPE", "0");
+                    return 0;
+                }else{
+                    Log.d("NOWNOWNOWNOW_VIEWTYPE", "10");
+                    return 10;
+                }
+            case Message.imageMessageFlag:
+                if(user.getUid().equals(fUid)){
+                    Log.d("NOWNOWNOWNOW_VIEWTYPE", "3");
+                    return 3;
+                }else if(user.getUid().equals(tUid)){
+                    Log.d("NOWNOWNOWNOW_VIEWTYPE", "2");
+                    return 2;
+                }else{
+                    Log.d("NOWNOWNOWNOW_VIEWTYPE", "10");
+                    return 10;
+                }
+            case Message.appointmentMessageFlag:
+
+                String[] msgList = msg.split("/");
+                String reservedTime = msgList[0];
+                String location = msgList[1];
+                String isconfirmed = msgList[2];
+
+                if (isconfirmed.equals("false")) {
+                    // Not yet Confirmed
+                    Log.d("NOWNOWNOWNOW_VIEWTYPE", "100");
+                    return 100;
+                } else if(isconfirmed.equals("true")){
+                    // Confirmed
+                    Log.d("NOWNOWNOWNOW_VIEWTYPE", "101");
+                    return 101;
+                } else{
+                    return 10;
+                }
+            case Message.chickenWinnerMessageFlag:
+                Log.d("NOWNOWNOWNOW_VIEWTYPE", "200");
+                return 200;
+            default:
                 return 10;
-            }
-        }else{
-            if(user.getUid().equals(fUid)){
-                Log.d("NOWNOWNOWNOW_VIEWTYPE", "3");
-                return 3;
-            }else if(user.getUid().equals(tUid)){
-                Log.d("NOWNOWNOWNOW_VIEWTYPE", "2");
-                return 2;
-            }else{
-                Log.d("NOWNOWNOWNOW_VIEWTYPE", "10");
-                return 10;
-            }
         }
     }
 
@@ -173,6 +198,10 @@ public class RecyclerViewAdapterForMessages extends RecyclerView.Adapter<Recycle
                 Log.d("NOWNOWNOWNOW_VIEWHOLDERTYPE", "101");
                 return new ConfirmedAppointmentViewHolder(
                         LayoutInflater.from(parent.getContext()).inflate(R.layout.message_item_for_confirmed_appointment, parent, false));
+            case 200:
+                Log.d("NOWNOWNOWNOW_VIEWHOLDERTYPE", "200");
+                return new ChickenBidViewHolder(
+                        LayoutInflater.from(parent.getContext()).inflate(R.layout.message_item_for_bidend, parent, false));
             default:
                 Log.d("NOWNOWNOWNOW_VIEWHOLDERTYPE", "null");
                 return null;
@@ -191,13 +220,15 @@ public class RecyclerViewAdapterForMessages extends RecyclerView.Adapter<Recycle
 
         Message msg = messageList.get(position);
         String message = msg.getMessage();
-
         String uri = msg.getImageUri();
-
         String time = msg.getTime();
-        TimeTextTool mTimeTextTool = new TimeTextTool(time);
-        String refinedTime = mTimeTextTool.Time2Text();
+        String refinedTime = "";
+        try {
+            TimeTextTool mTimeTextTool = new TimeTextTool(time);
+            refinedTime = mTimeTextTool.Time2Text();
+        }catch(Exception e){
 
+        }
         // holder.getItemViewType()
         switch(getItemViewType(position)) {
             case 0:
@@ -246,108 +277,78 @@ public class RecyclerViewAdapterForMessages extends RecyclerView.Adapter<Recycle
             case 100:
                 Log.d("NOWNOWNOWNOW_MESSAGETYPE", "100");
 
+                String[] aMessageList = message.split("/");
+                String aReservedTime = aMessageList[0];
+                String aLocation = aMessageList[1];
+                String aIsconfirmed = aMessageList[2];
+
                 AppointmentViewHolder ap_viewHolder = (AppointmentViewHolder) holder;
-                ap_viewHolder.MessageForAppointmentTimeTextView.setText(msg.getReservedTime());
-                ap_viewHolder.MessageForAppointmentLocationTextView.setText(msg.getLocation());
+                ap_viewHolder.MessageForAppointmentTimeTextView.setText(aReservedTime);
+                ap_viewHolder.MessageForAppointmentLocationTextView.setText(aLocation);
+
                 ap_viewHolder.MessageForAppointmentPositiveBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // Upload data to firebase where chatting room exists
-                        Message message = new Message(msg.getReservedTime(), msg.getLocation(),true);
-                        RealTimeDatabaseManager realTimeDatabaseManager = new RealTimeDatabaseManager(context, "Messages", user.getUid());
-                        realTimeDatabaseManager.writeMessage(databasePath, message);
-                        FirestoreManager firestoreManagerForUserProfile = new FirestoreManager(context, "UserProfile", user.getUid());
+                        String tUid;
+                        String fUid;
                         if (user.getUid().equals(userUID)) {
-                            String fromUserUid = userUID;
-                            String toUserUid = contentUID;
-                            firestoreManagerForUserProfile.read("UserProfile", fromUserUid, new Callback() {
-                                @Override
-                                public void OnCallback(Object object) {
-                                    UserProfile fromUser = (UserProfile) object;
-                                    ArrayList<String> ChattingRoomID = fromUser.getChattingRoomID();
-                                    if (ChattingRoomID.contains(databasePath) == false) {
-                                        ChattingRoomID.add(databasePath);
-                                        firestoreManagerForUserProfile.update("UserProfile", fromUserUid, "ChattingRoomID", ChattingRoomID, new Callback() {
-                                            @Override
-                                            public void OnCallback(Object object) {
-                                                int LogMessage = (int) object;
-                                                if (LogMessage == 0) {
-                                                    Log.d(TAG, "ISSUCCESSFUL");
-                                                } else {
-                                                    Log.d(TAG, "ISFAILURE");
-                                                }
-                                                firestoreManagerForUserProfile.read("UserProfile", toUserUid, new Callback() {
-                                                    @Override
-                                                    public void OnCallback(Object object) {
-                                                        UserProfile fromUser = (UserProfile) object;
-                                                        ArrayList<String> ChattingRoomID = fromUser.getChattingRoomID();
-                                                        if (ChattingRoomID.contains(databasePath) == false) {
-                                                            ChattingRoomID.add(databasePath);
-                                                            firestoreManagerForUserProfile.update("UserProfile", toUserUid, "ChattingRoomID", ChattingRoomID, new Callback() {
-                                                                @Override
-                                                                public void OnCallback(Object object) {
-                                                                    int LogMessage = (int) object;
-                                                                    if (LogMessage == 0) {
-                                                                        Log.d(TAG, "ISSUCCESSFUL");
-                                                                    } else {
-                                                                        Log.d(TAG, "ISFAILURE");
-                                                                    }
-                                                                }
-                                                            });
-                                                        }
-                                                    }
-                                                });
-                                            }
-                                        });
-                                    }
-                                }
-                            });
-                        } else {
-                            String fromUserUid = contentUID;
-                            String toUserUid = userUID;
-                            firestoreManagerForUserProfile.read("UserProfile", fromUserUid, new Callback() {
-                                @Override
-                                public void OnCallback(Object object) {
-                                    UserProfile fromUser = (UserProfile) object;
-                                    ArrayList<String> ChattingRoomID = fromUser.getChattingRoomID();
-                                    if (ChattingRoomID.contains(databasePath) == false) {
-                                        ChattingRoomID.add(databasePath);
-                                        firestoreManagerForUserProfile.update("UserProfile", fromUserUid, "ChattingRoomID", ChattingRoomID, new Callback() {
-                                            @Override
-                                            public void OnCallback(Object object) {
-                                                int LogMessage = (int) object;
-                                                if (LogMessage == 0) {
-                                                    Log.d(TAG, "ISSUCCESSFUL");
-                                                } else {
-                                                    Log.d(TAG, "ISFAILURE");
-                                                }
-                                                firestoreManagerForUserProfile.read("UserProfile", toUserUid, new Callback() {
-                                                    @Override
-                                                    public void OnCallback(Object object) {
-                                                        UserProfile fromUser = (UserProfile) object;
-                                                        ArrayList<String> ChattingRoomID = fromUser.getChattingRoomID();
-                                                        if (ChattingRoomID.contains(databasePath) == false) {
-                                                            ChattingRoomID.add(databasePath);
-                                                            firestoreManagerForUserProfile.update("UserProfile", toUserUid, "ChattingRoomID", ChattingRoomID, new Callback() {
-                                                                @Override
-                                                                public void OnCallback(Object object) {
-                                                                    int LogMessage = (int) object;
-                                                                    if (LogMessage == 0) {
-                                                                        Log.d(TAG, "ISSUCCESSFUL");
-                                                                    } else {
-                                                                        Log.d(TAG, "ISFAILURE");
-                                                                    }
-                                                                }
-                                                            });
-                                                        }
-                                                    }
-                                                });
-                                            }
-                                        });
-                                    }
-                                }
-                            });
+                            fUid = userUID;
+                            tUid = contentUID;
+                        }else{
+                            tUid = userUID;
+                            fUid = contentUID;
                         }
+                        firestoreManagerForUserProfile.read("UserProfile", tUid, new Callback() {
+                            @Override
+                            public void OnCallback(Object object) {
+                                UserProfile tempUserProfile = (UserProfile) object;
+                                String tToken = tempUserProfile.getDeviceToken();
+                                ArrayList<String> ChattingRoomID = tempUserProfile.getChattingRoomID();
+                                if (ChattingRoomID.contains(databasePath) == false) {
+                                    ChattingRoomID.add(databasePath);
+                                    firestoreManagerForUserProfile.update("UserProfile", tUid, "ChattingRoomID", ChattingRoomID, new Callback() {
+                                        @Override
+                                        public void OnCallback(Object object) {
+                                            int LogMessage = (int) object;
+                                            if (LogMessage == 0) {
+                                                Log.d(TAG, "ISSUCCESSFUL");
+                                            } else {
+                                                Log.d(TAG, "ISFAILURE");
+                                            }
+                                            firestoreManagerForUserProfile.read("UserProfile", fUid, new Callback() {
+                                                @Override
+                                                public void OnCallback(Object object) {
+                                                    UserProfile tempUserProfile = (UserProfile) object;
+                                                    String fToken = tempUserProfile.getDeviceToken();
+                                                    ArrayList<String> ChattingRoomID = tempUserProfile.getChattingRoomID();
+                                                    if (ChattingRoomID.contains(databasePath) == false) {
+                                                        ChattingRoomID.add(databasePath);
+                                                        firestoreManagerForUserProfile.update("UserProfile", fUid, "ChattingRoomID", ChattingRoomID, new Callback() {
+                                                            @Override
+                                                            public void OnCallback(Object object) {
+                                                                int LogMessage = (int) object;
+                                                                if (LogMessage == 0) {
+                                                                    Log.d(TAG, "ISSUCCESSFUL");
+                                                                } else {
+                                                                    Log.d(TAG, "ISFAILURE");
+                                                                }
+
+                                                                String payload = aReservedTime + "/" + aLocation + "/true";
+                                                                Message message = new Message(Message.appointmentMessageFlag, fUid, tUid, payload, fToken, tToken, "");
+                                                                realTimeDatabaseManagerForMessage.writeMessage(databasePath, message);
+
+                                                                // todo: complement Alarm for appointment and reputation.
+                                                                //realTimeDatabaseManagerForScheduledTask.writeMessage(Alarm.databasePath, new Alarm());
+                                                            }
+                                                        });
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            }
+                        });
                         // and then, delete this item from recyclerview
                         messageList.remove(position);
                         notifyItemRemoved(position);
@@ -369,11 +370,50 @@ public class RecyclerViewAdapterForMessages extends RecyclerView.Adapter<Recycle
             case 101:
                 Log.d("NOWNOWNOWNOW_MESSAGETYPE", "101");
 
+                String[] caMessageList = message.split("/");
+                String caReservedTime = caMessageList[0];
+                String caLocation = caMessageList[1];
+                String caIsconfirmed = caMessageList[2];
+
                 ConfirmedAppointmentViewHolder ca_viewHolder = (ConfirmedAppointmentViewHolder) holder;
-                ca_viewHolder.messageItemForConfirmedAppointmentTTextView.setText(msg.getReservedTime());
-                ca_viewHolder.messageItemForConfirmedAppointmentLocationTextView.setText(msg.getLocation());
+                ca_viewHolder.messageItemForConfirmedAppointmentTTextView.setText(caReservedTime);
+                ca_viewHolder.messageItemForConfirmedAppointmentLocationTextView.setText(caLocation);
                 ca_viewHolder.messageItemForConfirmedAppointmentTimeTextView.setText(refinedTime);
                 break;
+
+            case 200:
+                ChickenBidViewHolder chickenBidViewHolder = (ChickenBidViewHolder) holder;
+
+                ImageView tempImageView = chickenBidViewHolder.messageItemForUserProfilePaddle;
+                TextView tempTextView = chickenBidViewHolder.messageItemForUserProfileBidPriceTextView;
+
+                String userUid = user.getUid();
+                String[] cMessageList = message.split("/");
+                String contentUid = cMessageList[0];
+                String bidPrice = cMessageList[1];
+
+                tempTextView.setText(bidPrice);
+
+                CreatePaddle createPaddle = new CreatePaddle(context, userUid);
+                createPaddle.Initializer(contentUid, new Callback() {
+                    @Override
+                    public void OnCallback(Object object) {
+                        List<Bitmap> bitmapList = (List<Bitmap>) object;
+                        tempImageView.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                int Paddle_Size_x = tempImageView.getWidth();
+                                Bitmap InitialPaddle = createPaddle.createPaddle(bitmapList.get(0),bitmapList.get(1),bitmapList.get(2),Paddle_Size_x);
+
+                                tempImageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                                tempImageView.setAdjustViewBounds(true);
+                                tempImageView.setImageBitmap(InitialPaddle);
+                            }
+                        });
+                    }
+                });
+                break;
+
             default:
                 Log.d("NOWNOWNOWNOW_MESSAGETYPE", "default");
                 break;
@@ -480,6 +520,17 @@ public class RecyclerViewAdapterForMessages extends RecyclerView.Adapter<Recycle
             messageItemForConfirmedAppointmentTTextView = itemView.findViewById(R.id.messageItemForConfirmedAppointmentTTextViewDesign);
             messageItemForConfirmedAppointmentLocationTextView = itemView.findViewById(R.id.messageItemForConfirmedAppointmentLocationTextView2Design);
             messageItemForConfirmedAppointmentTimeTextView = itemView.findViewById(R.id.messageItemForConfirmedAppointmentTimeTextViewDesign);
+        }
+    }
+
+    public static class ChickenBidViewHolder extends RecyclerView.ViewHolder{
+
+        ImageView messageItemForUserProfilePaddle;
+        TextView messageItemForUserProfileBidPriceTextView;
+        public ChickenBidViewHolder(@NonNull View itemView) {
+            super(itemView);
+            messageItemForUserProfilePaddle = itemView.findViewById(R.id.messageItemForBidEndUserProfilePaddle);
+            messageItemForUserProfileBidPriceTextView = itemView.findViewById(R.id.messageItemForBidEndBidPriceTextView);
         }
     }
 }
