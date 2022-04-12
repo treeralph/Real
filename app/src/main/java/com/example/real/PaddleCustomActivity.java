@@ -1,6 +1,7 @@
 package com.example.real;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
@@ -8,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
@@ -16,6 +18,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.media.Image;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
@@ -51,9 +54,9 @@ public class PaddleCustomActivity extends AppCompatActivity {
     ImageView PreviewCenter;
     ImageView PreviewHandle;
 
-    static final int REQUESTBACKGROUND = 0325;
-    static final int REQUESTCENTER = 0326;
-    static final int REQUESTHANDLE = 0327;
+    public static final int REQUESTBACKGROUND = 0325;
+    public static final int REQUESTCENTER = 0326;
+    public static final int REQUESTHANDLE = 0327;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +70,7 @@ public class PaddleCustomActivity extends AppCompatActivity {
         PreviewHandle = findViewById(R.id.PaddleCustomActivityPreviewHandle);
 
         // Initial Setting
-        Bitmap Test = Bitmap.createBitmap(100,100,Bitmap.Config.ARGB_8888);
+        Bitmap Test = Bitmap.createBitmap(1,1,Bitmap.Config.ARGB_8888);
         Test.eraseColor(0xfffaeb87);
         Bitmap InitialBG = Test;
         //Bitmap InitialBG = BitmapFactory.decodeResource(this.getResources(), R.drawable.platinum);
@@ -109,6 +112,8 @@ public class PaddleCustomActivity extends AppCompatActivity {
                     public void run() {
                         Paddle_Size_x = paddleimageview.getWidth();
                         createPaddle = new CreatePaddle(PaddleCustomActivity.this, user.getUid());
+
+                        //UserHandle.getColor(1,1);
                         Bitmap InitialPaddle = createPaddle.createPaddle(UserBackground,UserCenter,UserHandle,Paddle_Size_x);
 
                         paddleimageview.setScaleType(ImageView.ScaleType.FIT_XY);
@@ -131,10 +136,19 @@ public class PaddleCustomActivity extends AppCompatActivity {
         PreviewBackground.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                /*
                 // Get Img as Bitmap
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(intent, REQUESTBACKGROUND);
+
+                 */
+
+                // Go Pallete Activity
+                Intent intent = new Intent(PaddleCustomActivity.this,PaddleCustomPalleteActivity.class);
+                intent.putExtra("REQUEST",REQUESTBACKGROUND);
                 startActivityForResult(intent, REQUESTBACKGROUND);
 
             }
@@ -142,10 +156,20 @@ public class PaddleCustomActivity extends AppCompatActivity {
         PreviewCenter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                /*
                 // Get Img as Bitmap
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
+
+                startActivityForResult(intent, REQUESTCENTER);
+
+                 */
+
+                // Go Pallete Activity
+                Intent intent = new Intent(PaddleCustomActivity.this,PaddleCustomPalleteActivity.class);
+                intent.putExtra("REQUEST",REQUESTCENTER);
                 startActivityForResult(intent, REQUESTCENTER);
 
             }
@@ -153,11 +177,20 @@ public class PaddleCustomActivity extends AppCompatActivity {
         PreviewHandle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*
                 // Get Img as Bitmap
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 startActivityForResult(intent, REQUESTHANDLE);
+
+                 */
+
+                // Go Pallete Activity
+                Intent intent = new Intent(PaddleCustomActivity.this,PaddleCustomPalleteActivity.class);
+                intent.putExtra("REQUEST",REQUESTHANDLE);
+                startActivityForResult(intent, REQUESTHANDLE);
+
 
             }
         });
@@ -201,6 +234,7 @@ public class PaddleCustomActivity extends AppCompatActivity {
         if(resultCode==RESULT_OK){
             if (requestCode == REQUESTBACKGROUND){
 
+                /*
                 // Set UserBackground = Bitmap;
 
                 Uri uri = data.getData();
@@ -210,14 +244,26 @@ public class PaddleCustomActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                /*
-                try{
-                    InputStream in = getContentResolver().openInputStream(data.getData());
-                    UserBackground = BitmapFactory.decodeStream(in);
-                    in.close();
-                }catch(Exception e){ }
-
                  */
+
+                try{
+                    String color = data.getStringExtra("COLOR");
+                    Bitmap image = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
+                    image.eraseColor(Color.parseColor(color));
+                    UserBackground = image;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                try{
+                    byte[] bytes =  data.getByteArrayExtra("BITMAP");
+                    Bitmap image = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    UserBackground = image;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
+
                 // Make Paddle & Set on View
                 Bitmap NewPaddle = createPaddle.createPaddle(UserBackground,UserCenter,UserHandle,Paddle_Size_x);
                 paddleimageview.setImageBitmap(NewPaddle);
@@ -228,21 +274,27 @@ public class PaddleCustomActivity extends AppCompatActivity {
 
             else if(requestCode == REQUESTCENTER){
 
-                // Set UserCenter = Bitmap;
-                Uri uri = data.getData();
-                try {
-                    UserCenter = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
-                } catch (IOException e) {
+
+                try{
+                    String color = data.getStringExtra("COLOR");
+                    Bitmap image = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
+                    image.eraseColor(Color.parseColor(color));
+                    UserCenter = image;
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
-                /*
                 try{
-                    InputStream in = getContentResolver().openInputStream(data.getData());
-                    UserCenter = BitmapFactory.decodeStream(in);
-                    in.close();
-                }catch(Exception e){ }
+                    byte[] bytes =  data.getByteArrayExtra("BITMAP");
+                    Bitmap image = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    UserCenter = image;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
-                 */
+
+
+
+
                 // Make Paddle & Set on View
                 Bitmap NewPaddle = createPaddle.createPaddle(UserBackground,UserCenter,UserHandle,Paddle_Size_x);
                 paddleimageview.setImageBitmap(NewPaddle);
@@ -253,12 +305,25 @@ public class PaddleCustomActivity extends AppCompatActivity {
 
             else if(requestCode == REQUESTHANDLE){
 
-                // Set UserHandle = Bitmap;
+
                 try{
-                    InputStream in = getContentResolver().openInputStream(data.getData());
-                    UserHandle = BitmapFactory.decodeStream(in);
-                    in.close();
-                }catch(Exception e){ }
+                    String color = data.getStringExtra("COLOR");
+                    Bitmap image = Bitmap.createBitmap(10, 10, Bitmap.Config.ARGB_8888);
+                    image.eraseColor(Color.parseColor(color));
+                    UserHandle = image;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                try{
+                    byte[] bytes =  data.getByteArrayExtra("BITMAP");
+                    Bitmap image = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    UserHandle = image;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+
+
                 // Make Paddle & Set on View
                 Bitmap NewPaddle = createPaddle.createPaddle(UserBackground,UserCenter,UserHandle,Paddle_Size_x);
                 paddleimageview.setImageBitmap(NewPaddle);

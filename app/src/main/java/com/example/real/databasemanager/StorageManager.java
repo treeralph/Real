@@ -3,6 +3,7 @@ package com.example.real.databasemanager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.telecom.Call;
 import android.util.Log;
 import android.view.View;
@@ -162,7 +163,7 @@ public class StorageManager {
         StorageReference mRef = ref.child(path);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        image.compress(Bitmap.CompressFormat.JPEG, 50, baos);
 
         byte[] data = baos.toByteArray();
 
@@ -207,7 +208,9 @@ public class StorageManager {
                                             @Override
                                             public void onSuccess(byte[] bytes) {
                                                 Log.d(TAG,  "Storage download Success");
+
                                                 Bitmap tempBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+
                                                 Map.put(type,tempBitmap);
                                                 if(Map.size() == listResult.getItems().size()){
                                                     callback.OnCallback(Map);
@@ -243,7 +246,7 @@ public class StorageManager {
         if(compressQuality < 1){ compressQuality = 1; } else{ }
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.JPEG, (int)(100/compressRatio), baos);
+        image.compress(Bitmap.CompressFormat.PNG, (int)(100/compressRatio), baos);
 
         byte[] data = baos.toByteArray();
 

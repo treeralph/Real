@@ -9,7 +9,6 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-
     <application
         android:name=".RealApplication"
         android:allowBackup="true"
@@ -18,10 +17,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
+        <activity android:name=".PaddleCustomPalleteActivity" />
+
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="465zd9bim0" />
-        <activity android:name=".PaddleCustomActivity"></activity>
+
+        <activity android:name=".PaddleCustomActivity" />
         <activity
             android:name=".ScheduleActivity"
             android:exported="false"
@@ -55,7 +57,7 @@
         <activity android:name=".AuctionBidActivity" />
         <activity
             android:name=".AuctionContentActivity"
-            android:parentActivityName=".ContentsActivity"></activity>
+            android:parentActivityName=".ContentsActivity" />
         <activity android:name=".MakeLiveAuctionContentActivity" />
         <activity android:name=".MakeAuctionContentActivity" />
         <activity android:name=".ChattingActivity" />
@@ -68,7 +70,7 @@
         <activity android:name=".RegisterActivity" />
         <activity
             android:name=".LoginActivity"
-            android:parentActivityName=".IntroActivity"></activity>
+            android:parentActivityName=".IntroActivity" />
         <activity android:name=".IntroActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -76,6 +78,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
 
         <service
             android:name=".tool.MyFirebaseMessagingService"
