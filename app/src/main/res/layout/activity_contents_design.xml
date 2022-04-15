@@ -19,20 +19,40 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:background="@drawable/bottomlineborder">
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
+            <EditText
+                android:id="@+id/ContentsActivitySearchEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:hint="Search Stuff"
+                android:textColorHint="@color/black"
+                android:textSize="20dp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/simplehae"
+                android:textStyle="bold"
+                android:layout_weight="1"/>
 
             <ImageView
+                android:id="@+id/ContentsActivitySearchButton"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:layout_gravity="right|center"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="bottom"
                 android:src="@drawable/search_high" />
+            <ImageView
+                android:id="@+id/ContentsActivitySearchAdditionalButton"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="bottom"
+                android:src="@drawable/plus_icon" />
             <!--
             <ImageView
                 android:layout_width="35dp"

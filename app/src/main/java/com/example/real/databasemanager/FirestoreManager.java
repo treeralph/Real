@@ -79,7 +79,8 @@ public class FirestoreManager {
                 (String)dict.get("title"),
                 (String)dict.get("content"),
                 (String)dict.get("uid"),
-                (String)dict.get("time"));
+                (String)dict.get("time"),
+                (String)dict.get("category"));
         return content;
     };
 
@@ -93,7 +94,8 @@ public class FirestoreManager {
                 (String)dict.get("auctionDuration"),
                 (String)dict.get("auctionState"),
                 (ArrayList<String>) dict.get("auctionUserList"),
-                (String)dict.get("time"));
+                (String)dict.get("time"),
+                (String)dict.get("category"));
         return auctionContent;
     };
 
@@ -102,7 +104,8 @@ public class FirestoreManager {
                 (String)dict.get("ContentId"),
                 (String)dict.get("ContentType"),
                 (String)dict.get("ContentTitle"),
-                (String)dict.get("Category"));
+                (String)dict.get("Category"),
+                (ArrayList<String>) dict.get("WordCase"));
         return contents;
     };
 
@@ -179,6 +182,26 @@ public class FirestoreManager {
                             callback.OnCallback(dataList);
                         } else{
                             Log.d(TAG, "Error getting document: ",task.getException());
+                        }
+                    }
+                });
+    }
+
+    public void searchIn(String path, String field, ArrayList<String> queryList, Callback callback){
+        ArrayList<Data> dataList = new ArrayList<>();
+        CollectionReference ref = db.collection(path);
+        ref.whereArrayContainsAny(field, queryList).get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            for(QueryDocumentSnapshot document: task.getResult()){
+                                Log.d(TAG, "searchIn. " + document.getId() + " => " + document.getData());
+                                dataList.add(CurrentDataType.Constructor(document.getData()));
+                            }
+                            callback.OnCallback(dataList);
+                        }else{
+                            Log.d(TAG, "searchIn. Error getting document: ",task.getException());
                         }
                     }
                 });

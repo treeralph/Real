@@ -6,15 +6,23 @@ import android.app.ActivityManager;
 import android.app.ActivityOptions;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.InsetDrawable;
 import android.os.Bundle;
 import android.transition.Transition;
 import android.util.Log;
 import android.util.Pair;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -57,6 +65,13 @@ public class ContentsActivity extends AppCompatActivity {
     FirestoreManager manager;
     SwipeRefreshLayout swipeRefreshLayout;
 
+    EditText searchText;
+    ImageView searchBtn;
+    ImageView searchAdditionalBtn;
+
+    int flag = 0;
+    int expiredFlag = 0; // 만료되지 않은 자료만 보기
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,17 +97,106 @@ public class ContentsActivity extends AppCompatActivity {
         chatRoomBtn = findViewById(R.id.ContentsActivityChatRoomBtnDesign);
         userHistoryBtn = findViewById(R.id.ContentsActivityUserHistoryButton);
         swipeRefreshLayout = findViewById(R.id.ContentsActivitySwipeRefreshLayout);
+        searchText = findViewById(R.id.ContentsActivitySearchEditText);
+        searchBtn = findViewById(R.id.ContentsActivitySearchButton);
+        searchAdditionalBtn = findViewById(R.id.ContentsActivitySearchAdditionalButton);
 
         manager = new FirestoreManager(ContentsActivity.this, "Contents", user.getUid());
 
-        /*
-        recyclerView = findViewById(R.id.minetestRecyclerView);
-        makeContentBtn = findViewById(R.id.ContentsMakeContentBtn);
-        SettingPopupImage = findViewById(R.id.ContentsSettingPopupImg);
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        chatRoomBtn = findViewById(R.id.ContentsActivityChatRoomBtn);
-         */
+        searchAdditionalBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SearchAdditionalFuntionDialog dialog = new SearchAdditionalFuntionDialog(ContentsActivity.this,
+                        new Callback() {
+                            @Override
+                            public void OnCallback(Object object) {
+                                manager.read("Contents", new Callback() {
+                                    @Override
+                                    public void OnCallback(Object object) {
+                                        ArrayList<Contents> contentsList = (ArrayList<Contents>) object;
+                                        Collections.reverse(contentsList);
+                                        RecyclerViewAdapterForContents adapter = new RecyclerViewAdapterForContents(contentsList, ContentsActivity.this);
+                                        recyclerView.setAdapter(adapter);
+                                        flag = 0;
+                                    }
+                                });
+                            }
+                        },
+                        new Callback() {
+                            @Override
+                            public void OnCallback(Object object) {
+                                manager.search("/Contents", "ContentType", "Content", new Callback() {
+                                    @Override
+                                    public void OnCallback(Object object) {
+                                        ArrayList<Contents> contentsList = (ArrayList<Contents>) object;
+                                        RecyclerViewAdapterForContents adapter = new RecyclerViewAdapterForContents(contentsList, ContentsActivity.this);
+                                        recyclerView.setAdapter(adapter);
+                                        flag = 1;
+                                    }
+                                });
+                            }
+                        },
+                        new Callback() {
+                            @Override
+                            public void OnCallback(Object object) {
+                                manager.search("/Contents", "ContentType", "AuctionContent", new Callback() {
+                                    @Override
+                                    public void OnCallback(Object object) {
+                                        ArrayList<Contents> contentsList = (ArrayList<Contents>) object;
+                                        RecyclerViewAdapterForContents adapter = new RecyclerViewAdapterForContents(contentsList, ContentsActivity.this);
+                                        recyclerView.setAdapter(adapter);
+                                        flag = 2;
+                                    }
+                                });
+                            }
+                        },
+                        new Callback() {
+                            @Override
+                            public void OnCallback(Object object) {
+                                ImageView imageView = (ImageView) object;
+                                switch(expiredFlag){
+                                    case 0: // 만료된 자료까지 보기
+                                        expiredFlag = 1;
+                                        break;
+                                    case 1: // 만료되지 않은 자료만 보기
+                                        expiredFlag = 0;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                        }, flag, expiredFlag);
 
+                dialog.setCanceledOnTouchOutside(true);
+                dialog.setCancelable(true);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+                layoutParams.gravity = Gravity.RIGHT | Gravity.TOP;
+                dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+                dialog.show();
+            }
+        });
+
+        searchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ArrayList<String> searchArray = new ArrayList<>();
+                String[] searchWordList = searchText.getText().toString().split(" ");
+                for(String s: searchWordList){
+                    searchArray.add(s);
+                }
+                Log.d("NOWTESTNOW", searchArray.toString());
+                manager.searchIn("/Contents", "WordCase", searchArray, new Callback() {
+                    @Override
+                    public void OnCallback(Object object) {
+                        ArrayList<Contents> contentsList = (ArrayList<Contents>) object;
+                        Log.d("NOWTESTNOW", contentsList.toString());
+                        RecyclerViewAdapterForContents adapter = new RecyclerViewAdapterForContents(contentsList, ContentsActivity.this);
+                        recyclerView.setAdapter(adapter);
+                    }
+                });
+            }
+        });
 
 
 
@@ -146,7 +250,7 @@ public class ContentsActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        FirestoreManager manager = new FirestoreManager(ContentsActivity.this, "Contents", user.getUid());
+        //FirestoreManager manager = new FirestoreManager(ContentsActivity.this, "Contents", user.getUid());
         manager.read("Contents", new Callback() {
             @Override
             public void OnCallback(Object object) {
@@ -241,6 +345,88 @@ public class ContentsActivity extends AppCompatActivity {
 
         }else{
             finish();
+        }
+    }
+
+    class SearchAdditionalFuntionDialog extends Dialog {
+
+        Callback normalSearchCallback;
+        Callback contentSearchCallback;
+        Callback auctionSearchCallback;
+        Callback expiredLockCallback;
+
+        int flag;
+        int expiredFlag;
+
+        public SearchAdditionalFuntionDialog(@NonNull Context context, Callback normalSearchCallback, Callback contentSearchCallback, Callback auctionSearchCallback, Callback expiredLockCallback, int flag, int expiredFlag) {
+
+            super(context);
+            this.normalSearchCallback = normalSearchCallback;
+            this.contentSearchCallback = contentSearchCallback;
+            this.auctionSearchCallback = auctionSearchCallback;
+            this.expiredLockCallback = expiredLockCallback;
+            this.flag = flag;
+            this.expiredFlag = expiredFlag;
+        }
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.search_additional_function_dialog);
+
+            LinearLayout normalSearchBtn = findViewById(R.id.searchDialogNormalSort);
+            LinearLayout contentSearchBtn = findViewById(R.id.searchDialogContent);
+            LinearLayout auctionSearchBtn = findViewById(R.id.searchDialogAuction);
+            LinearLayout expiredLockBtn = findViewById(R.id.searchDialogExpiredLockButton);
+
+            CardView normalSearchBox = findViewById(R.id.searchDialogNormalSortBox);
+            CardView contentSearchBox = findViewById(R.id.searchDialogContentBox);
+            CardView auctionSearchBox = findViewById(R.id.searchDialogAuctionBox);
+            ImageView expiredLockImageView = findViewById(R.id.searchDialogExpiredLockImageView);
+
+            ArrayList<CardView> cardViewList = new ArrayList<>();
+            cardViewList.add(normalSearchBox);
+            cardViewList.add(contentSearchBox);
+            cardViewList.add(auctionSearchBox);
+
+            CardView targetCardView = cardViewList.get(flag);
+            targetCardView.setBackgroundColor(Color.BLACK);
+
+            if(expiredFlag == 0){
+                expiredLockImageView.setImageResource(R.drawable.lock_icon_new);
+            }else{
+                expiredLockImageView.setImageResource(R.drawable.unlock_icon_new);
+            }
+
+            normalSearchBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    normalSearchCallback.OnCallback(null);
+                    dismiss();
+                }
+            });
+            contentSearchBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    contentSearchCallback.OnCallback(null);
+                    dismiss();
+                }
+            });
+            auctionSearchBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    auctionSearchCallback.OnCallback(null);
+                    dismiss();
+                }
+            });
+            expiredLockBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    expiredLockCallback.OnCallback(expiredLockImageView);
+                    dismiss();
+                }
+            });
+
         }
     }
 }

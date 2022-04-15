@@ -19,10 +19,11 @@ public class Content extends Data{
     private String Content;
     private String Time;
     private String Uid;
+    private String category;
 
 
     // make minSDKversion 21 -> 26 to use LocalDateTime class.
-    public Content(String title, String content, String uid) {
+    public Content(String title, String content, String uid, String category) {
 
         // If there exists error here, erase the under and use Remark.
         LocalDateTime dateNow = LocalDateTime.now();
@@ -30,15 +31,18 @@ public class Content extends Data{
         Title = title;
         Content = content;
         Uid = uid;
+        this.category = category;
     }
 
-    public Content(String title, String content, String uid, String time) {
+    public Content(String title, String content, String uid, String time, String category) {
 
         Title = title;
         Content = content;
         Uid = uid;
         Time = time;
+        this.category = category;
     }
+
 
     @Override
     public Map<String, Object> DataOut() {
@@ -48,9 +52,14 @@ public class Content extends Data{
         datum.put("uid", Uid);
         datum.put("time", Time);
         datum.put("contentType", ContentType);
+        datum.put("category", category);
         return datum;
     }
 
+
+    public String getCategory() {
+        return category;
+    }
     public String getTitle() { return Title; }
     public String getContent() { return Content; }
     public String getUid() { return Uid; }

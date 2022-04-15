@@ -2,6 +2,7 @@ package com.example.real.data;
 
 import android.content.Context;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,12 +12,15 @@ public class Contents extends Data{
     private String ContentType;
     private String ContentTitle;
     private String Category;
+    private ArrayList<String> wordCase;
 
-    public Contents(String contentId, String contentType, String contentTitle, String category){
+
+    public Contents(String contentId, String contentType, String contentTitle, String category, ArrayList<String> wordCase){
         ContentId = contentId;
         ContentType = contentType;
         ContentTitle = contentTitle;
         Category = category;
+        this.wordCase = wordCase;
     }
 
     @Override
@@ -26,7 +30,16 @@ public class Contents extends Data{
         datum.put("ContentType", ContentType);
         datum.put("ContentTitle", ContentTitle);
         datum.put("Category", Category);
+        datum.put("WordCase", wordCase);
         return datum;
+    }
+
+    public ArrayList<String> getWordCase() {
+        return wordCase;
+    }
+
+    public void setWordCase(ArrayList<String> wordCase) {
+        this.wordCase = wordCase;
     }
 
     public String getContentId() {

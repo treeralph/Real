@@ -16,9 +16,11 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.example.real.adapter.ViewPagerAdapter;
 import com.example.real.data.AuctionContent;
@@ -29,7 +31,9 @@ import com.example.real.databasemanager.FirestoreManager;
 import com.example.real.databasemanager.RealTimeDatabaseManager;
 import com.example.real.databasemanager.StorageManager;
 import com.example.real.fragment.ImgViewFromGalleryFragment;
+import com.example.real.tool.CategoryDialog;
 import com.example.real.tool.NumberingMachine;
+import com.example.real.tool.SearchTool;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.JsonArray;
@@ -37,6 +41,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 
 public class MakeAuctionContentActivity extends AppCompatActivity {
 
@@ -50,6 +55,7 @@ public class MakeAuctionContentActivity extends AppCompatActivity {
     ViewPagerAdapter adapter;
     FirebaseUser user;
     NumberingMachine numberingMachine;
+    TextView categoryText;
 
     private final int IMGSELECTINTENTREQUESTCODE = 0;
 
@@ -77,6 +83,25 @@ public class MakeAuctionContentActivity extends AppCompatActivity {
         editTextAuctionPrice = findViewById(R.id.makeAuctionContentPriceEditTextDesign);
         editTextAuctionDuration = findViewById(R.id.makeAuctionContentDurationEditTextDesign);
         viewPager = findViewById(R.id.makeAuctionContentViewPagerDesign);
+        categoryText = findViewById(R.id.makeAuctionContentCategoryTextView);
+
+        categoryText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CategoryDialog categoryDialog = new CategoryDialog(MakeAuctionContentActivity.this, new Callback() {
+                    @Override
+                    public void OnCallback(Object object) {
+                        String category = (String) object;
+                        categoryText.setText(category);
+                    }
+                });
+                categoryDialog.setCanceledOnTouchOutside(true);
+                categoryDialog.setCancelable(true);
+                categoryDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+                categoryDialog.show();
+            }
+        });
+
 
         ChooseImgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,7 +122,7 @@ public class MakeAuctionContentActivity extends AppCompatActivity {
                         editTextContent.getText().toString(),
                         user.getUid(),
                         editTextAuctionPrice.getText().toString(),
-                        editTextAuctionDuration.getText().toString());
+                        editTextAuctionDuration.getText().toString(), categoryText.getText().toString());
 
                 // If u want catch exception, write on upper side of thread.
                 thread = new Thread(new Runnable() {
@@ -109,8 +134,13 @@ public class MakeAuctionContentActivity extends AppCompatActivity {
                                 String contentId = (String)object;
                                 String contentType = auctionContent.getContentType();
                                 String contentTitle = auctionContent.getTitle();
+                                SearchTool searchTool = new SearchTool();
+                                ArrayList<String> stringList = new ArrayList<>();
+                                for(String s: contentTitle.split(" ")){
+                                    stringList.add(s);
+                                }
                                 //
-                                Contents contents = new Contents(contentId, contentType, contentTitle, "");
+                                Contents contents = new Contents(contentId, contentType, contentTitle, categoryText.getText().toString(), searchTool.makeCase(stringList));
                                 firestoreManagerForContents.write(contents, "Contents", auctionContent.getTime(), new Callback() {
                                     @Override
                                     public void OnCallback(Object object) {

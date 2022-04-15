@@ -17,7 +17,7 @@
             android:id="@+id/itemCardViewDesign"
             android:transitionName="contentsItemImageCardView"
             android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_height="135dp"
             app:cardBackgroundColor="@color/black"
             app:cardCornerRadius="5dp"
             app:contentPadding="2dp">
@@ -96,13 +96,14 @@
 
                 <ImageView
                     android:id="@+id/itemLikeFlickerDesign"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="8dp"
                     android:layout_gravity="top"
                     android:src="@drawable/new_heart_empty" />
             </LinearLayout>
+
 
 
             <LinearLayout

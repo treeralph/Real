@@ -33,11 +33,12 @@ public class AuctionContent extends Content implements Cloneable{
     private String AuctionStartTime;
     private String AuctionEndTime;
     private String AuctionState;
+    private String category;
 
     DateTimeFormatter formatter = new DateTimeFormatterBuilder().appendPattern("yyyyMMddHHmmss").appendValue(ChronoField.MILLI_OF_SECOND, 3).toFormatter();
 
-    public AuctionContent(String title, String content, String uid, String price, String auctionDuration) {
-        super(title, content, uid);
+    public AuctionContent(String title, String content, String uid, String price, String auctionDuration, String category) {
+        super(title, content, uid, category);
 
         Title = super.getTitle();
         Content = super.getContent();
@@ -57,10 +58,12 @@ public class AuctionContent extends Content implements Cloneable{
         AuctionEndTime = tempTime2.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
 
         AuctionState = AuctionContent.this.AUCTION_STATE_ACQUIRED_CODE;
+
+        this.category = category;
     }
 
-    public AuctionContent(String title, String content, String uid, String price, String priceGap, String auctionDuration, String auctionState, ArrayList<String> auctionUserList, String time) {
-        super(title, content, uid, time);
+    public AuctionContent(String title, String content, String uid, String price, String priceGap, String auctionDuration, String auctionState, ArrayList<String> auctionUserList, String time, String category) {
+        super(title, content, uid, time, category);
 
         Title = super.getTitle();
         Content = super.getContent();
@@ -83,6 +86,8 @@ public class AuctionContent extends Content implements Cloneable{
         AuctionEndTime = tempTime2.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
 
         AuctionState = auctionState;
+
+        this.category = category;
     }
 
     @NonNull
@@ -116,6 +121,7 @@ public class AuctionContent extends Content implements Cloneable{
         datum.put("auctionEndTime", AuctionEndTime);
         datum.put("autionState", AuctionState);
         datum.put("contentType", ContentType);
+        datum.put("category", category);
         return datum;
     }
 
@@ -140,6 +146,14 @@ public class AuctionContent extends Content implements Cloneable{
     public String getAuctionState() { return AuctionState; }
     @Override
     public String getContentType() { return ContentType; }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
 
     public void setAuctionUserList(ArrayList<String> auctionUserList) { AuctionUserList = auctionUserList; }
     public void setPrice(String price) { Price = price; }

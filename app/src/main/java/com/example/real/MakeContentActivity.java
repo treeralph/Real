@@ -29,6 +29,7 @@ import com.example.real.databasemanager.FirestoreManager;
 import com.example.real.databasemanager.StorageManager;
 import com.example.real.fragment.ImgViewFromGalleryFragment;
 import com.example.real.tool.NumberingMachine;
+import com.example.real.tool.SearchTool;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.JsonArray;
@@ -36,6 +37,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 
 public class MakeContentActivity extends AppCompatActivity {
 
@@ -95,14 +97,19 @@ public class MakeContentActivity extends AppCompatActivity {
                 thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        Content content = new Content(editTextTitle.getText().toString(), editTextContent.getText().toString(), user.getUid());
+                        Content content = new Content(editTextTitle.getText().toString(), editTextContent.getText().toString(), user.getUid(), "");
                         firestoreManagerForContent.write(content, "Content", new Callback() {
                             @Override
                             public void OnCallback(Object object) {
                                 String contentId = (String)object;
                                 String contentType = content.getContentType();
                                 String contentTitle = content.getTitle();
-                                Contents contents = new Contents(contentId, contentType, contentTitle, "");
+                                SearchTool searchTool = new SearchTool();
+                                ArrayList<String> stringList = new ArrayList<>();
+                                for(String s: contentTitle.split(" ")){
+                                    stringList.add(s);
+                                }
+                                Contents contents = new Contents(contentId, contentType, contentTitle, "", stringList);
                                 firestoreManagerForContents.write(contents, "Contents", content.getTime(), new Callback() {
                                     @Override
                                     public void OnCallback(Object object) {
