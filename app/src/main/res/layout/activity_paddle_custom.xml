@@ -38,7 +38,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
-                        android:layout_gravity="center"/>
+                        android:layout_gravity="center"
+
+                        />
                 </androidx.cardview.widget.CardView>
             </androidx.cardview.widget.CardView>
             <View
@@ -117,7 +119,12 @@
 
         </LinearLayout>
 
-
+        <Button
+            android:id="@+id/PCATestBtn"
+            android:text="test"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
         <androidx.cardview.widget.CardView
             android:id="@+id/PaddleCustomActivityApplyButton"
             android:layout_width="match_parent"

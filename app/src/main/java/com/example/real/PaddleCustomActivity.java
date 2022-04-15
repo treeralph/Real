@@ -22,6 +22,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -36,6 +37,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class PaddleCustomActivity extends AppCompatActivity {
@@ -54,6 +56,8 @@ public class PaddleCustomActivity extends AppCompatActivity {
     ImageView PreviewCenter;
     ImageView PreviewHandle;
 
+    Button test;
+
     public static final int REQUESTBACKGROUND = 0325;
     public static final int REQUESTCENTER = 0326;
     public static final int REQUESTHANDLE = 0327;
@@ -68,6 +72,8 @@ public class PaddleCustomActivity extends AppCompatActivity {
         PreviewBackground = findViewById(R.id.PaddleCustomActivityPreviewBackground);
         PreviewCenter = findViewById(R.id.PaddleCustomActivityPreviewCenter);
         PreviewHandle = findViewById(R.id.PaddleCustomActivityPreviewHandle);
+
+        test = findViewById(R.id.PCATestBtn);
 
         // Initial Setting
         Bitmap Test = Bitmap.createBitmap(1,1,Bitmap.Config.ARGB_8888);
@@ -125,7 +131,30 @@ public class PaddleCustomActivity extends AppCompatActivity {
         });
 
 
+        test.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createPaddle.Initializer(user.getUid(), new Callback() {
+                    @Override
+                    public void OnCallback(Object object) {
+                        List<Bitmap> bitmapList = (List<Bitmap>) object;
+                        paddleimageview.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                int Paddle_Size_x = paddleimageview.getWidth();
+                                Bitmap InitialPaddle = createPaddle.createPaddle(bitmapList.get(0),bitmapList.get(1),bitmapList.get(2),Paddle_Size_x,30,100);
+                                //paddleimageview.setScaleType(ImageView.ScaleType.FIT_XY);
+                                paddleimageview.setAdjustViewBounds(true);
+                                paddleimageview.setImageBitmap(InitialPaddle);
 
+
+
+                            }
+                        });
+                    }
+                });
+            }
+        });
 
 
 

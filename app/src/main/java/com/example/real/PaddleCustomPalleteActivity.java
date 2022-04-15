@@ -51,9 +51,9 @@ public class PaddleCustomPalleteActivity extends AppCompatActivity {
         LinearLayout[] LLL = {H1,H2,H3,H4};
 
 
-        String[] colors = {"#1ABC9C", "#2ECC71", "#3498DB", "#9B59B6", "#34495E",
+        String[] colors = {"#a5d8f3", "#2ECC71", "#3498DB", "#9B59B6", "#34495E",
                 "#16A085", "#27AE60", "#2980B9", "#8E44AD", "#2C3E50",
-                "#F1C40F", "#E67E22", "#E74C3C", "#ECF0F1", "#95A5A6",
+                "#faeb87", "#E67E22", "#E74C3C", "#ECF0F1", "#95A5A6",
                 "#F39C12", "#D35400", "#C0392B", "#BDC3C7", "#7F8C8D"};
 
 
@@ -88,6 +88,8 @@ public class PaddleCustomPalleteActivity extends AppCompatActivity {
         cropImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                cropImageView.setBackgroundResource(0);
+
                 // Get Img as Bitmap
                 Intent intent = new Intent();
                 intent.setType("image/*");
@@ -100,22 +102,30 @@ public class PaddleCustomPalleteActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 Bitmap cropped = cropImageView.getCroppedImage();
-                Bitmap resized = cropped;
-                if(getIntent().getIntExtra("REQUEST",0) == PaddleCustomActivity.REQUESTBACKGROUND){
-                    resized = Bitmap.createScaledBitmap(cropped,300,540,false);
-                }else if(getIntent().getIntExtra("REQUEST",0) == PaddleCustomActivity.REQUESTCENTER){
-                    resized = Bitmap.createScaledBitmap(cropped,300,300,false);
-                }else if(getIntent().getIntExtra("REQUEST",0) == PaddleCustomActivity.REQUESTHANDLE){
-                    resized = Bitmap.createScaledBitmap(cropped,200,400,false);
+
+                if(cropped == null){
+                    Toast.makeText(PaddleCustomPalleteActivity.this, "Select Your Image First", Toast.LENGTH_SHORT).show();
+                }else{
+                    Bitmap resized = cropped;
+                    if(getIntent().getIntExtra("REQUEST",0) == PaddleCustomActivity.REQUESTBACKGROUND){
+                        resized = Bitmap.createScaledBitmap(cropped,300,540,false);
+                    }else if(getIntent().getIntExtra("REQUEST",0) == PaddleCustomActivity.REQUESTCENTER){
+                        resized = Bitmap.createScaledBitmap(cropped,300,300,false);
+                    }else if(getIntent().getIntExtra("REQUEST",0) == PaddleCustomActivity.REQUESTHANDLE){
+                        resized = Bitmap.createScaledBitmap(cropped,200,400,false);
+                    }
+
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    resized.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    byte[] byteArray = stream.toByteArray();
+                    Intent intent = new Intent();
+                    intent.putExtra("BITMAP",byteArray);
+                    setResult(RESULT_OK, intent);
+                    finish();
                 }
 
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                resized.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                byte[] byteArray = stream.toByteArray();
-                Intent intent = new Intent();
-                intent.putExtra("BITMAP",byteArray);
-                setResult(RESULT_OK, intent);
-                finish();
+
+
             }
         });
 
