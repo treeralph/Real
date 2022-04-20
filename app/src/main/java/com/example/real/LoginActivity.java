@@ -37,6 +37,7 @@ public class LoginActivity extends AppCompatActivity {
 
     // [START declare_auth]
     private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
     // [END declare_auth]
     FirebaseUser currentUser;
 
@@ -56,6 +57,13 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login_design);
 
         mAuth = FirebaseAuth.getInstance();
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                updateUI(user);
+            }
+        };
 
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
@@ -71,9 +79,38 @@ public class LoginActivity extends AppCompatActivity {
 
                 Log.w(TAG, "move content");
             } catch(Exception e){
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                DocumentReference ref = db.document("UserProfile/" + currentUser.getUid());
+                ref.get()
+                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if(task.isSuccessful()){
+                                    Log.d(TAG, "automatic login:success:UserProfile data get Success");
+                                    DocumentSnapshot document = task.getResult();
+                                    if(document.getData() != null){
+                                        Log.d(TAG, "automatic login:success:UserProfile data get Success: there exists data");
+                                        Intent intent = new Intent(LoginActivity.this, ContentsActivity.class);
+                                        startActivity(intent);
+                                        finish();
+                                    } else{
+                                        Log.d(TAG, "automatic login:success:UserProfile data get Success: there does not exist data");
+                                        Intent intent = new Intent(LoginActivity.this, UserProfileActivity.class);
+                                        startActivity(intent);
+                                        finish();
+                                    }
+                                } else{
+                                    Log.d(TAG, "automatic login:success:UserProfile data get Failure");
+                                }
+                            }
+                        });
+                /*
                 Log.w(TAG, "automatic login");
                 Intent intent = new Intent(LoginActivity.this, ContentsActivity.class);
                 startActivity(intent);
+                finish();
+
+                 */
             }
         }
 
@@ -87,7 +124,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Log.w(TAG, "checkButton is clicked");
                 String phoneNumber = phoneNumberEditText.getText().toString();
-                startPhoneNumberVerification(phoneNumber);
+                String refinedPhoneNumber = "+82" + phoneNumber.substring(1);
+                startPhoneNumberVerification(refinedPhoneNumber);
             }
         });
 
@@ -141,59 +179,24 @@ public class LoginActivity extends AppCompatActivity {
         };
     }
 
-
-    private void firebaseAuthWithGoogle(String idToken) {
-        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithCredential:success");
-
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
-                            FirebaseFirestore db = FirebaseFirestore.getInstance();
-                            DocumentReference ref = db.document("UserProfile/" + user.getUid());
-                            ref.get()
-                                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                            if(task.isSuccessful()){
-                                                DocumentSnapshot document = task.getResult();
-                                                if(document.getData() != null){
-                                                    Intent intent = new Intent(LoginActivity.this, ContentsActivity.class);
-                                                    startActivity(intent);
-                                                    finish();
-                                                } else{
-                                                    Intent intent = new Intent(LoginActivity.this, UserProfileActivity.class);
-                                                    startActivity(intent);
-                                                    finish();
-                                                }
-                                            } else{
-
-                                            }
-                                        }
-                                    });
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            updateUI(null);
-                        }
-                    }
-                });
-    }
-
     @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
+        mAuth.addAuthStateListener(mAuthListener);
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUI(currentUser);
     }
     // [END on_start_check_user]
 
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
 
     private void startPhoneNumberVerification(String phoneNumber) {
         // [START start_phone_auth]
