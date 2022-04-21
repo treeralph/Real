@@ -1074,14 +1074,14 @@ public class CreatePaddle {
 
         //paintSimple.setColor(Color.argb(248, 255, 255, 255));
 
-        float[] positions = new float[]{ 0.2f, 0.4f, 0.6f, 0.8f};
+        float[] positions = new float[]{ 0.1f, 0.2f, 0.3f, 0.4f};
         int[] colors = {
-                Color.parseColor("#a5d8f3"),
-                Color.parseColor("#95A5A6"),
-                Color.parseColor("#BDC3C7"),
+                Color.parseColor("#ECF0F1"),
+                Color.parseColor("#ECF0F1"),
+                Color.parseColor("#ECF0F1"),
                 Color.parseColor("#ECF0F1")
         };
-        paintSimple.setShader(new LinearGradient(0f, 0f, 100, -150, colors, positions, Shader.TileMode.MIRROR));
+        paintSimple.setShader(new LinearGradient(0f, 0f, 10, -15, colors, positions, Shader.TileMode.MIRROR));
 
         Paint paintBlur = new Paint();
         paintBlur.set(paintSimple);
