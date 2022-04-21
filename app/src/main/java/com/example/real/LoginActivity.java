@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.EditText;
+import android.widget.Toast;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
@@ -56,87 +58,6 @@ public class LoginActivity extends AppCompatActivity {
         //setContentView(R.layout.activity_login);
         setContentView(R.layout.activity_login_design);
 
-        mAuth = FirebaseAuth.getInstance();
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                updateUI(user);
-            }
-        };
-
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser != null) {
-            // User is signed in (getCurrentUser() will be null if not signed in)
-            try{
-                String FCM_intent_to_auctionContent = getIntent().getStringExtra("FCM_contentId");
-                Log.d("WOWMACHINE", FCM_intent_to_auctionContent);
-
-                Intent intent = new Intent(LoginActivity.this, ContentsActivity.class);
-                intent.putExtra("FCM_contentId", FCM_intent_to_auctionContent);
-                startActivity(intent);
-                finish();
-
-                Log.w(TAG, "move content");
-            } catch(Exception e){
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                DocumentReference ref = db.document("UserProfile/" + currentUser.getUid());
-                ref.get()
-                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                if(task.isSuccessful()){
-                                    Log.d(TAG, "automatic login:success:UserProfile data get Success");
-                                    DocumentSnapshot document = task.getResult();
-                                    if(document.getData() != null){
-                                        Log.d(TAG, "automatic login:success:UserProfile data get Success: there exists data");
-                                        Intent intent = new Intent(LoginActivity.this, ContentsActivity.class);
-                                        startActivity(intent);
-                                        finish();
-                                    } else{
-                                        Log.d(TAG, "automatic login:success:UserProfile data get Success: there does not exist data");
-                                        Intent intent = new Intent(LoginActivity.this, UserProfileActivity.class);
-                                        startActivity(intent);
-                                        finish();
-                                    }
-                                } else{
-                                    Log.d(TAG, "automatic login:success:UserProfile data get Failure");
-                                }
-                            }
-                        });
-                /*
-                Log.w(TAG, "automatic login");
-                Intent intent = new Intent(LoginActivity.this, ContentsActivity.class);
-                startActivity(intent);
-                finish();
-
-                 */
-            }
-        }
-
-        phoneNumberEditText = findViewById(R.id.loginActivityPhoneNumberEditText);
-        codeEditText = findViewById(R.id.loginActivityAuthNumberEditText);
-        checkButton = findViewById(R.id.loginActivityPhoneNumberCheckButton);
-        registerButton = findViewById(R.id.loginActivityMemberShipButton);
-
-        checkButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.w(TAG, "checkButton is clicked");
-                String phoneNumber = phoneNumberEditText.getText().toString();
-                String refinedPhoneNumber = "+82" + phoneNumber.substring(1);
-                startPhoneNumberVerification(refinedPhoneNumber);
-            }
-        });
-
-        registerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.w(TAG, "registerButton is clicked");
-                verifyPhoneNumberWithCode(mVerificationId, codeEditText.getText().toString());
-            }
-        });
-
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             @Override
             public void onVerificationCompleted(PhoneAuthCredential credential) {
@@ -177,26 +98,60 @@ public class LoginActivity extends AppCompatActivity {
                 mResendToken = token;
             }
         };
+
+        mAuth = FirebaseAuth.getInstance();
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                updateUI(user);
+            }
+        };
+        mAuth.addAuthStateListener(mAuthListener);
+
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (currentUser != null) {
+            Log.d(TAG,"automatic login");
+            startPhoneNumberVerification(currentUser.getPhoneNumber());
+            // User is signed in (getCurrentUser() will be null if not signed in)
+
+        }
+
+        phoneNumberEditText = findViewById(R.id.loginActivityPhoneNumberEditText);
+        codeEditText = findViewById(R.id.loginActivityAuthNumberEditText);
+        checkButton = findViewById(R.id.loginActivityPhoneNumberCheckButton);
+        registerButton = findViewById(R.id.loginActivityMemberShipButton);
+
+        checkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.w(TAG, "checkButton is clicked");
+                String phoneNumber = phoneNumberEditText.getText().toString();
+                String refinedPhoneNumber = "+82" + phoneNumber.substring(1);
+                startPhoneNumberVerification(refinedPhoneNumber);
+            }
+        });
+
+        registerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.w(TAG, "registerButton is clicked");
+                verifyPhoneNumberWithCode(mVerificationId, codeEditText.getText().toString());
+            }
+        });
+
+
     }
 
     @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        mAuth.addAuthStateListener(mAuthListener);
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUI(currentUser);
     }
     // [END on_start_check_user]
-
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
-        }
-    }
 
     private void startPhoneNumberVerification(String phoneNumber) {
         // [START start_phone_auth]
@@ -255,9 +210,27 @@ public class LoginActivity extends AppCompatActivity {
                                                 DocumentSnapshot document = task.getResult();
                                                 if(document.getData() != null){
                                                     Log.d(TAG, "signInWithCredential:success:UserProfile data get Success: there exists data");
-                                                    Intent intent = new Intent(LoginActivity.this, ContentsActivity.class);
-                                                    startActivity(intent);
-                                                    finish();
+
+                                                    try{
+                                                        String FCM_intent_to_auctionContent = getIntent().getStringExtra("FCM_contentId");
+                                                        Log.d(TAG,"FCM_intent: " + FCM_intent_to_auctionContent);
+                                                        if(FCM_intent_to_auctionContent != null){
+                                                            Intent intent = new Intent(LoginActivity.this, ContentsActivity.class);
+                                                            intent.putExtra("FCM_contentId", FCM_intent_to_auctionContent);
+                                                            startActivity(intent);
+                                                            finish();
+
+                                                            Log.w(TAG, "move content");
+                                                        }else{
+                                                            Intent intent = new Intent(LoginActivity.this, ContentsActivity.class);
+                                                            startActivity(intent);
+                                                            finish();
+                                                        }
+                                                    } catch(Exception e){
+                                                        Intent intent = new Intent(LoginActivity.this, ContentsActivity.class);
+                                                        startActivity(intent);
+                                                        finish();
+                                                    }
                                                 } else{
                                                     Log.d(TAG, "signInWithCredential:success:UserProfile data get Success: there does not exist data");
                                                     Intent intent = new Intent(LoginActivity.this, UserProfileActivity.class);
