@@ -109,13 +109,60 @@ public class LoginActivity extends AppCompatActivity {
         };
         mAuth.addAuthStateListener(mAuthListener);
 
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
-
+        currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-            Log.d(TAG,"automatic login");
-            startPhoneNumberVerification(currentUser.getPhoneNumber());
-            // User is signed in (getCurrentUser() will be null if not signed in)
+            currentUser.reload().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if(task.isSuccessful()){
+                        FirebaseFirestore db = FirebaseFirestore.getInstance();
+                        DocumentReference ref = db.document("UserProfile/" + currentUser.getUid());
+                        ref.get()
+                                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        if(task.isSuccessful()){
+                                            Log.d(TAG, "automateSignIn:Success:UserProfile data get Success");
+                                            DocumentSnapshot document = task.getResult();
+                                            if(document.getData() != null){
+                                                Log.d(TAG, "automateSignIn:Success:UserProfile data get Success: there exists data");
 
+                                                try{
+                                                    String FCM_intent_to_auctionContent = getIntent().getStringExtra("FCM_contentId");
+                                                    Log.d(TAG,"FCM_intent: " + FCM_intent_to_auctionContent);
+                                                    if(FCM_intent_to_auctionContent != null){
+                                                        Intent intent = new Intent(LoginActivity.this, ContentsActivity.class);
+                                                        intent.putExtra("FCM_contentId", FCM_intent_to_auctionContent);
+                                                        startActivity(intent);
+                                                        finish();
+
+                                                        Log.w(TAG, "move content");
+                                                    }else{
+                                                        Intent intent = new Intent(LoginActivity.this, ContentsActivity.class);
+                                                        startActivity(intent);
+                                                        finish();
+                                                    }
+                                                } catch(Exception e){
+                                                    Intent intent = new Intent(LoginActivity.this, ContentsActivity.class);
+                                                    startActivity(intent);
+                                                    finish();
+                                                }
+                                            } else{
+                                                Log.d(TAG, "automateSignIn:Success:UserProfile data get Success: there does not exist data");
+                                                Intent intent = new Intent(LoginActivity.this, UserProfileActivity.class);
+                                                startActivity(intent);
+                                                finish();
+                                            }
+                                        } else{
+                                            Log.d(TAG, "automateSignIn:Success:UserProfile data get Failure");
+                                        }
+                                    }
+                                });
+                    }else{
+                        Log.d(TAG,"automateSignIn:Failure");
+                    }
+                }
+            });
         }
 
         phoneNumberEditText = findViewById(R.id.loginActivityPhoneNumberEditText);
