@@ -97,7 +97,7 @@ public class UserProfileActivity extends AppCompatActivity {
                                             Bitmap bitmapImage = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
 
                                             StorageManager storageManager = new StorageManager(UserProfileActivity.this, "UserProfile", user.getUid());
-                                            storageManager.upload("UserProfileImage" + "/" + user.getUid(), bitmapImage,50, new Callback() {
+                                            storageManager.upload("UserProfileImage" + "/" + user.getUid(), bitmapImage,500, new Callback() {
                                                 @Override
                                                 public void OnCallback(Object object) {
                                                     // Handler Message

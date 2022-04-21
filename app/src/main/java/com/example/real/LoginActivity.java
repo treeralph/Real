@@ -111,12 +111,16 @@ public class LoginActivity extends AppCompatActivity {
 
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
+        /*
         if (currentUser != null) {
             Log.d(TAG,"automatic login");
             startPhoneNumberVerification(currentUser.getPhoneNumber());
             // User is signed in (getCurrentUser() will be null if not signed in)
 
         }
+
+         */
+
 
         phoneNumberEditText = findViewById(R.id.loginActivityPhoneNumberEditText);
         codeEditText = findViewById(R.id.loginActivityAuthNumberEditText);
