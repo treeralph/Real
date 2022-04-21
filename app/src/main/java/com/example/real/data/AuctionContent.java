@@ -62,7 +62,7 @@ public class AuctionContent extends Content implements Cloneable{
         this.category = category;
     }
 
-    public AuctionContent(String title, String content, String uid, String price, String priceGap, String auctionDuration, String auctionState, ArrayList<String> auctionUserList, String time, String category) {
+    public AuctionContent(String title, String content, String uid, String price, String priceGap, String auctionDuration, String auctionState, ArrayList<String> auctionUserList, String time, String auctionEndTime, String category) {
         super(title, content, uid, time, category);
 
         Title = super.getTitle();
@@ -75,16 +75,7 @@ public class AuctionContent extends Content implements Cloneable{
         AuctionUserList = auctionUserList;
         AuctionDuration = auctionDuration;
         AuctionStartTime = Time;
-
-        System.out.println("TIME: " + Time);
-        System.out.println("TIME: " + Time);
-        System.out.println("TIME: " + Time);
-        System.out.println("TIME: " + Time);
-
-        LocalDateTime tempTime = LocalDateTime.parse(Time, formatter);
-        LocalDateTime tempTime2 = tempTime.plusDays(Integer.parseInt(AuctionDuration));
-        AuctionEndTime = tempTime2.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
-
+        AuctionEndTime = auctionEndTime;
         AuctionState = auctionState;
 
         this.category = category;

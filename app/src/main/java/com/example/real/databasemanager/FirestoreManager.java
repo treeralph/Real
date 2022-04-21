@@ -95,6 +95,7 @@ public class FirestoreManager {
                 (String)dict.get("auctionState"),
                 (ArrayList<String>) dict.get("auctionUserList"),
                 (String)dict.get("time"),
+                (String)dict.get("auctionEndTime"),
                 (String)dict.get("category"));
         return auctionContent;
     };
