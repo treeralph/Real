@@ -27,6 +27,8 @@ import java.util.ArrayList;
 
 public class ChattingRoomActivity extends AppCompatActivity {
 
+    private String TAG = "ChattingRoomActivity";
+
     private RecyclerView recyclerView;
     private LinearLayout contentsBtn;
     private LinearLayout userBtn;
@@ -80,6 +82,7 @@ public class ChattingRoomActivity extends AppCompatActivity {
         firestoreManagerForUserProfile.read("UserProfile", user.getUid(), new Callback() {
             @Override
             public void OnCallback(Object object) {
+                Log.w(TAG, "userProfile read");
                 UserProfile userProfile = (UserProfile) object;
                 ArrayList<String> chattingRoomPathList = userProfile.getChattingRoomID();
                 RecyclerViewAdapterForChattingRoom adapter = new RecyclerViewAdapterForChattingRoom(chattingRoomPathList, ChattingRoomActivity.this);

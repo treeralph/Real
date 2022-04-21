@@ -346,12 +346,14 @@ public class ChattingActivity extends AppCompatActivity {
             }
         });
 
+        Log.w(TAG, "userProfile read => " + userUID);
         firestoreManagerForUserProfile.read("UserProfile", userUID, new Callback() {
             @Override
             public void OnCallback(Object object) {
                 UserProfile userProfile = (UserProfile) object;
                 userProfileNickName = userProfile.getNickName();
                 userUIDToken = userProfile.getDeviceToken();
+                Log.w(TAG, "userProfile read => " + contentUID);
                 firestoreManagerForUserProfile.read("UserProfile", contentUID, new Callback() {
                     @Override
                     public void OnCallback(Object object) {
