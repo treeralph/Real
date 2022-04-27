@@ -37,6 +37,7 @@ public class StorageManager {
     private Context Context;
     private String DataType;
     private String Uid;
+    public final int PROFILEIMG_THREADHOLD = 500;
 
 
     // Operator choose ItemSize

@@ -17,8 +17,11 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.ExifInterface;
 import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -47,6 +50,7 @@ import com.google.gson.JsonParser;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -369,40 +373,21 @@ public class UserhistoryActivity extends AppCompatActivity {
                     public void onActivityResult(ActivityResult result) {
                         if (result.getResultCode() == RESULT_OK){
                             Intent intent = result.getData();
+
                             // 이미지뷰 씌우고
                             try{
                                 InputStream in = getContentResolver().openInputStream(intent.getData());
                                 Bitmap img = BitmapFactory.decodeStream(in);
                                 in.close();
-                                userprofileimg.setImageBitmap(img);
-                            }catch(Exception e){ }
-                            // 스토리지에 업뎃하고
-                            tempstorage = FirebaseStorage.getInstance();
-                            tempref = tempstorage.getReference();
-                            StorageReference tempcref = tempref.child("UserProfileImage/" + user.getUid());
-                            InputStream in = null;
-                            try {
-                                in = getContentResolver().openInputStream(intent.getData());
-                                Bitmap tempbit = BitmapFactory.decodeStream(in);
-                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                                tempbit.compress(Bitmap.CompressFormat.JPEG,100,baos);
-                                byte[] data = baos.toByteArray();
-                                tempcref.delete();
-                                UploadTask uploadTask = tempcref.putBytes(data);
-                                uploadTask.addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
 
-                                    }
-                                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                userprofileimg.setImageBitmap(img);
+                                storageManagerForUserProfile.upload("UserProfileImage" + "/" + user.getUid(), img, storageManagerForUserProfile.PROFILEIMG_THREADHOLD, new Callback() {
                                     @Override
-                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    public void OnCallback(Object object) {
 
                                     }
                                 });
-                            } catch (FileNotFoundException e) {
-                                e.printStackTrace();
-                            }
+                            }catch(Exception e){ }
 
 
                         }

@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.real.data.UserProfile;
 import com.example.real.databasemanager.FirestoreManager;
@@ -132,32 +133,20 @@ public class SetUserProfileActivity extends AppCompatActivity {
                     @Override
                     public void OnCallback(Object object) {
 
-                        tempstorage = FirebaseStorage.getInstance();
-                        tempref = tempstorage.getReference();
-                        StorageReference tempcref = tempref.child("UserProfileImage/" + user.getUid());
-
                         setuserprofile2userprofileimage.setDrawingCacheEnabled(true);
                         setuserprofile2userprofileimage.buildDrawingCache();
                         Bitmap tempbit = ((BitmapDrawable)setuserprofile2userprofileimage.getDrawable()).getBitmap();
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        tempbit.compress(Bitmap.CompressFormat.JPEG,100,baos);
-                        byte[] data = baos.toByteArray();
 
-                        tempcref.delete();
-                        UploadTask uploadTask = tempcref.putBytes(data);
-                        uploadTask.addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
 
-                            }
-                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        storageManagerForUserProfile.upload("UserProfileImage" + "/" + user.getUid(), tempbit, storageManagerForUserProfile.PROFILEIMG_THREADHOLD, new Callback() {
                             @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            public void OnCallback(Object object) {
                                 Intent ToContents = new Intent(SetUserProfileActivity.this,ContentsActivity.class);
                                 startActivity(ToContents);
                                 finish();
                             }
                         });
+
                     }
                 });
             }
@@ -184,8 +173,12 @@ public class SetUserProfileActivity extends AppCompatActivity {
         if(requestCode==IMGSELECTINTENTREQUESTCODE){
             if(resultCode==RESULT_OK){
                 try{
+
                     InputStream in = getContentResolver().openInputStream(data.getData());
+
                     Bitmap img = BitmapFactory.decodeStream(in);
+
+
                     in.close();
 
                     setuserprofile2userprofileimage.setImageBitmap(img);
