@@ -97,7 +97,7 @@ public class MakeContentActivity extends AppCompatActivity {
                 thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        Content content = new Content(editTextTitle.getText().toString(), editTextContent.getText().toString(), user.getUid(), "");
+                        Content content = new Content(editTextTitle.getText().toString(), editTextContent.getText().toString(), user.getUid(), "", "", "");
                         firestoreManagerForContent.write(content, "Content", new Callback() {
                             @Override
                             public void OnCallback(Object object) {

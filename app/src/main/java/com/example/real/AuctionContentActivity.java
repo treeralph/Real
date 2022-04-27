@@ -77,6 +77,7 @@ public class AuctionContentActivity extends AppCompatActivity {
     TextView AuctionContentUserProfileInfoTextView;
     TextView AuctionContentTimeTextView;
     TextView AuctionContentDescriptionTextView;
+    TextView AuctionContentLocationTextView;
     ViewPager AuctionContentViewPager;
     ImageView AuctionContentUserProfileImgImageView;
     TextView AuctionContentCurrentPriceTextView;
@@ -154,6 +155,7 @@ public class AuctionContentActivity extends AppCompatActivity {
         AuctionContentViewPager = findViewById(R.id.AuctionContentActivityContentImageViewPagerDesign);
         AuctionContentUserProfileImgImageView = findViewById(R.id.AuctionContentActivityProfileImageImageViewDesign);
         AuctionContentMessageBtn = findViewById(R.id.AuctionContentActivityMessageButtonDesign);
+        AuctionContentLocationTextView = findViewById(R.id.AuctionContentActivityLocationTextView);
         AuctionContentCurrentPriceTextView = findViewById(R.id.AuctionContentActivityAuctionPriceDesign);
         AuctionContentBidBtn = findViewById(R.id.AuctionContentActivityAuctionBidButtonDesign);
         AuctionContentRemainingTimeTextView = findViewById(R.id.AuctionContentActivityRemainingTimeDesign);
@@ -428,52 +430,6 @@ public class AuctionContentActivity extends AppCompatActivity {
                                 }});
                         }});
                 }}});
-        /*
-        realTimeDatabaseManagerForLatestBidder.readBidder(contentId, new Callback() {
-            @Override
-            public void OnCallback(Object object) {
-                String lastTIme = (String) object;
-                TimeTextTool TTT = new TimeTextTool(lastTIme);
-                LatestTimeTextView.setText(TTT.Time3Text());
-                if(lastTIme != null){
-                    LatestLL.setVisibility(View.VISIBLE);
-
-                    firestoreManagerForAuctionContent.read("Content", contentId, new Callback() {
-                    @Override
-                    public void OnCallback(Object object) {
-                        AuctionContent tempAuctionContent = (AuctionContent)object;
-                        List<String> templist = tempAuctionContent.getAuctionUserList();
-                        String LatestData = templist.get(templist.size()-1);
-                        String LatestBidder = LatestData.split("#")[0];
-                        String LatestPrice = LatestData.split("#")[2];
-                        LatestBidderTextview.setText(LatestBidder);
-                        LatestPriceTextView.setText(LatestPrice);
-                        createPaddle.Initializer(LatestBidder, new Callback() {
-                            @Override
-                            public void OnCallback(Object object) {
-                                List<Bitmap> bitmapList = (List<Bitmap>) object;
-                                LatestBidderImageView.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        LatestBidderImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                                        int Paddle_Size_x = LatestBidderImageView.getWidth();
-                                        createPaddle = new CreatePaddle(AuctionContentActivity.this, user.getUid());
-                                        Bitmap InitialPaddle = createPaddle.createPaddle(bitmapList.get(0),bitmapList.get(1),bitmapList.get(2),Paddle_Size_x, 30);
-
-                                        //LatestBidderImageView.setScaleType(ImageView.ScaleType.FIT_XY);
-                                        //LatestBidderImageView.setAdjustViewBounds(true);
-                                        LatestBidderImageView.setImageBitmap(InitialPaddle);
-
-
-                                    }});
-                            }});
-                    }});
-                }}
-        });
-
-         */
-
-
 
         firestoreManagerForAuctionContent.read("Content", contentId, new Callback() {
             @Override
@@ -486,6 +442,7 @@ public class AuctionContentActivity extends AppCompatActivity {
                 String time = tempAuctionContent.getTime(); contentTime = time;
                 String endTime = tempAuctionContent.getAuctionEndTime();
                 String price = tempAuctionContent.getPrice();
+                String location = tempAuctionContent.getLocation();
 
                 String year = time.substring(0, 4);
                 String month = time.substring(4, 6);
@@ -497,6 +454,7 @@ public class AuctionContentActivity extends AppCompatActivity {
                 AuctionContentTimeTextView.setText(year + "." + month + "." + day + " - " + hour + ":" + min);
                 AuctionContentDescriptionTextView.setText(description);
                 AuctionContentCurrentPriceTextView.setText(price);
+                AuctionContentLocationTextView.setText(location);
 
                 tempEndTime = LocalDateTime.parse(endTime, formatter);
 

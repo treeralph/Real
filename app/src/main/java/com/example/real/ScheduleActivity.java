@@ -148,13 +148,13 @@ public class ScheduleActivity extends AppCompatActivity {
             public void OnCallback(Object object) {
 
                 MotionEvent event = (MotionEvent) object;
-                Log.w("ASDF", String.valueOf(event.getAction()));
+                Log.w(TAG, String.valueOf(event.getAction()));
                 if (isInside(mapFragment.getMapView(), event)) {
-                    Log.w("ASDF", "Is inside");
+                    Log.w(TAG, "Is inside");
                     slidr.lock();
                 }
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    Log.w("ASDF", "Is outside");
+                    Log.w(TAG, "Is outside");
                     slidr.unlock();
                 }
             }

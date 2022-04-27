@@ -292,6 +292,17 @@
                             android:fontFamily="@font/simplehae"
                             android:layout_marginLeft="20dp"
                             android:layout_marginTop="10dp"/>
+                        <TextView
+                            android:id="@+id/AuctionContentActivityLocationTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Location"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:textSize="20dp"
+                            android:fontFamily="@font/simplehae"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginTop="10dp"/>
 
 
 
@@ -333,13 +344,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:background="@color/grey1">
-                    <TextView
-                        android:id="@+id/TESTBOARD"
-                        android:layout_width="match_parent"
-                        android:layout_height="500dp"
-                        android:text="TESTBOARD"
-                        android:textColor="@color/red"
-                        android:background="@color/black"/>
 
                     <TextView
                         android:layout_width="match_parent"

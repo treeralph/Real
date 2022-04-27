@@ -14,6 +14,8 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Message;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -31,7 +33,9 @@ import com.example.real.databasemanager.FirestoreManager;
 import com.example.real.databasemanager.RealTimeDatabaseManager;
 import com.example.real.databasemanager.StorageManager;
 import com.example.real.fragment.ImgViewFromGalleryFragment;
+import com.example.real.fragment.MapFragment;
 import com.example.real.tool.CategoryDialog;
+import com.example.real.tool.LocationDialog;
 import com.example.real.tool.NumberingMachine;
 import com.example.real.tool.SearchTool;
 import com.google.firebase.auth.FirebaseAuth;
@@ -45,6 +49,8 @@ import java.util.ArrayList;
 
 public class MakeAuctionContentActivity extends AppCompatActivity {
 
+    public static final String TAG = "MakeAuctionContentActivity";
+
     CardView MakeContentBtn;
     FrameLayout ChooseImgBtn;
     EditText editTextTitle;
@@ -56,10 +62,14 @@ public class MakeAuctionContentActivity extends AppCompatActivity {
     FirebaseUser user;
     NumberingMachine numberingMachine;
     TextView categoryText;
+    TextView locationText;
 
     private final int IMGSELECTINTENTREQUESTCODE = 0;
 
     Thread thread;
+
+    MapFragment mapFragment;
+    LocationDialog locationDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +94,55 @@ public class MakeAuctionContentActivity extends AppCompatActivity {
         editTextAuctionDuration = findViewById(R.id.makeAuctionContentDurationEditTextDesign);
         viewPager = findViewById(R.id.makeAuctionContentViewPagerDesign);
         categoryText = findViewById(R.id.makeAuctionContentCategoryTextView);
+        locationText = findViewById(R.id.makeAuctionContentLocationTextView);
+
+        mapFragment = new MapFragment(MakeAuctionContentActivity.this, new Callback() {
+            @Override
+            public void OnCallback(Object object) {
+
+            }
+        }, new Callback() {
+            @Override
+            public void OnCallback(Object object) {
+                View view = (View) object;
+                CardView cardView = view.findViewById(R.id.mapFragmentCheckButton);
+                cardView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        locationText.setText(mapFragment.getFocusAddress());
+                        locationDialog.dismiss();
+                    }
+                });
+            }
+        });
+
+        locationText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                locationDialog = new LocationDialog(MakeAuctionContentActivity.this, new Callback() {
+                    @Override
+                    public void OnCallback(Object object) {
+
+                        String address = (String) object;
+                        locationText.setText(address);
+                        locationDialog.dismiss();
+
+                        /*
+                        ViewPager tempViewPager = (ViewPager) object;
+                        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(mapFragment.getChildFragmentManager());
+                        viewPagerAdapter.addItem(mapFragment);
+                        tempViewPager.setAdapter(viewPagerAdapter);
+
+                         */
+                    }
+                });
+                locationDialog.setCanceledOnTouchOutside(true);
+                locationDialog.setCancelable(true);
+                locationDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                locationDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+                locationDialog.show();
+            }
+        });
 
         categoryText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,7 +181,9 @@ public class MakeAuctionContentActivity extends AppCompatActivity {
                         editTextContent.getText().toString(),
                         user.getUid(),
                         editTextAuctionPrice.getText().toString(),
-                        editTextAuctionDuration.getText().toString(), categoryText.getText().toString());
+                        editTextAuctionDuration.getText().toString(),
+                        categoryText.getText().toString(),
+                        locationText.getText().toString());
 
                 // If u want catch exception, write on upper side of thread.
                 thread = new Thread(new Runnable() {
@@ -221,19 +282,6 @@ public class MakeAuctionContentActivity extends AppCompatActivity {
                                                     });
                                                 }
                                             });
-                                    /*
-                                    storageManager.upload("image/" + contentId + "/" + String.valueOf(i), TempImg, new Callback() {
-                                        @Override
-                                        public void OnCallback(Object object) {
-                                            if(numberingMachine.getNumber() == adapter.getCount()){
-                                                Intent intent = new Intent(MakeAuctionContentActivity.this, ContentsActivity.class);
-                                                startActivity(intent);
-                                                finish();
-                                            }
-                                        }
-                                    });
-
-                                     */
                                         }
                                     }
                                 });

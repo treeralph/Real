@@ -26,7 +26,6 @@ public class TimeTextTool {
     public TimeTextTool(String time) {
 
         Time = time;
-        Log.d("TIME_CHECK", Time);
         DateTimeFormatter formatter = new DateTimeFormatterBuilder()
                 .appendPattern("yyyyMMddHHmmss").appendValue(ChronoField.MILLI_OF_SECOND, 3).toFormatter();
 

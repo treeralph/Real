@@ -128,7 +128,6 @@ public class RecyclerViewAdapterForContents extends RecyclerView.Adapter<Recycle
         myViewHolder.ContentLikeFlicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if(w[0] == FLICKERNEGATIVE){// 하트가 비어있는 상태에서 버튼을 누르면
                     // DB에 UserLog Write
                     FirestoreManager firestoreManagerForUserProfile = new FirestoreManager(
@@ -212,11 +211,8 @@ public class RecyclerViewAdapterForContents extends RecyclerView.Adapter<Recycle
 
                                         }
                                     });
-
-
                         }
                     });
-
 
                     // Delete 끝나면 콜백에 w값을 바꿔주고 이미지변경
                     w[0] = FLICKERNEGATIVE;
