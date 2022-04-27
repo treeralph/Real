@@ -80,7 +80,9 @@ public class FirestoreManager {
                 (String)dict.get("content"),
                 (String)dict.get("uid"),
                 (String)dict.get("time"),
-                (String)dict.get("category"));
+                (String)dict.get("category"),
+                (String)dict.get("location"),
+                (String)dict.get("price"));
         return content;
     };
 
@@ -96,7 +98,8 @@ public class FirestoreManager {
                 (ArrayList<String>) dict.get("auctionUserList"),
                 (String)dict.get("time"),
                 (String)dict.get("auctionEndTime"),
-                (String)dict.get("category"));
+                (String)dict.get("category"),
+                (String)dict.get("location"));
         return auctionContent;
     };
 

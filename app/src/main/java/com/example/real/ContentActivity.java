@@ -82,6 +82,8 @@ public class ContentActivity extends AppCompatActivity {
     ImageView ContentUserProfileImgImageView;
     Button ContentMessageBtn;
     ImageView ContentLikeFlicker;
+    TextView ContentPriceTextView;
+    TextView ContentLocationTextView;
 
     ViewPagerAdapter adapter;
 
@@ -121,6 +123,8 @@ public class ContentActivity extends AppCompatActivity {
         Comments_Recyclerview = findViewById(R.id.designTestContentCommentRecyclerView);
         ContentCommentEditText = findViewById(R.id.designTestCommentEditText);
         ContentCommentBtn = findViewById(R.id.designTestContentCommentAddButton);
+        ContentPriceTextView = findViewById(R.id.ContentActivityPriceTextView);
+        ContentLocationTextView = findViewById(R.id.ContentActivityLocationTextView);
         srtbtn = findViewById(R.id.designTestContentSortingButton);
         BackgroundImageView = findViewById(R.id.designTestViewPagerBackgroundImageView);
         ContentLikeFlicker = findViewById(R.id.desingContentLikeFlicker);
@@ -212,26 +216,6 @@ public class ContentActivity extends AppCompatActivity {
                 ContentActivity.this, "Image", user.getUid());
         StorageManager storageManagerForUserProfile = new StorageManager(
                 ContentActivity.this, "UserProfileImage", user.getUid());
-
-        // todo: for design test
-        /* original
-        ContentTitleTextView = findViewById(R.id.ContentActivityTitleTextView);
-        ContentUserProfileInfoTextView = findViewById(R.id.ContentActivityProfileInfoTextView);
-        ContentTimeTextView = findViewById(R.id.ContentActivityTimeTextView);
-        ContentDescriptionTextView = findViewById(R.id.ContentActivityDescriptionTextView);
-        ContentViewPager = findViewById(R.id.ContentActivityViewPager);
-        ContentUserProfileImgImageView = findViewById(R.id.ContentActivityProfileImageImageView);
-        ContentMessageBtn = findViewById(R.id.ContentActivityMessageBtn);
-        Comments_Recyclerview = findViewById(R.id.comments_recyclerview);
-        ContentCommentEditText = findViewById(R.id.ContentActivityCommentEditText);
-        ContentCommentBtn = findViewById(R.id.ContentActivityCommentBtn);
-        srtbtn = findViewById(R.id.ContentActivitySortingBtn);
-         */
-
-        // new one\
-
-        //////////////////////////////////////////////////////////////////////////////////////
-
 
         final int[] w = {FLICKERNEGATIVE}; // 나중에 DB에서 값을 받아오게 바꾸3
         ContentLikeFlicker.setOnClickListener(new View.OnClickListener() {
@@ -359,6 +343,8 @@ public class ContentActivity extends AppCompatActivity {
                 String title = tempContent.getTitle();
                 String description = tempContent.getContent();
                 String time = tempContent.getTime(); contentTime = time;
+                String price = tempContent.getPrice();
+                String location = tempContent.getLocation();
 
                 String year = time.substring(0, 4);
                 String month = time.substring(4, 6);
@@ -369,6 +355,8 @@ public class ContentActivity extends AppCompatActivity {
                 ContentTitleTextView.setText(title);
                 ContentTimeTextView.setText(year + "." + month + "." + day + " - " + hour + ":" + min);
                 ContentDescriptionTextView.setText(description);
+                ContentPriceTextView.setText(price);
+                ContentLocationTextView.setText(location);
 
                 firestoreManagerForUserProfile.read("UserProfile", uid, new Callback() {
                     @Override
