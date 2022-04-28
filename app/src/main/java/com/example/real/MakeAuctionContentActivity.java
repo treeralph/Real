@@ -150,7 +150,7 @@ public class MakeAuctionContentActivity extends AppCompatActivity {
                 else if(categoryText.getText().toString().equals("")){
                     Toast.makeText(MakeAuctionContentActivity.this, "카테고리를 설정해 주세요", Toast.LENGTH_SHORT).show(); }
                 else if(locationText.getText().toString().equals("")){
-                    Toast.makeText(MakeAuctionContentActivity.this, "카테고리를 설정해 주세요", Toast.LENGTH_SHORT).show(); }
+                    Toast.makeText(MakeAuctionContentActivity.this, "지역을 설정해 주세요", Toast.LENGTH_SHORT).show(); }
                 else if(adapter.getCount()==0){
                     Toast.makeText(MakeAuctionContentActivity.this, "이미지를 업로드 해주세요", Toast.LENGTH_SHORT).show(); }
                 else{

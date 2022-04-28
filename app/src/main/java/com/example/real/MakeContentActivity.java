@@ -52,6 +52,7 @@ public class MakeContentActivity extends AppCompatActivity {
     FrameLayout ChooseImgBtn;
     EditText editTextTitle;
     EditText editTextContent;
+    EditText editTextPrice;
     ViewPager viewPager;
     ViewPagerAdapter adapter;
     FirebaseUser user;
@@ -80,6 +81,7 @@ public class MakeContentActivity extends AppCompatActivity {
         ChooseImgBtn = findViewById(R.id.makeContentImageSelectButtonDesign);
         editTextTitle = findViewById(R.id.makeContentTitleEditTextDesign);
         editTextContent = findViewById(R.id.makeContentDescriptionEditTextDesign);
+        editTextPrice = findViewById(R.id.makeContentPriceEditTextDesign);
         categoryText = findViewById(R.id.makeContentCategoryTextView);
         locationText = findViewById(R.id.makeContentLocationTextView);
         viewPager = findViewById(R.id.makeContentViewPagerDesign);
@@ -124,20 +126,18 @@ public class MakeContentActivity extends AppCompatActivity {
         MakeContentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-            }
-        });
-
-        MakeContentBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
                 if(editTextTitle.getText().toString().equals("")){
                     Toast.makeText(MakeContentActivity.this, "제목을 입력해 주세요", Toast.LENGTH_SHORT).show(); }
                 else if(editTextContent.getText().toString().equals("")){
                     Toast.makeText(MakeContentActivity.this, "내용을 입력해 주세요", Toast.LENGTH_SHORT).show(); }
                 else if(adapter.getCount()==0){
-                    Toast.makeText(MakeContentActivity.this, "이미지를 업로드 해주세요", Toast.LENGTH_SHORT).show();
-                }
+                    Toast.makeText(MakeContentActivity.this, "이미지를 업로드 해주세요", Toast.LENGTH_SHORT).show(); }
+                else if(editTextPrice.getText().toString().equals("")){
+                    Toast.makeText(MakeContentActivity.this, "가격을 입력해 주세요", Toast.LENGTH_SHORT).show(); }
+                else if(categoryText.getText().toString().equals("")){
+                    Toast.makeText(MakeContentActivity.this, "카테고리를 설정해 주세요", Toast.LENGTH_SHORT).show(); }
+                else if(locationText.getText().toString().equals("")){
+                    Toast.makeText(MakeContentActivity.this, "지역을 설정해 주세요", Toast.LENGTH_SHORT).show(); }
                 else{
                     thread = new Thread(new Runnable() {
                         @Override
