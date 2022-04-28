@@ -4,6 +4,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.DatePicker;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +19,7 @@ import com.example.real.Callback;
 import com.example.real.MakeAuctionContentActivity;
 import com.example.real.R;
 import com.example.real.adapter.ViewPagerAdapter;
+import com.example.real.fragment.DatepickerFragment;
 import com.example.real.fragment.MapFragment;
 import com.example.real.fragment.TimepickerFragment;
 import com.naver.maps.map.renderer.MapRenderer;
@@ -30,6 +33,7 @@ public class LocationDialog extends Dialog {
 
     Context context;
     MapFragment mapFragment;
+
 
     public LocationDialog(@NonNull Context context, Callback callback) {
         super(context);
@@ -55,6 +59,7 @@ public class LocationDialog extends Dialog {
             @Override
             public void OnCallback(Object object) {
 
+
             }
         }, new Callback() {
             @Override
@@ -67,6 +72,7 @@ public class LocationDialog extends Dialog {
                         callback.OnCallback(mapFragment.getFocusAddress());
                     }
                 });
+
             }
         });
 
@@ -74,7 +80,6 @@ public class LocationDialog extends Dialog {
         ViewPager viewPager = (ViewPager) findViewById(R.id.customDialogLocationViewPager);
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(((AppCompatActivity)context).getSupportFragmentManager());
         viewPagerAdapter.addItem(mapFragment);
-
         viewPager.setAdapter(viewPagerAdapter);
     }
 }

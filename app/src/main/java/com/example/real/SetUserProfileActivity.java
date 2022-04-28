@@ -22,6 +22,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.data.ExifOrientationStream;
 import com.example.real.data.UserProfile;
 import com.example.real.databasemanager.FirestoreManager;
 import com.example.real.databasemanager.StorageManager;
@@ -169,19 +171,19 @@ public class SetUserProfileActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        // uri = data.getData()
         if(requestCode==IMGSELECTINTENTREQUESTCODE){
             if(resultCode==RESULT_OK){
                 try{
+                    Glide.with(SetUserProfileActivity.this)
+                            .load(data.getData())
+                            .into(setuserprofile2userprofileimage);
 
-                    InputStream in = getContentResolver().openInputStream(data.getData());
 
-                    Bitmap img = BitmapFactory.decodeStream(in);
-
-
-                    in.close();
-
-                    setuserprofile2userprofileimage.setImageBitmap(img);
+                    //InputStream in = getContentResolver().openInputStream(data.getData());
+                    //Bitmap img = BitmapFactory.decodeStream(in);
+                    //in.close();
+                    //setuserprofile2userprofileimage.setImageBitmap(img);
                 }catch(Exception e){
 
                 }

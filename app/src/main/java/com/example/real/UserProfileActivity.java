@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.real.data.UserProfile;
 import com.example.real.databasemanager.FirestoreManager;
 import com.example.real.databasemanager.StorageManager;
@@ -138,11 +139,15 @@ public class UserProfileActivity extends AppCompatActivity {
         if(requestCode==IMGSELECTINTENTREQUESTCODE){
             if(resultCode==RESULT_OK){
                 try{
-                    InputStream in = getContentResolver().openInputStream(data.getData());
-                    Bitmap img = BitmapFactory.decodeStream(in);
-                    in.close();
 
-                    imageView.setImageBitmap(img);
+                    Glide.with(UserProfileActivity.this)
+                            .load(data.getData())
+                            .into(imageView);
+                    //InputStream in = getContentResolver().openInputStream(data.getData());
+                    //Bitmap img = BitmapFactory.decodeStream(in);
+                    //in.close();
+                    //imageView.setImageBitmap(img);
+
                     iTextView.setText("");
                 }catch(Exception e){
 

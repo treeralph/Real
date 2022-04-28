@@ -32,6 +32,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.real.adapter.ExpandableListAdapter;
 import com.example.real.adapter.RecyclerViewAdapterForHistory;
 import com.example.real.data.UserProfile;
@@ -376,15 +377,20 @@ public class UserhistoryActivity extends AppCompatActivity {
 
                             // 이미지뷰 씌우고
                             try{
-                                InputStream in = getContentResolver().openInputStream(intent.getData());
-                                Bitmap img = BitmapFactory.decodeStream(in);
-                                in.close();
+                                Glide.with(UserhistoryActivity.this)
+                                        .load(intent.getData())
+                                        .into(userprofileimg);
 
-                                userprofileimg.setImageBitmap(img);
+                                //InputStream in = getContentResolver().openInputStream(intent.getData());
+                                //Bitmap img = BitmapFactory.decodeStream(in);
+                                //in.close();
+                                //userprofileimg.setImageBitmap(img);
+
+                                Bitmap img = ((BitmapDrawable)userprofileimg.getDrawable()).getBitmap();
                                 storageManagerForUserProfile.upload("UserProfileImage" + "/" + user.getUid(), img, storageManagerForUserProfile.PROFILEIMG_THREADHOLD, new Callback() {
                                     @Override
                                     public void OnCallback(Object object) {
-
+                                        Log.d("why","asdf");
                                     }
                                 });
                             }catch(Exception e){ }
