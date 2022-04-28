@@ -356,6 +356,7 @@ public class UserhistoryActivity extends AppCompatActivity {
 
             }
         });
+        setuserprofileimg.setVisibility(View.GONE);
         setuserprofileimg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -366,6 +367,8 @@ public class UserhistoryActivity extends AppCompatActivity {
                 resultLauncher.launch(intent);
             }
         });
+        setuserprofilenickname.setVisibility(View.GONE);
+
 
         resultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
