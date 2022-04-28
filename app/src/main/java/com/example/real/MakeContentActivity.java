@@ -14,6 +14,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -94,113 +95,123 @@ public class MakeContentActivity extends AppCompatActivity {
         MakeContentBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Content content = new Content(editTextTitle.getText().toString(), editTextContent.getText().toString(), user.getUid(), "", "", "");
-                        firestoreManagerForContent.write(content, "Content", new Callback() {
-                            @Override
-                            public void OnCallback(Object object) {
-                                String contentId = (String)object;
-                                String contentType = content.getContentType();
-                                String contentTitle = content.getTitle();
-                                SearchTool searchTool = new SearchTool();
-                                ArrayList<String> stringList = new ArrayList<>();
-                                for(String s: contentTitle.split(" ")){
-                                    stringList.add(s);
-                                }
-                                Contents contents = new Contents(contentId, contentType, contentTitle, "", stringList);
-                                firestoreManagerForContents.write(contents, "Contents", content.getTime(), new Callback() {
-                                    @Override
-                                    public void OnCallback(Object object) {
-                                        // image
-                                        for(int i=0; i<adapter.getCount(); i++){
-                                            int j = i;
-                                            numberingMachine.add();
-                                            ImgViewFromGalleryFragment TempFregment = (ImgViewFromGalleryFragment)adapter.getItem(i);
-                                            Bitmap TempImg = TempFregment.getBitmap();
-                                            storageManager.upload("image/" + contentId + "/2000/" + String.valueOf(j), TempImg, 2000, new Callback() {
-                                                @Override
-                                                public void OnCallback(Object object) {
-                                                    storageManager.upload("image/" + contentId + "/1000/" + String.valueOf(j), TempImg, 1000, new Callback() {
-                                                        @Override
-                                                        public void OnCallback(Object object) {
-                                                            storageManager.upload("image/" + contentId + "/100/" + String.valueOf(j), TempImg, 100, new Callback() {
-                                                                @Override
-                                                                public void OnCallback(Object object) {
-                                                                    if(numberingMachine.getNumber() == adapter.getCount()){
-                                                                        Message message = Message.obtain();
-                                                                        message.obj = "ContentMakingDone";
-                                                                        LoadingActivity.LoadingHandler handler = ((LoadingActivity)LoadingActivity.LoadingContext).handler;
-                                                                        handler.sendMessage(message);
-
-                                                                        //UPLOAD USERLOG
-                                                                        FirestoreManager firestoreManagerForUserProfile = new FirestoreManager(
-                                                                                MakeContentActivity.this, "UserProfile", user.getUid());
-
-                                                                        firestoreManagerForUserProfile.read("UserProfile", user.getUid(), new Callback() {
-                                                                            @Override
-                                                                            public void OnCallback(Object object) {
-                                                                                UserProfile userprofile = (UserProfile) object;
-                                                                                String userlog = userprofile.getUserLog();
-                                                                                String address = "Content/" + contentId;
-                                                                                if(userlog.equals("")){
-                                                                                    // Create Json Obj & JsonArray
-                                                                                    JsonArray frame = new JsonArray();
-                                                                                    JsonObject init = new JsonObject();
-                                                                                    init.addProperty("Type","Content");
-                                                                                    init.addProperty("Address",address);
-                                                                                    frame.add(init);
-                                                                                    firestoreManagerForUserProfile.update("UserProfile", user.getUid(), "UserLog",
-                                                                                            frame.toString(), new Callback() {
-                                                                                                @Override
-                                                                                                public void OnCallback(Object object) {
-
-                                                                                                }
-                                                                                            });
-                                                                                } else{
-                                                                                    // Parsing JsonArray
-                                                                                    JsonParser parser = new JsonParser();
-                                                                                    Object tempparsed = parser.parse(userlog);
-                                                                                    JsonArray templog = (JsonArray) tempparsed;
-
-                                                                                    // Create Json Obj
-                                                                                    JsonObject temp = new JsonObject();
-                                                                                    temp.addProperty("Type", "Content");
-                                                                                    temp.addProperty("Address",address);
-
-                                                                                    // Add & Update
-                                                                                    templog.add(temp);
-                                                                                    firestoreManagerForUserProfile.update("UserProfile", user.getUid(), "UserLog",
-                                                                                            templog.toString(), new Callback() {
-                                                                                                @Override
-                                                                                                public void OnCallback(Object object) {
-
-                                                                                                }
-                                                                                            });
-                                                                                }
-
-                                                                            }
-                                                                        });
-                                                                    }
-                                                                }
-                                                            });
-                                                        }
-                                                    });
-                                                }
-                                            });
-                                        }
+                if(editTextTitle.getText().toString().equals("")){
+                    Toast.makeText(MakeContentActivity.this, "제목을 입력해 주세요", Toast.LENGTH_SHORT).show(); }
+                else if(editTextContent.getText().toString().equals("")){
+                    Toast.makeText(MakeContentActivity.this, "내용을 입력해 주세요", Toast.LENGTH_SHORT).show(); }
+                else if(adapter.getCount()==0){
+                    Toast.makeText(MakeContentActivity.this, "이미지를 업로드 해주세요", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    thread = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Content content = new Content(editTextTitle.getText().toString(), editTextContent.getText().toString(), user.getUid(), "", "", "");
+                            firestoreManagerForContent.write(content, "Content", new Callback() {
+                                @Override
+                                public void OnCallback(Object object) {
+                                    String contentId = (String)object;
+                                    String contentType = content.getContentType();
+                                    String contentTitle = content.getTitle();
+                                    SearchTool searchTool = new SearchTool();
+                                    ArrayList<String> stringList = new ArrayList<>();
+                                    for(String s: contentTitle.split(" ")){
+                                        stringList.add(s);
                                     }
-                                });
-                            }
-                        });
-                    }
-                });
-                thread.start();
-                Intent intent = new Intent(MakeContentActivity.this, LoadingActivity.class);
-                startActivity(intent);
-                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-                finish();
+                                    Contents contents = new Contents(contentId, contentType, contentTitle, "", stringList);
+                                    firestoreManagerForContents.write(contents, "Contents", content.getTime(), new Callback() {
+                                        @Override
+                                        public void OnCallback(Object object) {
+                                            // image
+                                            for(int i=0; i<adapter.getCount(); i++){
+                                                int j = i;
+                                                numberingMachine.add();
+                                                ImgViewFromGalleryFragment TempFregment = (ImgViewFromGalleryFragment)adapter.getItem(i);
+                                                Bitmap TempImg = TempFregment.getBitmap();
+                                                storageManager.upload("image/" + contentId + "/2000/" + String.valueOf(j), TempImg, 2000, new Callback() {
+                                                    @Override
+                                                    public void OnCallback(Object object) {
+                                                        storageManager.upload("image/" + contentId + "/1000/" + String.valueOf(j), TempImg, 1000, new Callback() {
+                                                            @Override
+                                                            public void OnCallback(Object object) {
+                                                                storageManager.upload("image/" + contentId + "/100/" + String.valueOf(j), TempImg, 100, new Callback() {
+                                                                    @Override
+                                                                    public void OnCallback(Object object) {
+                                                                        if(numberingMachine.getNumber() == adapter.getCount()){
+                                                                            Message message = Message.obtain();
+                                                                            message.obj = "ContentMakingDone";
+                                                                            LoadingActivity.LoadingHandler handler = ((LoadingActivity)LoadingActivity.LoadingContext).handler;
+                                                                            handler.sendMessage(message);
+
+                                                                            //UPLOAD USERLOG
+                                                                            FirestoreManager firestoreManagerForUserProfile = new FirestoreManager(
+                                                                                    MakeContentActivity.this, "UserProfile", user.getUid());
+
+                                                                            firestoreManagerForUserProfile.read("UserProfile", user.getUid(), new Callback() {
+                                                                                @Override
+                                                                                public void OnCallback(Object object) {
+                                                                                    UserProfile userprofile = (UserProfile) object;
+                                                                                    String userlog = userprofile.getUserLog();
+                                                                                    String address = "Content/" + contentId;
+                                                                                    if(userlog.equals("")){
+                                                                                        // Create Json Obj & JsonArray
+                                                                                        JsonArray frame = new JsonArray();
+                                                                                        JsonObject init = new JsonObject();
+                                                                                        init.addProperty("Type","Content");
+                                                                                        init.addProperty("Address",address);
+                                                                                        frame.add(init);
+                                                                                        firestoreManagerForUserProfile.update("UserProfile", user.getUid(), "UserLog",
+                                                                                                frame.toString(), new Callback() {
+                                                                                                    @Override
+                                                                                                    public void OnCallback(Object object) {
+
+                                                                                                    }
+                                                                                                });
+                                                                                    } else{
+                                                                                        // Parsing JsonArray
+                                                                                        JsonParser parser = new JsonParser();
+                                                                                        Object tempparsed = parser.parse(userlog);
+                                                                                        JsonArray templog = (JsonArray) tempparsed;
+
+                                                                                        // Create Json Obj
+                                                                                        JsonObject temp = new JsonObject();
+                                                                                        temp.addProperty("Type", "Content");
+                                                                                        temp.addProperty("Address",address);
+
+                                                                                        // Add & Update
+                                                                                        templog.add(temp);
+                                                                                        firestoreManagerForUserProfile.update("UserProfile", user.getUid(), "UserLog",
+                                                                                                templog.toString(), new Callback() {
+                                                                                                    @Override
+                                                                                                    public void OnCallback(Object object) {
+
+                                                                                                    }
+                                                                                                });
+                                                                                    }
+
+                                                                                }
+                                                                            });
+                                                                        }
+                                                                    }
+                                                                });
+                                                            }
+                                                        });
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    });
+                    thread.start();
+                    Intent intent = new Intent(MakeContentActivity.this, LoadingActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                    finish();
+                }
+
             }
         });
 
