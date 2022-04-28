@@ -55,13 +55,14 @@ public class RecyclerViewAdapterForContentsV2 extends RecyclerView.Adapter<Recyc
     FirebaseUser user;
 
     FirestoreManager firestoreManagerForContent;
+    FirestoreManager firestoreManagerForAuctionContent;
     FirestoreManager firestoreManagerForComment;
     StorageManager storageManagerForContent;
 
     Context context;
     ArrayList<Contents> contentsList;
 
-    public RecyclerViewAdapterForContentsV2(Context context, ArrayList<Contents> contentsList) {
+    public RecyclerViewAdapterForContentsV2(ArrayList<Contents> contentsList, Context context) {
 
         this.context = context;
         this.contentsList = contentsList;
@@ -69,6 +70,7 @@ public class RecyclerViewAdapterForContentsV2 extends RecyclerView.Adapter<Recyc
         user = FirebaseAuth.getInstance().getCurrentUser();
 
         firestoreManagerForContent =  new FirestoreManager(context, "Content", user.getUid());
+        firestoreManagerForAuctionContent = new FirestoreManager(context, "AuctionContent", user.getUid());
         firestoreManagerForComment =  new FirestoreManager(context, "Comment", user.getUid());
         storageManagerForContent = new StorageManager(context, "image", user.getUid());
     }
@@ -219,7 +221,7 @@ public class RecyclerViewAdapterForContentsV2 extends RecyclerView.Adapter<Recyc
                 });
 
                 Log.w(TAG, "AuctionContent read => " + contentId);
-                firestoreManagerForContent.read("Content", contentId, new Callback() {
+                firestoreManagerForAuctionContent.read("Content", contentId, new Callback() {
                     @Override
                     public void OnCallback(Object object) {
 
@@ -293,7 +295,8 @@ public class RecyclerViewAdapterForContentsV2 extends RecyclerView.Adapter<Recyc
 
     @Override
     public int getItemCount() {
-        return 0;
+
+        return contentsList.size();
     }
 
     public static class ContentViewHolder extends RecyclerView.ViewHolder{

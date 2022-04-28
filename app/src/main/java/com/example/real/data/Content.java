@@ -34,6 +34,8 @@ public class Content extends Data{
         Content = content;
         Uid = uid;
         this.category = category;
+        this.location = location;
+        this.price = price;
     }
 
     public Content(String title, String content, String uid, String time, String category, String location, String price) {
