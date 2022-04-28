@@ -142,7 +142,7 @@ public class MakeContentActivity extends AppCompatActivity {
                     thread = new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            Content content = new Content(editTextTitle.getText().toString(), editTextContent.getText().toString(), user.getUid(), "", "", "");
+                            Content content = new Content(editTextTitle.getText().toString(), editTextContent.getText().toString(), user.getUid(), categoryText.getText().toString(), locationText.getText().toString(), editTextPrice.getText().toString());
                             firestoreManagerForContent.write(content, "Content", new Callback() {
                                 @Override
                                 public void OnCallback(Object object) {
@@ -154,7 +154,7 @@ public class MakeContentActivity extends AppCompatActivity {
                                     for(String s: contentTitle.split(" ")){
                                         stringList.add(s);
                                     }
-                                    Contents contents = new Contents(contentId, contentType, contentTitle, "", stringList);
+                                    Contents contents = new Contents(contentId, contentType, contentTitle, categoryText.getText().toString(), stringList);
                                     firestoreManagerForContents.write(contents, "Contents", content.getTime(), new Callback() {
                                         @Override
                                         public void OnCallback(Object object) {

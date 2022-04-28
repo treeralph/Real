@@ -97,7 +97,7 @@ public class RecyclerViewAdapterForContentsV2 extends RecyclerView.Adapter<Recyc
 
         switch (viewType){
             case contentFlag:
-                return new AuctionContentViewHolder(
+                return new ContentViewHolder(
                         LayoutInflater.from(parent.getContext()).inflate(R.layout.contents_item_for_content, parent, false));
             case auctionContentFlag:
                 return new AuctionContentViewHolder(
