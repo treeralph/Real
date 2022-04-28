@@ -38,6 +38,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.real.adapter.RecyclerViewAdapterForContents;
+import com.example.real.adapter.RecyclerViewAdapterForContentsV2;
 import com.example.real.data.Contents;
 import com.example.real.databasemanager.FirestoreManager;
 import com.example.real.tool.OnSwipeTouchListener;
@@ -88,7 +89,6 @@ public class ContentsActivity extends AppCompatActivity {
 
         } catch(Exception e){
 
-
         }
 
         recyclerView = findViewById(R.id.ContentsActivityRecyclerViewDesign);
@@ -115,7 +115,7 @@ public class ContentsActivity extends AppCompatActivity {
                                     public void OnCallback(Object object) {
                                         ArrayList<Contents> contentsList = (ArrayList<Contents>) object;
                                         Collections.reverse(contentsList);
-                                        RecyclerViewAdapterForContents adapter = new RecyclerViewAdapterForContents(contentsList, ContentsActivity.this);
+                                        RecyclerViewAdapterForContentsV2 adapter = new RecyclerViewAdapterForContentsV2(contentsList, ContentsActivity.this);
                                         recyclerView.setAdapter(adapter);
                                         flag = 0;
                                     }
@@ -129,7 +129,7 @@ public class ContentsActivity extends AppCompatActivity {
                                     @Override
                                     public void OnCallback(Object object) {
                                         ArrayList<Contents> contentsList = (ArrayList<Contents>) object;
-                                        RecyclerViewAdapterForContents adapter = new RecyclerViewAdapterForContents(contentsList, ContentsActivity.this);
+                                        RecyclerViewAdapterForContentsV2 adapter = new RecyclerViewAdapterForContentsV2(contentsList, ContentsActivity.this);
                                         recyclerView.setAdapter(adapter);
                                         flag = 1;
                                     }
@@ -143,7 +143,7 @@ public class ContentsActivity extends AppCompatActivity {
                                     @Override
                                     public void OnCallback(Object object) {
                                         ArrayList<Contents> contentsList = (ArrayList<Contents>) object;
-                                        RecyclerViewAdapterForContents adapter = new RecyclerViewAdapterForContents(contentsList, ContentsActivity.this);
+                                        RecyclerViewAdapterForContentsV2 adapter = new RecyclerViewAdapterForContentsV2(contentsList, ContentsActivity.this);
                                         recyclerView.setAdapter(adapter);
                                         flag = 2;
                                     }
@@ -191,7 +191,7 @@ public class ContentsActivity extends AppCompatActivity {
                     public void OnCallback(Object object) {
                         ArrayList<Contents> contentsList = (ArrayList<Contents>) object;
                         Log.d("NOWTESTNOW", contentsList.toString());
-                        RecyclerViewAdapterForContents adapter = new RecyclerViewAdapterForContents(contentsList, ContentsActivity.this);
+                        RecyclerViewAdapterForContentsV2 adapter = new RecyclerViewAdapterForContentsV2(contentsList, ContentsActivity.this);
                         recyclerView.setAdapter(adapter);
                     }
                 });
@@ -257,7 +257,7 @@ public class ContentsActivity extends AppCompatActivity {
                 ArrayList<Contents> contentsList = (ArrayList<Contents>)object;
                 Collections.reverse(contentsList);
 
-                RecyclerViewAdapterForContents adapter = new RecyclerViewAdapterForContents(contentsList, ContentsActivity.this);
+                RecyclerViewAdapterForContentsV2 adapter = new RecyclerViewAdapterForContentsV2(contentsList, ContentsActivity.this);
                 recyclerView.setAdapter(adapter);
             }
         });
@@ -276,7 +276,7 @@ public class ContentsActivity extends AppCompatActivity {
 
                         Collections.reverse(contentsList);
                         // Actually, we don't clear our dataset but create new adapter with same name
-                        RecyclerViewAdapterForContents adapter = new RecyclerViewAdapterForContents(contentsList, ContentsActivity.this);
+                        RecyclerViewAdapterForContentsV2 adapter = new RecyclerViewAdapterForContentsV2(contentsList, ContentsActivity.this);
                         recyclerView.setAdapter(adapter);
                         swipeRefreshLayout.setRefreshing(false);
                     }
@@ -307,7 +307,7 @@ public class ContentsActivity extends AppCompatActivity {
                         ArrayList<Contents> contentsList = (ArrayList<Contents>)object;
                         Collections.reverse(contentsList);
 
-                        RecyclerViewAdapterForContents adapter = new RecyclerViewAdapterForContents(contentsList, ContentsActivity.this);
+                        RecyclerViewAdapterForContentsV2 adapter = new RecyclerViewAdapterForContentsV2(contentsList, ContentsActivity.this);
                         recyclerView.setAdapter(adapter);
                     }
                 });

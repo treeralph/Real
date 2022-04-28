@@ -35,6 +35,7 @@ import com.example.real.databasemanager.StorageManager;
 import com.example.real.fragment.ImgViewFromGalleryFragment;
 import com.example.real.fragment.MapFragment;
 import com.example.real.tool.CategoryDialog;
+import com.example.real.tool.LocationActivity;
 import com.example.real.tool.LocationDialog;
 import com.example.real.tool.NumberingMachine;
 import com.example.real.tool.SearchTool;
@@ -50,6 +51,8 @@ import java.util.ArrayList;
 public class MakeAuctionContentActivity extends AppCompatActivity {
 
     public static final String TAG = "MakeAuctionContentActivity";
+
+    private final int LocationActivityRequestCode = 8;
 
     CardView MakeContentBtn;
     FrameLayout ChooseImgBtn;
@@ -68,8 +71,6 @@ public class MakeAuctionContentActivity extends AppCompatActivity {
 
     Thread thread;
 
-    MapFragment mapFragment;
-    LocationDialog locationDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,51 +97,12 @@ public class MakeAuctionContentActivity extends AppCompatActivity {
         categoryText = findViewById(R.id.makeAuctionContentCategoryTextView);
         locationText = findViewById(R.id.makeAuctionContentLocationTextView);
 
-        mapFragment = new MapFragment(MakeAuctionContentActivity.this, new Callback() {
-            @Override
-            public void OnCallback(Object object) {
-
-            }
-        }, new Callback() {
-            @Override
-            public void OnCallback(Object object) {
-                View view = (View) object;
-                CardView cardView = view.findViewById(R.id.mapFragmentCheckButton);
-                cardView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        locationText.setText(mapFragment.getFocusAddress());
-                        locationDialog.dismiss();
-                    }
-                });
-            }
-        });
-
         locationText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                locationDialog = new LocationDialog(MakeAuctionContentActivity.this, new Callback() {
-                    @Override
-                    public void OnCallback(Object object) {
-
-                        String address = (String) object;
-                        locationText.setText(address);
-                        locationDialog.dismiss();
-
-                        /*
-                        ViewPager tempViewPager = (ViewPager) object;
-                        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(mapFragment.getChildFragmentManager());
-                        viewPagerAdapter.addItem(mapFragment);
-                        tempViewPager.setAdapter(viewPagerAdapter);
-
-                         */
-                    }
-                });
-                locationDialog.setCanceledOnTouchOutside(true);
-                locationDialog.setCancelable(true);
-                locationDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                locationDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
-                locationDialog.show();
+                // request code = 8;
+                Intent intent = new Intent(MakeAuctionContentActivity.this, LocationActivity.class);
+                startActivityForResult(intent, LocationActivityRequestCode);
             }
         });
 
@@ -313,6 +275,17 @@ public class MakeAuctionContentActivity extends AppCompatActivity {
                     adapter.addItem(fragment);
                     viewPager.setAdapter(adapter);
                 } catch (Exception e) {
+                }
+            }
+        }else if(requestCode == LocationActivityRequestCode){
+            if(resultCode == RESULT_OK){
+                try{
+                    String location = data.getStringExtra("Location");
+                    locationText.setText(location);
+
+
+                } catch(Exception e){
+
                 }
             }
         }

@@ -104,7 +104,7 @@ public class AuctionContent extends Content implements Cloneable{
         datum.put("content", super.getContent());
         datum.put("uid", super.getUid());
         datum.put("time", super.getTime());
-        datum.put("price", Price);
+        datum.put("price", super.getPrice());
         datum.put("priceGap", PriceGap);
         datum.put("auctionUserList", AuctionUserList);
         datum.put("auctionDuration", AuctionDuration);
@@ -113,7 +113,7 @@ public class AuctionContent extends Content implements Cloneable{
         datum.put("autionState", AuctionState);
         datum.put("contentType", ContentType);
         datum.put("category", category);
-        datum.put("location", location);
+        datum.put("location", super.getLocation());
         return datum;
     }
 
