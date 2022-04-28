@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.RelativeLayout;
 
 import com.example.real.Callback;
 import com.example.real.R;
@@ -19,6 +20,7 @@ public class LocationActivity extends AppCompatActivity {
 
     private String TAG = "LocationActivity";
 
+    RelativeLayout relativeLayout;
     ViewPager viewPager;
     ViewPagerAdapter adapter;
 
@@ -30,6 +32,13 @@ public class LocationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location);
 
+        relativeLayout = findViewById(R.id.locationActivityRelativeLayout);
+        relativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         viewPager = findViewById(R.id.locationActivityViewPager);
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
 

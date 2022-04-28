@@ -19,7 +19,8 @@
         android:theme="@style/Theme.AppCompat.NoActionBar">
         <activity
             android:name=".tool.LocationActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Transparent.NoActionBar"/>
         <activity android:name=".PaddleCustomPalleteActivity" />
 
         <meta-data

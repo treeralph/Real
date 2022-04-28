@@ -18,58 +18,92 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:orientation="horizontal"
             android:weightSum="1">
             <EditText
                 android:id="@+id/mapFragmentEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:hint="HI, GUYS"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:textSize="20dp"
                 android:layout_weight="1"
                 android:backgroundTint="@color/black"/>
-            <Button
+
+            <androidx.cardview.widget.CardView
                 android:id="@+id/mapFragmentButton"
-                android:layout_width="wrap_content"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="ENTER"/>
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:padding="10dp"
+                app:contentPadding="10dp"
+                app:cardCornerRadius="20dp"
+                app:cardBackgroundColor="@color/black">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="검 색"
+                    android:textColor="@color/white"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/simplehae"
+                    android:gravity="center"/>
+
+
+            </androidx.cardview.widget.CardView>
+
 
         </LinearLayout>
 
-        <fragment
-            android:id="@+id/mapFragmentNaverMap"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:name="com.naver.maps.map.MapFragment"
-            android:layout_weight="1"/>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/mapFragmentCheckButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="20dp"
-            android:padding="10dp"
-            app:contentPadding="10dp"
-            app:cardCornerRadius="20dp"
-            app:cardBackgroundColor="@color/black">
-            <TextView
+            android:layout_height="match_parent">
+            <fragment
+                android:id="@+id/mapFragmentNaverMap"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="확 인"
-                android:textColor="@color/white"
-                android:textSize="20dp"
-                android:textStyle="bold"
-                android:fontFamily="@font/simplehae"
-                android:gravity="center"/>
+                android:layout_height="match_parent"
+                android:name="com.naver.maps.map.MapFragment"
+                android:layout_weight="1"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/mapFragmentCheckButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="35dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_alignParentBottom="true"
+                    android:padding="10dp"
+                    app:contentPadding="10dp"
+                    app:cardCornerRadius="20dp"
+                    app:cardBackgroundColor="@color/black">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="확 인"
+                        android:textColor="@color/white"
+                        android:textSize="20dp"
+                        android:textStyle="bold"
+                        android:fontFamily="@font/simplehae"
+                        android:gravity="center"/>
 
 
-        </androidx.cardview.widget.CardView>
+                </androidx.cardview.widget.CardView>
+
+            </RelativeLayout>
+
+
+        </FrameLayout>
+
+
     </LinearLayout>
 
 </RelativeLayout>

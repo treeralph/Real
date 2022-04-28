@@ -11,9 +11,11 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -29,6 +31,8 @@ import com.example.real.data.UserProfile;
 import com.example.real.databasemanager.FirestoreManager;
 import com.example.real.databasemanager.StorageManager;
 import com.example.real.fragment.ImgViewFromGalleryFragment;
+import com.example.real.tool.CategoryDialog;
+import com.example.real.tool.LocationActivity;
 import com.example.real.tool.NumberingMachine;
 import com.example.real.tool.SearchTool;
 import com.google.firebase.auth.FirebaseAuth;
@@ -42,6 +46,8 @@ import java.util.ArrayList;
 
 public class MakeContentActivity extends AppCompatActivity {
 
+    private final int LocationActivityRequestCode = 8;
+
     CardView MakeContentBtn;
     FrameLayout ChooseImgBtn;
     EditText editTextTitle;
@@ -50,6 +56,8 @@ public class MakeContentActivity extends AppCompatActivity {
     ViewPagerAdapter adapter;
     FirebaseUser user;
     NumberingMachine numberingMachine;
+    TextView categoryText;
+    TextView locationText;
 
     Thread thread;
     private final int IMGSELECTINTENTREQUESTCODE = 0;
@@ -72,7 +80,35 @@ public class MakeContentActivity extends AppCompatActivity {
         ChooseImgBtn = findViewById(R.id.makeContentImageSelectButtonDesign);
         editTextTitle = findViewById(R.id.makeContentTitleEditTextDesign);
         editTextContent = findViewById(R.id.makeContentDescriptionEditTextDesign);
+        categoryText = findViewById(R.id.makeContentCategoryTextView);
+        locationText = findViewById(R.id.makeContentLocationTextView);
         viewPager = findViewById(R.id.makeContentViewPagerDesign);
+
+        locationText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // request code = 8;
+                Intent intent = new Intent(MakeContentActivity.this, LocationActivity.class);
+                startActivityForResult(intent, LocationActivityRequestCode);
+            }
+        });
+
+        categoryText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CategoryDialog categoryDialog = new CategoryDialog(MakeContentActivity.this, new Callback() {
+                    @Override
+                    public void OnCallback(Object object) {
+                        String category = (String) object;
+                        categoryText.setText(category);
+                    }
+                });
+                categoryDialog.setCanceledOnTouchOutside(true);
+                categoryDialog.setCancelable(true);
+                categoryDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+                categoryDialog.show();
+            }
+        });
 
         ChooseImgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -237,6 +273,17 @@ public class MakeContentActivity extends AppCompatActivity {
                     adapter.addItem(fragment);
                     viewPager.setAdapter(adapter);
                 } catch (Exception e) {
+                }
+            }
+        }else if(requestCode == LocationActivityRequestCode){
+            if(resultCode == RESULT_OK){
+                try{
+                    String location = data.getStringExtra("Location");
+                    locationText.setText(location);
+
+
+                } catch(Exception e){
+
                 }
             }
         }

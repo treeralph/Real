@@ -9,6 +9,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -58,7 +59,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     NaverMap myNaverMap;
     EditText editText;
-    Button button;
+    CardView button;
 
     Handler handler;
     Handler handlerT;

@@ -155,6 +155,10 @@ public class RecyclerViewAdapterForContentsV2 extends RecyclerView.Adapter<Recyc
 
                         TimeTextTool tTT = new TimeTextTool(time);
                         viewHolderForC.contentsTimeTextView.setText(tTT.Time2Text());
+
+                        if(title.length() >= 18){
+                            title = title.substring(0, 18) + "...";
+                        }
                         viewHolderForC.contentsTitleTextView.setText(title);
                         viewHolderForC.contentsPriceTextView.setText(price + "원");
                         viewHolderForC.contentsLocationTextView.setText(location);
@@ -237,6 +241,11 @@ public class RecyclerViewAdapterForContentsV2 extends RecyclerView.Adapter<Recyc
 
                         TimeTextTool tTT = new TimeTextTool(time);
                         viewHolderForAC.contentsTimeTextView.setText(tTT.Time2Text());
+
+                        if(title.length() >= 18){
+                            title = title.substring(0, 18) + "...";
+                        }
+
                         viewHolderForAC.contentsTitleTextView.setText(title);
                         viewHolderForAC.contentsPriceTextView.setText(price + "원");
                         viewHolderForAC.contentsLocationTextView.setText(location);
@@ -248,7 +257,7 @@ public class RecyclerViewAdapterForContentsV2 extends RecyclerView.Adapter<Recyc
                             viewHolderForAC.contentsRemainingTextView.setText("만료된 경매입니다.");
                         } else{ // acquired
                             TimeTextTool tTT_a = new TimeTextTool(auctionEndTime);
-                            viewHolderForAC.contentsRemainingTextView.setText(tTT_a.Time3Text());
+                            viewHolderForAC.contentsRemainingTextView.setText("경매 종료까지 " + tTT_a.Time3Text());
                         }
 
                         // todo: read comment
