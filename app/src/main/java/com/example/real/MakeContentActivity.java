@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -26,13 +25,11 @@ import androidx.viewpager.widget.ViewPager;
 import com.example.real.adapter.ViewPagerAdapter;
 import com.example.real.data.Content;
 import com.example.real.data.Contents;
-import com.example.real.data.LoadingHandler;
 import com.example.real.data.UserProfile;
 import com.example.real.databasemanager.FirestoreManager;
 import com.example.real.databasemanager.StorageManager;
 import com.example.real.fragment.ImgViewFromGalleryFragment;
 import com.example.real.tool.CategoryDialog;
-import com.example.real.tool.LocationActivity;
 import com.example.real.tool.NumberingMachine;
 import com.example.real.tool.SearchTool;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,6 +37,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.naver.maps.geometry.LatLng;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -62,6 +60,8 @@ public class MakeContentActivity extends AppCompatActivity {
 
     Thread thread;
     private final int IMGSELECTINTENTREQUESTCODE = 0;
+
+    String latLng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,7 +142,7 @@ public class MakeContentActivity extends AppCompatActivity {
                     thread = new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            Content content = new Content(editTextTitle.getText().toString(), editTextContent.getText().toString(), user.getUid(), categoryText.getText().toString(), locationText.getText().toString(), editTextPrice.getText().toString());
+                            Content content = new Content(editTextTitle.getText().toString(), editTextContent.getText().toString(), user.getUid(), categoryText.getText().toString(), locationText.getText().toString(), editTextPrice.getText().toString(), latLng);
                             firestoreManagerForContent.write(content, "Content", new Callback() {
                                 @Override
                                 public void OnCallback(Object object) {
@@ -154,7 +154,7 @@ public class MakeContentActivity extends AppCompatActivity {
                                     for(String s: contentTitle.split(" ")){
                                         stringList.add(s);
                                     }
-                                    Contents contents = new Contents(contentId, contentType, contentTitle, categoryText.getText().toString(), stringList);
+                                    Contents contents = new Contents(contentId, contentType, contentTitle, categoryText.getText().toString(), stringList, latLng);
                                     firestoreManagerForContents.write(contents, "Contents", content.getTime(), new Callback() {
                                         @Override
                                         public void OnCallback(Object object) {
@@ -279,6 +279,7 @@ public class MakeContentActivity extends AppCompatActivity {
             if(resultCode == RESULT_OK){
                 try{
                     String location = data.getStringExtra("Location");
+                    latLng = data.getStringExtra("LatLng");
                     locationText.setText(location);
 
 

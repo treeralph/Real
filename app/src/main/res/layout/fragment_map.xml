@@ -97,13 +97,7 @@
 
 
                 </androidx.cardview.widget.CardView>
-
             </RelativeLayout>
-
-
         </FrameLayout>
-
-
     </LinearLayout>
-
 </RelativeLayout>
