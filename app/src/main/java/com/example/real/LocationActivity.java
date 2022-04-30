@@ -1,4 +1,4 @@
-package com.example.real.tool;
+package com.example.real;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -15,6 +15,7 @@ import com.example.real.Callback;
 import com.example.real.R;
 import com.example.real.adapter.ViewPagerAdapter;
 import com.example.real.fragment.MapFragment;
+import com.naver.maps.geometry.LatLng;
 
 public class LocationActivity extends AppCompatActivity {
 
@@ -26,6 +27,7 @@ public class LocationActivity extends AppCompatActivity {
 
     MapFragment mapFragment;
     String location;
+    LatLng latLng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,9 +58,12 @@ public class LocationActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         location = mapFragment.getFocusAddress();
+                        latLng = mapFragment.getFocusLatLng();
 
+                        String stringLatLng = String.valueOf(latLng.latitude) + "," + String.valueOf(latLng.longitude);
                         Intent intent = new Intent();
                         intent.putExtra("Location", location);
+                        intent.putExtra("LatLng", stringLatLng);
                         setResult(RESULT_OK, intent);
                         finish();
                     }

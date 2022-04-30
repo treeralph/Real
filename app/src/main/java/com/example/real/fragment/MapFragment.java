@@ -28,6 +28,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.airbnb.lottie.L;
 import com.example.real.Callback;
 import com.example.real.R;
 import com.example.real.tool.OnSwipeTouchListener;
@@ -72,6 +73,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     MapView mapView;
 
     String focusAddress = "";
+    LatLng focusLatLng = new LatLng(0, 0);
 
     public MapFragment(Context context, Callback callback, Callback callback1) {
         this.context = context;
@@ -182,6 +184,23 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         TextView txtV = view.findViewById(R.id.textViewDesign);
                         txtV.setText(textViewText);
                         focusAddress = textViewText;
+
+                        Thread thread = new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                requestGeocode(focusAddress, new Callback() {
+                                    @Override
+                                    public void OnCallback(Object object) {
+                                        MyCoordinate result = (MyCoordinate) object;
+                                        Tm128 tm128 = new Tm128(result.x, result.y);
+                                        LatLng latLng = tm128.toLatLng();
+                                        focusLatLng = latLng;
+                                    }
+                                });
+                            }
+                        });
+                        thread.start();
+
                         return view;
                     }
                 });
@@ -195,6 +214,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public String getFocusAddress() {
         return focusAddress;
     }
+    public LatLng getFocusLatLng() { return focusLatLng; }
 
     public View getMapView() {
         return mapView;
