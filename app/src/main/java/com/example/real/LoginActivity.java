@@ -175,8 +175,14 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Log.w(TAG, "checkButton is clicked");
                 String phoneNumber = phoneNumberEditText.getText().toString();
-                String refinedPhoneNumber = "+82" + phoneNumber.substring(1);
-                startPhoneNumberVerification(refinedPhoneNumber);
+                if(phoneNumber.length() != 11){
+                    Toast.makeText(LoginActivity.this, "전화번호를 확인해 주세요", Toast.LENGTH_SHORT).show();
+                }
+                else{
+
+                    String refinedPhoneNumber = "+82" + phoneNumber.substring(1);
+                    startPhoneNumberVerification(refinedPhoneNumber);
+                }
             }
         });
 

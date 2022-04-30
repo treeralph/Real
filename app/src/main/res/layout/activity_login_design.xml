@@ -71,7 +71,8 @@
                         android:textColor="@color/black"
                         android:textSize="25dp"
                         android:textStyle="bold"
-                        android:layout_gravity="center"/>
+                        android:layout_gravity="center"
+                        android:inputType="number"/>
 
                     <androidx.cardview.widget.CardView
                         android:id="@+id/loginActivityPhoneNumberCheckButton"

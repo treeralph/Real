@@ -23,7 +23,7 @@
                 android:orientation="vertical">
 
                 <View
-                    android:id="@+id/testView"
+                    android:id="@+id/ContentActivityTransitionView"
                     android:transitionName="testView"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"/>

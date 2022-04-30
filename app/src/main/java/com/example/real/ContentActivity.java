@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.ContentView;
 import androidx.annotation.NonNull;
@@ -105,6 +106,8 @@ public class ContentActivity extends AppCompatActivity {
     LinearLayout ChatRoomBtn;
     LinearLayout ModifyBtn;
 
+    View ContentActivityTransitionView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -134,7 +137,7 @@ public class ContentActivity extends AppCompatActivity {
         ChatRoomBtn = findViewById(R.id.ContentActivityChatRoomButtonnDesign);
         ModifyBtn = findViewById(R.id.ContentActivityModifyBtnDesign);
 
-        View testView = findViewById(R.id.testView);
+        ContentActivityTransitionView = findViewById(R.id.ContentActivityTransitionView);
 
 
 
@@ -188,7 +191,7 @@ public class ContentActivity extends AppCompatActivity {
                 //intent.putExtra("userProfileImageByteArray", byteArray);
 
                 Pair[] pairs = new Pair[1];
-                pairs[0] = new Pair<View, String>(testView, "testView");
+                pairs[0] = new Pair<View, String>(ContentActivityTransitionView, "testView");
                 ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(ContentActivity.this, pairs);
 
                 startActivity(intent, options.toBundle());
@@ -450,6 +453,16 @@ public class ContentActivity extends AppCompatActivity {
 
         List<ExpandableListAdapter.Item> data = new ArrayList<>();
         ExpandableListAdapter expandablelistadapter = new ExpandableListAdapter(data, ContentActivity.this, contentId);
+        expandablelistadapter.setCallbackListener(new Callback() {
+            @Override
+            public void OnCallback(Object object) {
+                ImageView peek = (ImageView) object;
+                Toast.makeText(ContentActivity.this, "asdfsadf", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+
         Comments_Recyclerview.setAdapter(expandablelistadapter);
 
         String Contentuseruid = contentUID;

@@ -45,6 +45,7 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private Context context;
     private String contentid;
     FirebaseUser user;
+    Callback callback;
 
 
     public ExpandableListAdapter(List<Item> data) {
@@ -55,6 +56,10 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         this.data = data;
         this.context = context;
         this.contentid = contentid;
+    }
+
+    public void setCallbackListener(Callback callback){
+        this.callback = callback;
     }
 
 
@@ -122,7 +127,14 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
                 storageManagerForUserProfileImage.downloadImg2View("UserProfileImage", item.from, itemController.header_profile_image, new Callback() {
                     @Override
-                    public void OnCallback(Object object) { }});
+                    public void OnCallback(Object object) {
+                        itemController.header_profile_image.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                callback.OnCallback(itemController.header_profile_image);
+                            }
+                        });
+                    }});
 
                 String asdfgh = new TimeTextTool(item.time).Time2Text();
                 itemController.header_time.setText(asdfgh);
@@ -544,7 +556,14 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 });
                 storageManagerForUserProfileImage.downloadImg2View("UserProfileImage", item.from, itemController2.bachelor_profile_image, new Callback() {
                     @Override
-                    public void OnCallback(Object object) { }});
+                    public void OnCallback(Object object) {
+                        itemController2.bachelor_profile_image.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                callback.OnCallback(itemController2.bachelor_profile_image);
+                            }
+                        });
+                    }});
 
                 String asdf = new TimeTextTool(item.time).Time2Text();
                 itemController2.bachelor_time.setText(asdf);
