@@ -59,75 +59,76 @@ public class FirestoreManager {
 
     DataLambda UserProfileType = dict -> {
         UserProfile userProfile = new UserProfile(
-                (String)dict.get("rating"),
-                (String)dict.get("nickname"),
-                (String)dict.get("registertime"),
-                (String)dict.get("BO"),
-                (String)dict.get("SO"),
-                (String)dict.get("Description"),
-                (String)dict.get("UserLog"),
-                (String)dict.get("DeviceToken"),
+                (String) dict.get("rating"),
+                (String) dict.get("nickname"),
+                (String) dict.get("registertime"),
+                (String) dict.get("BO"),
+                (String) dict.get("SO"),
+                (String) dict.get("Description"),
+                (String) dict.get("UserLog"),
+                (String) dict.get("DeviceToken"),
                 (ArrayList<String>) dict.get("ChattingRoomID"),
-                (String)dict.get("Income"),
-                (String)dict.get("NumContent"),
-                (String)dict.get("Hierarchy"));
+                (String) dict.get("Income"),
+                (String) dict.get("NumContent"),
+                (String) dict.get("Hierarchy"));
         return userProfile;
     };
 
     DataLambda ContentType = dict -> {
         Content content = new Content(
-                (String)dict.get("title"),
-                (String)dict.get("content"),
-                (String)dict.get("uid"),
-                (String)dict.get("time"),
-                (String)dict.get("category"),
-                (String)dict.get("location"),
-                (String)dict.get("price"),
-                (String)dict.get("latLng"));
+                (String) dict.get("title"),
+                (String) dict.get("content"),
+                (String) dict.get("uid"),
+                (String) dict.get("time"),
+                (String) dict.get("category"),
+                (String) dict.get("location"),
+                (String) dict.get("price"),
+                (String) dict.get("latLng"));
         return content;
     };
 
     DataLambda AuctionContentType = dict -> {
         AuctionContent auctionContent = new AuctionContent(
-                (String)dict.get("title"),
-                (String)dict.get("content"),
-                (String)dict.get("uid"),
-                (String)dict.get("price"),
-                (String)dict.get("priceGap"),
-                (String)dict.get("auctionDuration"),
-                (String)dict.get("auctionState"),
+                (String) dict.get("title"),
+                (String) dict.get("content"),
+                (String) dict.get("uid"),
+                (String) dict.get("price"),
+                (String) dict.get("priceGap"),
+                (String) dict.get("auctionDuration"),
+                (String) dict.get("auctionState"),
                 (ArrayList<String>) dict.get("auctionUserList"),
-                (String)dict.get("time"),
-                (String)dict.get("auctionEndTime"),
-                (String)dict.get("category"),
-                (String)dict.get("location"),
-                (String)dict.get("latLng"));
+                (String) dict.get("time"),
+                (String) dict.get("auctionEndTime"),
+                (String) dict.get("category"),
+                (String) dict.get("location"),
+                (String) dict.get("latLng"));
         return auctionContent;
     };
 
     DataLambda ContentsType = dict -> {
         Contents contents = new Contents(
-                (String)dict.get("ContentId"),
-                (String)dict.get("ContentType"),
-                (String)dict.get("ContentTitle"),
-                (String)dict.get("Category"),
+                (String) dict.get("ContentId"),
+                (String) dict.get("ContentType"),
+                (String) dict.get("ContentTitle"),
+                (String) dict.get("Category"),
                 (ArrayList<String>) dict.get("WordCase"),
-                (String)dict.get("latLng"));
+                (String) dict.get("latLng"),
+                (String) dict.get("time"));
         return contents;
     };
 
     DataLambda CommentType = dict -> {
         Comment comment = new Comment(
-                (String)dict.get("From"),
-                (String)dict.get("To"),
-                (String)dict.get("Mention"),
-                (String)dict.get("Time"),
-                (String)dict.get("Recomment_token")
+                (String) dict.get("From"),
+                (String) dict.get("To"),
+                (String) dict.get("Mention"),
+                (String) dict.get("Time"),
+                (String) dict.get("Recomment_token")
         );
         return comment;
     };
 
-    public FirestoreManager(Context context, String dataType, String uid){
+    public FirestoreManager(Context context, String dataType, String uid) {
 
         db = FirebaseFirestore.getInstance();
 
@@ -136,85 +137,85 @@ public class FirestoreManager {
         Uid = uid;
 
         // Type of Data
-        if(dataType.equals("UserProfile")){
+        if (dataType.equals("UserProfile")) {
             CurrentDataType = UserProfileType;
-        } else if(dataType.equals("Content")){
+        } else if (dataType.equals("Content")) {
             CurrentDataType = ContentType;
-        } else if(dataType.equals("AuctionContent")){
+        } else if (dataType.equals("AuctionContent")) {
             CurrentDataType = AuctionContentType;
-        } else if(dataType.equals("Contents")){
+        } else if (dataType.equals("Contents")) {
             CurrentDataType = ContentsType;
-        } else if(dataType.equals("Comment")){
+        } else if (dataType.equals("Comment")) {
             CurrentDataType = CommentType;
-        } else{
+        } else {
             throw new IllegalArgumentException("IllegalArgumentException: " + dataType + " does not exist.");
         }
     }
 
     /*
-    * search method - condition raed
-    * read method - path read
-    * */
+     * search method - condition raed
+     * read method - path read
+     * */
 
 
-    public void update(String collectionPath, String documentPath, String field, Object fieldData, Callback callback){
+    public void update(String collectionPath, String documentPath, String field, Object fieldData, Callback callback) {
         DocumentReference ref = db.document(collectionPath + "/" + documentPath);
         ref.update(field, fieldData)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             Log.d(TAG, "is Successful");
                             callback.OnCallback(ISSUCCESSFUL);
-                        } else{
-                            Log.d(TAG, "Error updating document: ",task.getException());
+                        } else {
+                            Log.d(TAG, "Error updating document: ", task.getException());
                             callback.OnCallback(ISFAILURE);
                         }
                     }
                 });
     }
 
-    public void search(String path, String field, String data, Callback callback){
+    public void search(String path, String field, String data, Callback callback) {
         ArrayList<Data> dataList = new ArrayList<>();
         CollectionReference ref = db.collection(path);
         ref.whereEqualTo(field, data).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()){
-                            for(QueryDocumentSnapshot document : task.getResult()){
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                                 dataList.add(CurrentDataType.Constructor(document.getData()));
                             }
                             callback.OnCallback(dataList);
-                        } else{
-                            Log.d(TAG, "Error getting document: ",task.getException());
+                        } else {
+                            Log.d(TAG, "Error getting document: ", task.getException());
                         }
                     }
                 });
     }
 
-    public void searchIn(String path, String field, ArrayList<String> queryList, Callback callback){
+    public void searchIn(String path, String field, ArrayList<String> queryList, Callback callback) {
         ArrayList<Data> dataList = new ArrayList<>();
         CollectionReference ref = db.collection(path);
         ref.whereArrayContainsAny(field, queryList).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()){
-                            for(QueryDocumentSnapshot document: task.getResult()){
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, "searchIn. " + document.getId() + " => " + document.getData());
                                 dataList.add(CurrentDataType.Constructor(document.getData()));
                             }
                             callback.OnCallback(dataList);
-                        }else{
-                            Log.d(TAG, "searchIn. Error getting document: ",task.getException());
+                        } else {
+                            Log.d(TAG, "searchIn. Error getting document: ", task.getException());
                         }
                     }
                 });
     }
 
-    public void delete(String collectionPath, String documentPath, Callback callback){
+    public void delete(String collectionPath, String documentPath, Callback callback) {
         DocumentReference ref = db.document(collectionPath + "/" + documentPath);
         ref.delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -234,105 +235,128 @@ public class FirestoreManager {
 
 
     // "read" Method is overloaded
-    public void read(String collectionPath, Callback callback){ // CollectionReference - Read more than one
+    public void read(String collectionPath, Callback callback) { // CollectionReference - Read more than one
         ArrayList<Data> dataList = new ArrayList<>();
         CollectionReference ref = db.collection(collectionPath);
         ref.get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()){
-                            for(QueryDocumentSnapshot document : task.getResult()){
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
 
                                 dataList.add(CurrentDataType.Constructor(document.getData()));
                             }
                             callback.OnCallback(dataList);
-                        } else{
-                            Log.d(TAG, "Error getting document: ",task.getException());
+                        } else {
+                            Log.d(TAG, "Error getting document: ", task.getException());
                         }
                     }
                 });
     }
 
-    public void read(String collectionPath, String documentPath, Callback callback){ // DocumentReference - only Read one
+    // "readlimit" read # docs on collection order by time
+    public void readlimit(String collectionPath,int numlimit, Callback callback){
+        ArrayList<Data> dataList = new ArrayList<>();
+        CollectionReference ref = db.collection(collectionPath);
+        ref.orderBy("time", Query.Direction.DESCENDING).limit(numlimit).get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+
+                                dataList.add(CurrentDataType.Constructor(document.getData()));
+                            }
+                            callback.OnCallback(dataList);
+                        } else {
+                            Log.d(TAG, "Error getting document: ", task.getException());
+                        }
+                    }
+                });
+    }
+
+    public void read(String collectionPath, String documentPath, Callback callback) { // DocumentReference - only Read one
         DocumentReference ref = db.document(collectionPath + "/" + documentPath);
         ref.get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if(task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
                             Log.d(TAG, document.getId() + " => " + document.getData());
                             Data datum = CurrentDataType.Constructor(document.getData());
                             callback.OnCallback(datum);
-                        } else{
-                            Log.d(TAG, "Error getting document: ",task.getException());
+                        } else {
+                            Log.d(TAG, "Error getting document: ", task.getException());
                         }
                     }
                 });
     }
-    public void test(String collectionPath, Callback callback){
+
+    public void test(String collectionPath, Callback callback) {
         ArrayList<Data> dataList = new ArrayList<>();
         CollectionReference ref = db.collection(collectionPath);
-        ref.orderBy("time",Query.Direction.DESCENDING).get()
+        ref.orderBy("time", Query.Direction.DESCENDING).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()){
-                            for(QueryDocumentSnapshot document : task.getResult()){
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
 
                                 dataList.add(CurrentDataType.Constructor(document.getData()));
                             }
                             callback.OnCallback(dataList);
-                        } else{
-                            Log.d(TAG, "Error getting document: ",task.getException());
+                        } else {
+                            Log.d(TAG, "Error getting document: ", task.getException());
                         }
                     }
                 });
     }
 
-    public void read(String collectionPath, String documentPath, Callback successCallback, Callback failureCallback){ // DocumentReference - only Read one
+    public void read(String collectionPath, String documentPath, Callback successCallback, Callback failureCallback) { // DocumentReference - only Read one
         DocumentReference ref = db.document(collectionPath + "/" + documentPath);
         ref.get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if(task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
                             Log.d(TAG, document.getId() + " => " + document.getData());
                             if (document.exists()) {
                                 Data datum = CurrentDataType.Constructor(document.getData());
                                 successCallback.OnCallback(datum);
-                            }else{
+                            } else {
                                 failureCallback.OnCallback(null);
                             }
-                        } else{
-                            Log.d(TAG, "Error getting document: ",task.getException());
+                        } else {
+                            Log.d(TAG, "Error getting document: ", task.getException());
                         }
                     }
                 });
     }
 
-    public void readIgnore(String collectionPath, String documentPath, Callback callback){ // DocumentReference - only Read one
+    public void readIgnore(String collectionPath, String documentPath, Callback callback) { // DocumentReference - only Read one
         DocumentReference ref = db.document(collectionPath + "/" + documentPath);
         ref.get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if(task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
                             Log.d(TAG, document.getId() + " => " + document.getData());
                             try {
                                 Data datum = CurrentDataType.Constructor(document.getData());
                                 callback.OnCallback(datum);
-                            } catch(Exception e){
+                            } catch (Exception e) {
                                 e.printStackTrace();
                                 callback.OnCallback(null);
                             }
-                        } else{
-                            Log.d(TAG, "Error getting document: ",task.getException());
+                        } else {
+                            Log.d(TAG, "Error getting document: ", task.getException());
                         }
                     }
                 });
@@ -340,42 +364,42 @@ public class FirestoreManager {
 
 
     // write method is overloaded
-    public void write(Data datum, String path, Callback callback){
+    public void write(Data datum, String path, Callback callback) {
         CollectionReference ref = db.collection(path);
         ref.add(datum.DataOut())
                 .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentReference> task) {
-                        if(task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             Log.d(TAG, task.getResult().getId() + " write Success");
                             callback.OnCallback(task.getResult().getId());
-                        } else{
-                            Log.d(TAG, "Error getting document: ",task.getException());
+                        } else {
+                            Log.d(TAG, "Error getting document: ", task.getException());
                         }
                     }
                 });
     }
 
-    public void write(Data datum, String collectionPath, String documentPath, Callback callback){
+    public void write(Data datum, String collectionPath, String documentPath, Callback callback) {
         DocumentReference ref = db.document(collectionPath + "/" + documentPath);
         ref.set(datum.DataOut())
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             Log.d(TAG, task.getResult() + " write Success");
                             callback.OnCallback(documentPath);
-                        } else{
-                            Log.d(TAG, "Error getting document: ",task.getException());
+                        } else {
+                            Log.d(TAG, "Error getting document: ", task.getException());
                         }
                     }
-        });
+                });
     }
 
-    public void transactionUpdate(List<Object> newFieldData, String collectionPath, String documentPath, List<String> fieldPath, Callback callback1, Callback callback2){
+    public void transactionUpdate(List<Object> newFieldData, String collectionPath, String documentPath, List<String> fieldPath, Callback callback1, Callback callback2) {
 
-        Map<String,Object> temp = new HashMap<>();
-        for (int i =0;i< newFieldData.size(); i++){
+        Map<String, Object> temp = new HashMap<>();
+        for (int i = 0; i < newFieldData.size(); i++) {
             temp.put(fieldPath.get(i), newFieldData.get(i));
         }
         DocumentReference ref = db.document(collectionPath + "/" + documentPath);

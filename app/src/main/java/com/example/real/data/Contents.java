@@ -14,15 +14,17 @@ public class Contents extends Data{
     private String Category;
     private ArrayList<String> wordCase;
     private String latLng;
+    private String time;
 
 
-    public Contents(String contentId, String contentType, String contentTitle, String category, ArrayList<String> wordCase, String latLng){
+    public Contents(String contentId, String contentType, String contentTitle, String category, ArrayList<String> wordCase, String latLng, String time){
         ContentId = contentId;
         ContentType = contentType;
         ContentTitle = contentTitle;
         Category = category;
         this.wordCase = wordCase;
         this.latLng = latLng;
+        this.time = time;
     }
 
     @Override
@@ -34,6 +36,7 @@ public class Contents extends Data{
         datum.put("Category", Category);
         datum.put("WordCase", wordCase);
         datum.put("latLng", latLng);
+        datum.put("time", time);
         return datum;
     }
 
@@ -75,5 +78,13 @@ public class Contents extends Data{
 
     public void setCategory(String category) {
         Category = category;
+    }
+
+    public String getLatLng() {
+        return latLng;
+    }
+
+    public String getTime() {
+        return time;
     }
 }

@@ -174,8 +174,8 @@ public class MakeAuctionContentActivity extends AppCompatActivity {
                                         stringList.add(s);
                                     }
                                     //
-                                    Contents contents = new Contents(contentId, contentType, contentTitle, categoryText.getText().toString(), searchTool.makeCase(stringList), latLng);
-                                    firestoreManagerForContents.write(contents, "Contents", auctionContent.getTime(), new Callback() {
+                                    Contents contents = new Contents(contentId, contentType, contentTitle, categoryText.getText().toString(), searchTool.makeCase(stringList), latLng, auctionContent.getTime());
+                                    firestoreManagerForContents.write(contents, "Contents", contentId, new Callback() {
                                         @Override
                                         public void OnCallback(Object object) {
                                             // image
