@@ -154,7 +154,7 @@ public class MakeContentActivity extends AppCompatActivity {
                                     for(String s: contentTitle.split(" ")){
                                         stringList.add(s);
                                     }
-                                    Contents contents = new Contents(contentId, contentType, contentTitle, categoryText.getText().toString(), stringList, latLng);
+                                    Contents contents = new Contents(contentId, contentType, contentTitle, categoryText.getText().toString(), searchTool.makeCase(stringList), latLng);
                                     firestoreManagerForContents.write(contents, "Contents", content.getTime(), new Callback() {
                                         @Override
                                         public void OnCallback(Object object) {

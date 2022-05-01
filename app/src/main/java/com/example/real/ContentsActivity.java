@@ -28,6 +28,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -180,21 +181,28 @@ public class ContentsActivity extends AppCompatActivity {
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ArrayList<String> searchArray = new ArrayList<>();
-                String[] searchWordList = searchText.getText().toString().split(" ");
-                for(String s: searchWordList){
-                    searchArray.add(s);
-                }
-                Log.d("NOWTESTNOW", searchArray.toString());
-                manager.searchIn("/Contents", "WordCase", searchArray, new Callback() {
-                    @Override
-                    public void OnCallback(Object object) {
-                        ArrayList<Contents> contentsList = (ArrayList<Contents>) object;
-                        Log.d("NOWTESTNOW", contentsList.toString());
-                        RecyclerViewAdapterForContentsV2 adapter = new RecyclerViewAdapterForContentsV2(contentsList, ContentsActivity.this);
-                        recyclerView.setAdapter(adapter);
+                if(searchText.getText().toString().length() != 0){
+                    ArrayList<String> searchArray = new ArrayList<>();
+                    String[] searchWordList = searchText.getText().toString().split(" ");
+                    for(String s: searchWordList){
+                        searchArray.add(s);
                     }
-                });
+                    Log.d("NOWTESTNOW", searchArray.toString());
+                    manager.searchIn("/Contents", "WordCase", searchArray, new Callback() {
+                        @Override
+                        public void OnCallback(Object object) {
+                            ArrayList<Contents> contentsList = (ArrayList<Contents>) object;
+                            Log.d("NOWTESTNOW", contentsList.toString());
+                            RecyclerViewAdapterForContentsV2 adapter = new RecyclerViewAdapterForContentsV2(contentsList, ContentsActivity.this);
+                            recyclerView.setAdapter(adapter);
+                            if(contentsList.size() == 0){
+                                Toast.makeText(ContentsActivity.this, "There is no result matching for " + searchText.getText().toString()
+                                        , Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
+
             }
         });
 
@@ -267,6 +275,7 @@ public class ContentsActivity extends AppCompatActivity {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                //recyclerView.setVisibility(View.VISIBLE);
                 // Set category
                 // Clear & refresh Dataset
                 manager.read("Contents", new Callback() {
