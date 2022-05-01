@@ -181,10 +181,10 @@ public class ContentActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Bitmap bitmap = ((BitmapDrawable) ContentUserProfileImgImageView.getDrawable()).getBitmap();
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                byte[] byteArray = stream.toByteArray();
+                //Bitmap bitmap = ((BitmapDrawable) ContentUserProfileImgImageView.getDrawable()).getBitmap();
+                //ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                //bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                //byte[] byteArray = stream.toByteArray();
 
                 Intent intent = new Intent(ContentActivity.this, PeekUserProfileActivity.class);
                 intent.putExtra("userProfileUID", contentUID);
@@ -453,13 +453,7 @@ public class ContentActivity extends AppCompatActivity {
 
         List<ExpandableListAdapter.Item> data = new ArrayList<>();
         ExpandableListAdapter expandablelistadapter = new ExpandableListAdapter(data, ContentActivity.this, contentId);
-        expandablelistadapter.setCallbackListener(new Callback() {
-            @Override
-            public void OnCallback(Object object) {
-                ImageView peek = (ImageView) object;
-                Toast.makeText(ContentActivity.this, "asdfsadf", Toast.LENGTH_SHORT).show();
-            }
-        });
+
 
 
 

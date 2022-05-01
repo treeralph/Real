@@ -1,8 +1,14 @@
 package com.example.real.adapter;
 
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,11 +19,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.real.Callback;
+import com.example.real.ContentActivity;
+import com.example.real.PeekUserProfileActivity;
 import com.example.real.R;
 import com.example.real.RecommentActivity;
 import com.example.real.data.Comment;
@@ -31,6 +40,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -45,7 +55,6 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private Context context;
     private String contentid;
     FirebaseUser user;
-    Callback callback;
 
 
     public ExpandableListAdapter(List<Item> data) {
@@ -58,9 +67,6 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         this.contentid = contentid;
     }
 
-    public void setCallbackListener(Callback callback){
-        this.callback = callback;
-    }
 
 
     // XML 연결
@@ -131,7 +137,25 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         itemController.header_profile_image.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                callback.OnCallback(itemController.header_profile_image);
+
+                                Intent intent = new Intent(context, PeekUserProfileActivity.class);
+                                intent.putExtra("userProfileUID", item.from);
+                                //intent.putExtra("userProfileImageByteArray", byteArray);
+
+                                Pair[] pairs = new Pair[1];
+                                try{
+                                    pairs[0] = new Pair<View, String>(((Activity) (context)).findViewById(R.id.ContentActivityTransitionView), "testView");
+
+                                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, pairs);
+                                    context.startActivity(intent, options.toBundle());
+                                    ((Activity) (context)).overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                                }catch (Exception e){
+                                    pairs[0] = new Pair<View, String>(((Activity) (context)).findViewById(R.id.AuctionContentActivityTransitionView), "testView");
+
+                                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, pairs);
+                                    context.startActivity(intent, options.toBundle());
+                                    ((Activity) (context)).overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                                }
                             }
                         });
                     }});
@@ -339,7 +363,33 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                 });
                 storageManagerForUserProfileImage.downloadImg2View("UserProfileImage", item.from, itemController1.child_profile_image, new Callback() {
                     @Override
-                    public void OnCallback(Object object) { }});
+                    public void OnCallback(Object object) {
+                        itemController1.child_profile_image.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+
+                                Intent intent = new Intent(context, PeekUserProfileActivity.class);
+                                intent.putExtra("userProfileUID", item.from);
+                                //intent.putExtra("userProfileImageByteArray", byteArray);
+
+                                Pair[] pairs = new Pair[1];
+                                try{
+                                    pairs[0] = new Pair<View, String>(((Activity) (context)).findViewById(R.id.ContentActivityTransitionView), "testView");
+
+                                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, pairs);
+                                    context.startActivity(intent, options.toBundle());
+                                    ((Activity) (context)).overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                                }catch (Exception e){
+                                    pairs[0] = new Pair<View, String>(((Activity) (context)).findViewById(R.id.AuctionContentActivityTransitionView), "testView");
+
+                                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, pairs);
+                                    context.startActivity(intent, options.toBundle());
+                                    ((Activity) (context)).overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                                }
+                            }
+                        });
+                    }});
 
                 String asdfg = new TimeTextTool(item.time).Time2Text();
                 itemController1.child_time.setText(asdfg);
@@ -560,7 +610,25 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                         itemController2.bachelor_profile_image.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                callback.OnCallback(itemController2.bachelor_profile_image);
+
+                                Intent intent = new Intent(context, PeekUserProfileActivity.class);
+                                intent.putExtra("userProfileUID", item.from);
+                                //intent.putExtra("userProfileImageByteArray", byteArray);
+
+                                Pair[] pairs = new Pair[1];
+                                try{
+                                    pairs[0] = new Pair<View, String>(((Activity) (context)).findViewById(R.id.ContentActivityTransitionView), "testView");
+
+                                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, pairs);
+                                    context.startActivity(intent, options.toBundle());
+                                    ((Activity) (context)).overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                                }catch (Exception e){
+                                    pairs[0] = new Pair<View, String>(((Activity) (context)).findViewById(R.id.AuctionContentActivityTransitionView), "testView");
+
+                                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, pairs);
+                                    context.startActivity(intent, options.toBundle());
+                                    ((Activity) (context)).overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                                }
                             }
                         });
                     }});

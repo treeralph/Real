@@ -1,8 +1,11 @@
 package com.example.real.adapter;
 
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +18,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.real.Callback;
+import com.example.real.PeekUserProfileActivity;
 import com.example.real.R;
 import com.example.real.RecommentActivity;
 import com.example.real.data.Comment;
@@ -113,7 +117,24 @@ public class ExpAdapterForAuctionContent extends RecyclerView.Adapter<RecyclerVi
 
                 storageManagerForUserProfileImage.downloadImg2View("UserProfileImage", item.from, itemController.header_profile_image, new Callback() {
                     @Override
-                    public void OnCallback(Object object) { }});
+                    public void OnCallback(Object object) {
+                        itemController.header_profile_image.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                Intent intent = new Intent(context, PeekUserProfileActivity.class);
+                                intent.putExtra("userProfileUID", item.from);
+                                //intent.putExtra("userProfileImageByteArray", byteArray);
+
+                                Pair[] pairs = new Pair[1];
+                                pairs[0] = new Pair<View, String>(((Activity) (context)).findViewById(R.id.AuctionContentActivityTransitionView), "testView");
+                                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, pairs);
+
+                                context.startActivity(intent, options.toBundle());
+                                ((Activity) (context)).overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                            }
+                        });
+                    }});
 
                 String asdfgh = new TimeTextTool(item.time).Time2Text();
                 itemController.header_time.setText(asdfgh);
@@ -214,7 +235,24 @@ public class ExpAdapterForAuctionContent extends RecyclerView.Adapter<RecyclerVi
                 });
                 storageManagerForUserProfileImage.downloadImg2View("UserProfileImage", item.from, itemController1.child_profile_image, new Callback() {
                     @Override
-                    public void OnCallback(Object object) { }});
+                    public void OnCallback(Object object) {
+                        itemController1.child_profile_image.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                Intent intent = new Intent(context, PeekUserProfileActivity.class);
+                                intent.putExtra("userProfileUID", item.from);
+                                //intent.putExtra("userProfileImageByteArray", byteArray);
+
+                                Pair[] pairs = new Pair[1];
+                                pairs[0] = new Pair<View, String>(((Activity) (context)).findViewById(R.id.AuctionContentActivityTransitionView), "testView");
+                                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, pairs);
+
+                                context.startActivity(intent, options.toBundle());
+                                ((Activity) (context)).overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                            }
+                        });
+                    }});
 
                 String asdfg = new TimeTextTool(item.time).Time2Text();
                 itemController1.child_time.setText(asdfg);
@@ -319,7 +357,24 @@ public class ExpAdapterForAuctionContent extends RecyclerView.Adapter<RecyclerVi
                 });
                 storageManagerForUserProfileImage.downloadImg2View("UserProfileImage", item.from, itemController2.bachelor_profile_image, new Callback() {
                     @Override
-                    public void OnCallback(Object object) { }});
+                    public void OnCallback(Object object) {
+                        itemController2.bachelor_profile_image.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                Intent intent = new Intent(context, PeekUserProfileActivity.class);
+                                intent.putExtra("userProfileUID", item.from);
+                                //intent.putExtra("userProfileImageByteArray", byteArray);
+
+                                Pair[] pairs = new Pair[1];
+                                pairs[0] = new Pair<View, String>(((Activity) (context)).findViewById(R.id.AuctionContentActivityTransitionView), "testView");
+                                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation((Activity) context, pairs);
+
+                                context.startActivity(intent, options.toBundle());
+                                ((Activity) (context)).overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+                            }
+                        });
+                    }});
 
                 String asdf = new TimeTextTool(item.time).Time2Text();
                 itemController2.bachelor_time.setText(asdf);

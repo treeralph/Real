@@ -4,17 +4,20 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Path;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -57,6 +60,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import java.io.ByteArrayOutputStream;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -211,6 +215,28 @@ public class AuctionContentActivity extends AppCompatActivity {
                 intent.putExtra("ContentUID", contentUID);
                 intent.putExtra("ContentTime", contentTime);
                 startActivityForResult(intent, 0);
+            }
+        });
+
+        AuctionContentUserProfileImgImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //Bitmap bitmap = ((BitmapDrawable) AuctionContentUserProfileImgImageView.getDrawable()).getBitmap();
+                //ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                //bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                //byte[] byteArray = stream.toByteArray();
+
+                Intent intent = new Intent(AuctionContentActivity.this, PeekUserProfileActivity.class);
+                intent.putExtra("userProfileUID", contentUID);
+                //intent.putExtra("userProfileImageByteArray", byteArray);
+
+                Pair[] pairs = new Pair[1];
+                pairs[0] = new Pair<View, String>(AuctionContentUserProfileImgImageView, "testView");
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(AuctionContentActivity.this, pairs);
+
+                startActivity(intent, options.toBundle());
+                overridePendingTransition(R.anim.fadein, R.anim.fadeout);
             }
         });
 
