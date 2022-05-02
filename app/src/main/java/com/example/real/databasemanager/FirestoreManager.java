@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 
 import com.example.real.AuctionContentActivity;
 import com.example.real.Callback;
+import com.example.real.Callback2;
 import com.example.real.data.AuctionContent;
 import com.example.real.data.Comment;
 import com.example.real.data.Content;
@@ -281,19 +282,23 @@ public class FirestoreManager {
                     }
                 });
     }
-    public void readPagination(String collectionPath, @Nullable String latestitemid, int numlimit, Callback InitialCallback, Callback PaginateCallback){
+    public void readPagination(String collectionPath, @Nullable DocumentSnapshot latestdocument, int numlimit, @Nullable Callback2 InitialCallback, @Nullable Callback2 PaginateCallback){
+        // latestitemid = contents.getcontentid
         ArrayList<Data> dataList = new ArrayList<>();
         CollectionReference ref = db.collection(collectionPath);
-        if(latestitemid == null || latestitemid.equals("")){
-            ref.limitToLast(numlimit).orderBy("time").addSnapshotListener(new EventListener<QuerySnapshot>() {
+        if(latestdocument == null || !latestdocument.exists()){
+            ref.limitToLast(numlimit).orderBy("time").
+                    addSnapshotListener(new EventListener<QuerySnapshot>() {
                 @Override
                 public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                     if(!value.isEmpty()){
                         for(DocumentSnapshot document : value.getDocuments()){
                             Log.d(TAG, document.getId() + " => " + document.getData());
-                            dataList.add(CurrentDataType.Constructor(document.getData()));
+                            dataList.add(0,CurrentDataType.Constructor(document.getData()));
                         }
-                        InitialCallback.OnCallback(dataList);
+                        DocumentSnapshot finaldoc = value.getDocuments().get(0);
+                        Log.d(TAG, " # " + dataList.size());
+                        InitialCallback.OnCallback(dataList,finaldoc);
                     }else{
                         Log.d(TAG, "Error getting document: ", error);
                     }
@@ -301,7 +306,22 @@ public class FirestoreManager {
             });
         }
         else{
-
+            ref.orderBy("time").limitToLast(numlimit).endBefore(latestdocument).
+                    addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                            if(!value.isEmpty()){
+                                for(DocumentSnapshot document : value.getDocuments()){
+                                    Log.d(TAG, document.getId() + " => " + document.getData());
+                                    dataList.add(0,CurrentDataType.Constructor(document.getData()));
+                                }
+                                DocumentSnapshot finaldoc = value.getDocuments().get(0);
+                                PaginateCallback.OnCallback(dataList,finaldoc);
+                            }else{
+                                Log.d(TAG, "Error getting document: ", error);
+                            }
+                        }
+                    });
         }
     }
 

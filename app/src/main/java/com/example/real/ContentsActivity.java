@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -48,6 +49,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.api.Distribution;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
@@ -70,6 +72,14 @@ public class ContentsActivity extends AppCompatActivity {
     EditText searchText;
     ImageView searchBtn;
     ImageView searchAdditionalBtn;
+
+    ArrayList<Contents> ContentsList;
+    DocumentSnapshot LatestDocForPaginate;
+    RecyclerViewAdapterForContentsV2 adapter;
+
+
+
+
 
     int flag = 0;
     int expiredFlag = 0; // 만료되지 않은 자료만 보기
@@ -272,21 +282,42 @@ public class ContentsActivity extends AppCompatActivity {
         });
 
          */
-        manager.readPagination("Contents", null, 3, new Callback() {
+        ContentsList = new ArrayList<>();
+        adapter = new RecyclerViewAdapterForContentsV2(ContentsList, ContentsActivity.this);
+        manager.readPagination("Contents", null, 3, new Callback2() {
             @Override
-            public void OnCallback(Object object) {
-                ArrayList<Contents> contentsList = (ArrayList<Contents>)object;
+            public void OnCallback(Object object1, Object object2) {
+                ArrayList<Contents> templist = (ArrayList<Contents>) object1;
                 //Collections.reverse(contentsList);
-
-                RecyclerViewAdapterForContentsV2 adapter = new RecyclerViewAdapterForContentsV2(contentsList, ContentsActivity.this);
+                LatestDocForPaginate = (DocumentSnapshot) object2;
+                Log.d("#temp",String.valueOf(templist.size()));
+                ContentsList.addAll(templist);
+                adapter.notifyDataSetChanged();
                 recyclerView.setAdapter(adapter);
             }
-        }, new Callback() {
-            @Override
-            public void OnCallback(Object object) {
+        }, null);
 
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if(!recyclerView.canScrollVertically(1)) {
+                    manager.readPagination("Contents", LatestDocForPaginate, 3, null, new Callback2() {
+                        @Override
+                        public void OnCallback(Object object1, Object object2) {
+                            ArrayList<Contents> templist = (ArrayList<Contents>) object1;
+                            LatestDocForPaginate = (DocumentSnapshot) object2;
+                            Log.d("LatestPaginate",LatestDocForPaginate.getId());
+
+                            ContentsList.addAll(templist);
+                            adapter.notifyDataSetChanged();
+
+                        }
+                    });
+                }
             }
         });
+
 
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
