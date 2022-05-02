@@ -21,10 +21,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -32,6 +35,7 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.Transaction;
+import com.google.firestore.v1.Document;
 import com.google.firestore.v1.StructuredQuery;
 import com.google.firestore.v1.TransactionOptions;
 import com.google.firestore.v1.TransactionOptionsOrBuilder;
@@ -276,6 +280,29 @@ public class FirestoreManager {
                         }
                     }
                 });
+    }
+    public void readPagination(String collectionPath, @Nullable String latestitemid, int numlimit, Callback InitialCallback, Callback PaginateCallback){
+        ArrayList<Data> dataList = new ArrayList<>();
+        CollectionReference ref = db.collection(collectionPath);
+        if(latestitemid == null || latestitemid.equals("")){
+            ref.limitToLast(numlimit).orderBy("time").addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                    if(!value.isEmpty()){
+                        for(DocumentSnapshot document : value.getDocuments()){
+                            Log.d(TAG, document.getId() + " => " + document.getData());
+                            dataList.add(CurrentDataType.Constructor(document.getData()));
+                        }
+                        InitialCallback.OnCallback(dataList);
+                    }else{
+                        Log.d(TAG, "Error getting document: ", error);
+                    }
+                }
+            });
+        }
+        else{
+
+        }
     }
 
     public void read(String collectionPath, String documentPath, Callback callback) { // DocumentReference - only Read one

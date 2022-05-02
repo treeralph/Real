@@ -259,6 +259,7 @@ public class ContentsActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
 
         //FirestoreManager manager = new FirestoreManager(ContentsActivity.this, "Contents", user.getUid());
+        /*
         manager.readlimit("Contents",3, new Callback() {
             @Override
             public void OnCallback(Object object) {
@@ -270,6 +271,22 @@ public class ContentsActivity extends AppCompatActivity {
             }
         });
 
+         */
+        manager.readPagination("Contents", null, 3, new Callback() {
+            @Override
+            public void OnCallback(Object object) {
+                ArrayList<Contents> contentsList = (ArrayList<Contents>)object;
+                //Collections.reverse(contentsList);
+
+                RecyclerViewAdapterForContentsV2 adapter = new RecyclerViewAdapterForContentsV2(contentsList, ContentsActivity.this);
+                recyclerView.setAdapter(adapter);
+            }
+        }, new Callback() {
+            @Override
+            public void OnCallback(Object object) {
+
+            }
+        });
 
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
