@@ -102,9 +102,12 @@ public class RecyclerViewAdapterForHistory extends RecyclerView.Adapter<Recycler
 
             Log.d("TRACKING4", Address);
             return 4;
+        } else if(DatumSplit[0].equals("Earned")){
+            Log.d("TRACKING5", Address);
+            return 5;
         } else{
             // error
-            return 5;
+            return 100;
         }
     }
 
@@ -128,6 +131,10 @@ public class RecyclerViewAdapterForHistory extends RecyclerView.Adapter<Recycler
             case 4:
                 return new ContentViewHolder(
                         LayoutInflater.from(parent.getContext()).inflate(R.layout.logitem_for_content, parent, false));
+            case 5:
+                return new AuctionContentViewHolder(
+                        LayoutInflater.from(parent.getContext()).inflate(R.layout.logitem_for_auctioncontent, parent, false));
+
             default: return null;
         }
     }
@@ -330,6 +337,44 @@ public class RecyclerViewAdapterForHistory extends RecyclerView.Adapter<Recycler
                     }
                 });
                 break;
+            case 5:
+                AuctionContentViewHolder earnedholder = (AuctionContentViewHolder)holder;
+                if(address.equals("DELETEDITEM_FLAG/DELETEDITEM_FLAG")){
+                    earnedholder.logitemforauctioncontent_AuctionContentTitle.setText("DELETED ITEM");
+                    earnedholder.logitemforauctioncontent_AuctionContentDescription.setText(datumSplit[2]);
+                }
+                else{
+                    storageManagerForContent.downloadImg2View( "image/"+ contentId + "/100/0", earnedholder.logitemforauctioncontent_AuctionContentImg, new Callback() {
+                        @Override
+                        public void OnCallback(Object object) {
+                            firestoreManagerForAuctionContent.read(datumType, contentId, new Callback() {
+                                @Override
+                                public void OnCallback(Object object) {
+                                    System.out.println(datumType);
+                                    AuctionContent auctionContent = (AuctionContent) object;
+                                    TimeTextTool timeTextTool = new TimeTextTool(auctionContent.getTime());
+                                    earnedholder.logitemforauctioncontent_AuctionContentTitle.setText(auctionContent.getTitle());
+                                    earnedholder.logitemforauctioncontent_AuctionContentDescription.setText(datumSplit[2]);
+                                    earnedholder.logitemforauctioncontent_AuctionContentTime.setText(timeTextTool.Time2Text());
+                                }
+                            });
+                        }
+                    });
+                    earnedholder.logitemforauctioncontent_Mainlayout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Bitmap bitmap = ((BitmapDrawable) earnedholder.logitemforauctioncontent_AuctionContentImg.getDrawable()).getBitmap();
+                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                            byte[] byteArray = stream.toByteArray();
+                            Intent intent = new Intent(context, AuctionContentActivity.class);
+                            intent.putExtra("ContentId", contentId);
+                            intent.putExtra("ImageBitmap", byteArray);
+
+                            context.startActivity(intent);
+                        }
+                    });
+                }
             default:
                 Log.e("RECYCLERVIEWADAPTERFORHISTORY_ONBINDVIEWHOLDER", "NON_CASE_ERROR");
         }

@@ -63,6 +63,7 @@ public class UserhistoryActivity extends AppCompatActivity {
     int NUM_CONTENTS;
     int NUM_COMMENTS;
     int NUM_LOVERS;
+    int NUM_EARNED;
     ActivityResultLauncher<Intent> resultLauncher;
     FirebaseStorage tempstorage;
     StorageReference tempref;
@@ -82,9 +83,10 @@ public class UserhistoryActivity extends AppCompatActivity {
         TextView NumContents = (TextView) findViewById(R.id.UserhistoryNumContents);
         TextView NumComments = (TextView) findViewById(R.id.UserhistoryNumComments);
         TextView NUMLovers = (TextView) findViewById(R.id.UserhistoryNumLovers);
+        TextView NumEarned = (TextView) findViewById(R.id.UserhistoryNumEarned); 
 
         LinearLayout ContentsBtn = (LinearLayout) findViewById(R.id.UserhistoryBtnContents);
-        LinearLayout AuctionContentsBtn = (LinearLayout) findViewById(R.id.UserhistoryBtnAuctionContents);
+        LinearLayout EarnedBtn = (LinearLayout) findViewById(R.id.UserhistoryBtnEarned);
         LinearLayout CommentsBtn = (LinearLayout) findViewById(R.id.UserhistoryBtnComments);
         LinearLayout LoversBtn = (LinearLayout) findViewById(R.id.UserhistoryBtnLovers);
 
@@ -136,12 +138,18 @@ public class UserhistoryActivity extends AppCompatActivity {
         });
 
         //
+        List<String> LIST_Earned = new ArrayList<>();
+        
         List<String> LIST_Contents = new ArrayList<>();
         List<String> LIST_Auctioncontents = new ArrayList<>();
+        List<String> LIST_ContentsMerged = new ArrayList<>();
+        
         List<String> LIST_Comments = new ArrayList<>();
-        List<String> LIST_DATASET = new ArrayList<>();
 
         List<String> LIST_LOVERS = new ArrayList<>();
+        
+        List<String> LIST_DATASET = new ArrayList<>();
+
 
 
         RecyclerViewAdapterForHistory AdapterForHistory = new RecyclerViewAdapterForHistory(LIST_DATASET, UserhistoryActivity.this);
@@ -167,6 +175,8 @@ public class UserhistoryActivity extends AppCompatActivity {
                     // DISCRIMINATING USERLOG
                     NUM_CONTENTS = 0;
                     NUM_COMMENTS = 0;
+                    NUM_LOVERS = 0;
+                    NUM_EARNED = 0;
 
                     for (JsonElement shard : templog) {
                         String shardtype = shard.getAsJsonObject().get("Type").getAsString();
@@ -180,6 +190,7 @@ public class UserhistoryActivity extends AppCompatActivity {
                                     if(object != null) {
                                         NUM_CONTENTS++;
                                         LIST_Contents.add(shardtype + "#" + shardaddress);
+                                        LIST_ContentsMerged.add(shardtype + "#" + shardaddress);
                                         NumContents.setText(String.valueOf(NUM_CONTENTS));
                                     }
                                 }
@@ -190,7 +201,10 @@ public class UserhistoryActivity extends AppCompatActivity {
                                 @Override
                                 public void OnCallback(Object object) {
                                     if(object != null) {
+                                        NUM_CONTENTS++;
                                         LIST_Auctioncontents.add(shardtype + "#" + shardaddress);
+                                        LIST_ContentsMerged.add(shardtype + "#" + shardaddress);
+                                        NumContents.setText(String.valueOf(NUM_CONTENTS));
                                     }
                                 }
                             });
@@ -216,16 +230,44 @@ public class UserhistoryActivity extends AppCompatActivity {
                                 @Override
                                 public void OnCallback(Object object) {
                                     if(object != null) {
+                                        NUM_LOVERS++;
                                         LIST_LOVERS.add(shardtype + "#" + shardaddress);
+                                        NUMLovers.setText(String.valueOf(NUM_LOVERS));
                                         //recyclerView2.setAdapter(AdapterForLover);
                                     }
                                 }
                             });
-                        }else{}
+                        } else if (shardtype.equals("Earned")){
+                            //,{"Type":"Earned","Address":"Content/asdf","Price":"1000"}
+                            firestoreManagerForUserProfile.readIgnore(shardaddress.split("/")[0], shardaddress.split("/")[1], new Callback() {
+                                @Override
+                                public void OnCallback(Object object) {
+                                    if(object != null){
+                                        String shardprice = shard.getAsJsonObject().get("Price").getAsString();
+                                        NUM_EARNED = NUM_EARNED + Integer.parseInt(shardprice);
+                                        LIST_Earned.add(shardtype + "#" + shardaddress + "#"+ shardprice);
+                                        NumEarned.setText(String.valueOf(NUM_EARNED));
+                                    }else{
+                                        // NOTICE USER " UR EARNED DATA IS DELELTED FOR SOME REASON "
+                                        String shardprice = shard.getAsJsonObject().get("Price").getAsString();
+                                        NUM_EARNED = NUM_EARNED + Integer.parseInt(shardprice);
+                                        LIST_Earned.add(shardtype + "#" + "DELETEDITEM_FLAG/DELETEDITEM_FLAG" + "#"+ shardprice);
+                                        NumEarned.setText(String.valueOf(NUM_EARNED));
+                                        // AND THEN JUST ENTER PRICE INFO
+                                    }
+                                }
+                            });
+                            // Extenstion needed for Earning Case...
+                            // Like, if shardtye.eq("earned") , then readIgnore...
+                            
+                        }
+                        else{
+                        }
 
                     }
                     NumContents.setText(String.valueOf(NUM_CONTENTS));
                     NumComments.setText(String.valueOf(NUM_COMMENTS));
+                    NUMLovers.setText(String.valueOf(NUM_LOVERS));
                     //"Address":"Content/MfnsDaivaiyedaOpTxdp/Comments/20220110163124295"}
                 } catch(Exception e){
                     e.printStackTrace();
@@ -248,12 +290,32 @@ public class UserhistoryActivity extends AppCompatActivity {
             }
         });
 
+        EarnedBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (LIST_DATASET.equals(LIST_Earned)){
+                    LIST_DATASET.clear();
+                    AdapterForHistory.notifyDataSetChanged();
+                    recyclerView.setAdapter(AdapterForHistory);
+                    EarnedBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.white));
+                }else{
+                    ContentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.white));
+                    CommentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.white));
+                    EarnedBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.grey1));
+                    LoversBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.white));
+                    LIST_DATASET.clear();
+                    LIST_DATASET.addAll(LIST_Earned);
+                    AdapterForHistory.notifyDataSetChanged();
+                    recyclerView.setAdapter(AdapterForHistory);
+                }
+            }
+        });
 
         // CLICKLISTENER
         ContentsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (LIST_DATASET.equals(LIST_Contents)){
+                if (LIST_DATASET.equals(LIST_ContentsMerged)){
                     LIST_DATASET.clear();
                     AdapterForHistory.notifyDataSetChanged();
                     recyclerView.setAdapter(AdapterForHistory);
@@ -261,31 +323,12 @@ public class UserhistoryActivity extends AppCompatActivity {
                 }else{
                     ContentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.grey1));
                     CommentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.white));
-                    AuctionContentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.white));
+                    EarnedBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.white));
+                    LoversBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.white));
                     LIST_DATASET.clear();
-                    LIST_DATASET.addAll(LIST_Contents);
+                    LIST_DATASET.addAll(LIST_ContentsMerged);
                     //AdapterForHistory.AddItem(LIST_Contents);
                     //Log.d("park",LIST_DATASET.toString());
-                    AdapterForHistory.notifyDataSetChanged();
-                    recyclerView.setAdapter(AdapterForHistory);
-                }
-            }
-        });
-
-        AuctionContentsBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (LIST_DATASET.equals(LIST_Auctioncontents)){
-                    LIST_DATASET.clear();
-                    AdapterForHistory.notifyDataSetChanged();
-                    recyclerView.setAdapter(AdapterForHistory);
-                    AuctionContentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.white));
-                }else{
-                    ContentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.white));
-                    CommentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.white));
-                    AuctionContentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.grey1));
-                    LIST_DATASET.clear();
-                    LIST_DATASET.addAll(LIST_Auctioncontents);
                     AdapterForHistory.notifyDataSetChanged();
                     recyclerView.setAdapter(AdapterForHistory);
                 }
@@ -302,8 +345,9 @@ public class UserhistoryActivity extends AppCompatActivity {
                     CommentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.white));
                 }else{
                     ContentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.white));
+                    LoversBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.white));
                     CommentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.grey1));
-                    AuctionContentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.white));
+                    EarnedBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.white));
                     LIST_DATASET.clear();
                     LIST_DATASET.addAll(LIST_Comments);
                     AdapterForHistory.notifyDataSetChanged();
@@ -323,6 +367,9 @@ public class UserhistoryActivity extends AppCompatActivity {
                 }else{
                     LIST_DATASET.clear();
                     LIST_DATASET.addAll(LIST_LOVERS);
+                    EarnedBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.white));
+                    CommentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.white));
+                    ContentsBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.white));
                     LoversBtn.setBackgroundColor(getApplicationContext().getResources().getColor(R.color.grey1));
                     AdapterForHistory.notifyDataSetChanged();
                     recyclerView.setAdapter(AdapterForHistory);
