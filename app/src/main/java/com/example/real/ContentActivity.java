@@ -470,6 +470,9 @@ public class ContentActivity extends AppCompatActivity {
             @Override
             public void OnCallback(Object object) {
                 ArrayList<Comment> X = (ArrayList<Comment>) object;
+                if(X.size() == 0 ){
+                    Comments_Recyclerview.setVisibility(View.GONE);
+                }
 
                 for (Comment QuaryComment : X) {
 
@@ -586,6 +589,7 @@ public class ContentActivity extends AppCompatActivity {
                             });
                             data.add(new ExpandableListAdapter.Item(ExpandableListAdapter.BACHELOR, user.getUid(), contentUID, temp_comment.getTime(), temp_mention, "0"));
                             expandablelistadapter.notifyDataSetChanged();
+                            Comments_Recyclerview.setVisibility(View.VISIBLE);
                             Comments_Recyclerview.setAdapter(expandablelistadapter);
                         }
                     });

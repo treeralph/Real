@@ -121,14 +121,18 @@ public class RecyclerViewAdapterForContentsV2 extends RecyclerView.Adapter<Recyc
                 viewHolderForC.contentsLinearLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Bitmap bitmap = ((BitmapDrawable) viewHolderForC.contentsImageView.getDrawable()).getBitmap();
-                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                        byte[] byteArray = stream.toByteArray();
 
                         Intent intent = new Intent(context, ContentActivity.class);
                         intent.putExtra("ContentId", contentId);
-                        intent.putExtra("ImageBitmap", byteArray);
+
+                        try{
+                            Bitmap bitmap = ((BitmapDrawable) viewHolderForC.contentsImageView.getDrawable()).getBitmap();
+                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                            byte[] byteArray = stream.toByteArray();
+                            intent.putExtra("ImageBitmap", byteArray);
+                        }catch (Exception e){}
+
 
                         Pair[] pairs = new Pair[1];
                         pairs[0] = new Pair<View, String>(viewHolderForC.contentsCardView, "contentsItemForCCardView");
@@ -206,14 +210,18 @@ public class RecyclerViewAdapterForContentsV2 extends RecyclerView.Adapter<Recyc
                 viewHolderForAC.contentsLinearLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Bitmap bitmap = ((BitmapDrawable) viewHolderForAC.contentsImageView.getDrawable()).getBitmap();
-                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                        byte[] byteArray = stream.toByteArray();
+
 
                         Intent intent = new Intent(context, AuctionContentActivity.class);
                         intent.putExtra("ContentId", contentId);
-                        intent.putExtra("ImageBitmap", byteArray);
+                        try{
+                            Bitmap bitmap = ((BitmapDrawable) viewHolderForAC.contentsImageView.getDrawable()).getBitmap();
+                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                            byte[] byteArray = stream.toByteArray();
+                            intent.putExtra("ImageBitmap", byteArray);
+                        }catch (Exception e){}
+
 
                         Pair[] pairs = new Pair[1];
                         pairs[0] = new Pair<View, String>(viewHolderForAC.contentsCardView, "contentsItemForACCardView");

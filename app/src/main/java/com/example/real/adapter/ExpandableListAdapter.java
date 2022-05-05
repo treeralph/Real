@@ -33,6 +33,7 @@ import com.example.real.data.Comment;
 import com.example.real.data.UserProfile;
 import com.example.real.databasemanager.FirestoreManager;
 import com.example.real.databasemanager.StorageManager;
+import com.example.real.tool.NumberingMachine;
 import com.example.real.tool.TimeTextTool;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -254,6 +255,7 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                                             firestoreManagerForComment.write(temp_comment, temp_path, temp_comment.getTime(), new Callback() {
                                                 @Override
                                                 public void OnCallback(Object object) {
+                                                    refresh(contentid);
                                                     FirestoreManager firestoreManagerForUserProfile = new FirestoreManager(context, "UserProfile", from);
                                                     firestoreManagerForUserProfile.read("UserProfile",from, new Callback() {
                                                         @Override
@@ -482,6 +484,7 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                                             firestoreManagerForComment.write(temp_comment, temp_path, temp_comment.getTime(), new Callback() {
                                                 @Override
                                                 public void OnCallback(Object object) {
+                                                    refresh(contentid);
                                                     FirestoreManager firestoreManagerForUserProfile = new FirestoreManager(context, "UserProfile", from);
                                                     firestoreManagerForUserProfile.read("UserProfile",from, new Callback() {
                                                         @Override
@@ -693,7 +696,7 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                                                 public void OnCallback(Object object) {
                                                     //data.add(position+1,new ExpandableListAdapter.Item(ExpandableListAdapter.CHILD, from, to, header, temp_mention, "0"));
                                                     //notifyItemInserted(position+1);
-
+                                                    refresh(contentid);
                                                     FirestoreManager firestoreManagerForUserProfile = new FirestoreManager(context, "UserProfile", from);
                                                     firestoreManagerForUserProfile.read("UserProfile",from, new Callback() {
                                                         @Override
@@ -836,6 +839,71 @@ public class ExpandableListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         notifyDataSetChanged();
         //diffresult.dispatchUpdatesTo();
 
+    }
+
+    public void refresh(String contentid){
+        ArrayList<Item> refreshed_item = new ArrayList<>();
+
+        FirestoreManager firestoreManager = new FirestoreManager( context, "Comment", user.getUid());
+        firestoreManager.read("Content/" + contentid + "/Comments", new Callback() {
+            @Override
+            public void OnCallback(Object object) {
+                ArrayList<Comment> X = (ArrayList<Comment>) object;
+                for (Comment QuaryComment : X) {
+
+                    int CommentType;
+                    if (QuaryComment.getRecomment_token().equals("0")) {
+
+                        CommentType = ExpandableListAdapter.BACHELOR;
+
+                        refreshed_item.add(new ExpandableListAdapter.Item(CommentType, QuaryComment.getFrom(), QuaryComment.getTo(), QuaryComment.getTime(), QuaryComment.getMention(), QuaryComment.getRecomment_token()));
+                        data.clear();
+                        data.addAll(refreshed_item);
+                        notifyDataSetChanged();
+                    } else {
+                        CommentType = ExpandableListAdapter.HEADER;
+                        ExpandableListAdapter.Item temp_header = new ExpandableListAdapter.Item(CommentType, QuaryComment.getFrom(), QuaryComment.getTo(), QuaryComment.getTime(), QuaryComment.getMention(), QuaryComment.getRecomment_token());
+                        //data.add(temp_header);
+                        //final int[] count = {0};
+
+                        // RECOMMENTS 읽어오기
+                        firestoreManager.read("Content/" + contentid + "/Comments/" + QuaryComment.getTime() + "/Recomments", new Callback() {
+                            @Override
+                            public void OnCallback(Object object) {
+                                ArrayList<Comment> Y = (ArrayList<Comment>) object;
+
+                                int Y_length = Y.size();
+                                NumberingMachine machine = new NumberingMachine();
+
+                                //data.add(temp_header);
+                                for (Comment QuaryRecomment : Y) {
+                                    machine.add();
+                                    int RecommentType = CHILD;
+                                    System.out.println(temp_header.from);
+                                    ExpandableListAdapter.Item temp_child = new ExpandableListAdapter.Item(RecommentType, QuaryRecomment.getFrom(), QuaryRecomment.getTo(), QuaryRecomment.getTime(), QuaryRecomment.getMention(), QuaryRecomment.getRecomment_token());
+                                    System.out.println(temp_child.from);
+                                    temp_header.invisibleChildren.add(temp_child);
+                                    /*
+                                    if (count[0] == 0) {
+                                        data.add(temp_header);
+                                        count[0] = 1; }*/
+
+                                    //expandablelistadapter.notifyDataSetChanged();
+                                    if(machine.getNumber() == Y_length){
+                                        refreshed_item.add(temp_header);
+                                        sorting();
+                                        data.clear();
+                                        data.addAll(refreshed_item);
+                                        notifyDataSetChanged();
+
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+        });
     }
 
     @Override

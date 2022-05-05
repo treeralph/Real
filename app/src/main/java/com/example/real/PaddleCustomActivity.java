@@ -233,7 +233,7 @@ public class PaddleCustomActivity extends AppCompatActivity {
                     storageManagerForUserPaddle.uploadforpaddle("Background","UserPaddleImage/" + user.getUid(), UserBackground,1000,  new Callback() {
                         @Override
                         public void OnCallback(Object object) {
-
+                            Toast.makeText(PaddleCustomActivity.this, "저장완료", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
