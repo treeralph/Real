@@ -620,6 +620,9 @@ public class AuctionContentActivity extends AppCompatActivity {
             @Override
             public void OnCallback(Object object) {
                 ArrayList<Comment> X = (ArrayList<Comment>) object;
+                if(X.size() == 0){
+                    AuctionComments_Recyclerview.setVisibility(View.GONE);
+                }
 
                 for (Comment QuaryComment : X) {
 
@@ -736,6 +739,7 @@ public class AuctionContentActivity extends AppCompatActivity {
                             data_auction.add(new ExpandableListAdapter.Item(ExpandableListAdapter.BACHELOR, user.getUid(), contentUID, temp_comment.getTime(), temp_mention, "0"));
                             expandablelistadapterForAuction.notifyDataSetChanged();
                             AuctionComments_Recyclerview.setAdapter(expandablelistadapterForAuction);
+                            AuctionComments_Recyclerview.setVisibility(View.VISIBLE);
 
                         }
                     });
