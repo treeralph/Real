@@ -65,6 +65,7 @@ public class MakeAuctionContentActivity extends AppCompatActivity {
 
     Thread thread;
     String latLng;
+    String adm_cd;
 
 
     @Override
@@ -156,7 +157,8 @@ public class MakeAuctionContentActivity extends AppCompatActivity {
                             editTextAuctionDuration.getText().toString(),
                             categoryText.getText().toString(),
                             locationText.getText().toString(),
-                            latLng);
+                            latLng,
+                            adm_cd);
 
                     // If u want catch exception, write on upper side of thread.
                     thread = new Thread(new Runnable() {
@@ -174,7 +176,7 @@ public class MakeAuctionContentActivity extends AppCompatActivity {
                                         stringList.add(s);
                                     }
                                     //
-                                    Contents contents = new Contents(contentId, contentType, contentTitle, categoryText.getText().toString(), searchTool.makeCase(stringList), latLng, auctionContent.getTime());
+                                    Contents contents = new Contents(contentId, contentType, contentTitle, categoryText.getText().toString(), searchTool.makeCase(stringList), latLng, auctionContent.getTime(), adm_cd);
                                     firestoreManagerForContents.write(contents, "Contents", contentId, new Callback() {
                                         @Override
                                         public void OnCallback(Object object) {
@@ -295,6 +297,7 @@ public class MakeAuctionContentActivity extends AppCompatActivity {
             if(resultCode == RESULT_OK){
                 try{
                     String location = data.getStringExtra("Location");
+                    adm_cd = data.getStringExtra("Adm_cd");
                     latLng = data.getStringExtra("LatLng");
                     locationText.setText(location);
 

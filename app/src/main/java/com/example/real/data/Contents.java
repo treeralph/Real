@@ -15,9 +15,10 @@ public class Contents extends Data{
     private ArrayList<String> wordCase;
     private String latLng;
     private String time;
+    private String adm_cd;
 
 
-    public Contents(String contentId, String contentType, String contentTitle, String category, ArrayList<String> wordCase, String latLng, String time){
+    public Contents(String contentId, String contentType, String contentTitle, String category, ArrayList<String> wordCase, String latLng, String time, String adm_cd){
         ContentId = contentId;
         ContentType = contentType;
         ContentTitle = contentTitle;
@@ -25,6 +26,7 @@ public class Contents extends Data{
         this.wordCase = wordCase;
         this.latLng = latLng;
         this.time = time;
+        this.adm_cd = adm_cd;
     }
 
     @Override
@@ -37,6 +39,7 @@ public class Contents extends Data{
         datum.put("WordCase", wordCase);
         datum.put("latLng", latLng);
         datum.put("time", time);
+        datum.put("adm_cd", adm_cd);
         return datum;
     }
 
@@ -84,7 +87,10 @@ public class Contents extends Data{
         return latLng;
     }
 
+    public String getAdm_cd() { return adm_cd; }
+
     public String getTime() {
         return time;
     }
 }
+

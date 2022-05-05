@@ -88,7 +88,8 @@ public class FirestoreManager {
                 (String) dict.get("category"),
                 (String) dict.get("location"),
                 (String) dict.get("price"),
-                (String) dict.get("latLng"));
+                (String) dict.get("latLng"),
+                (String) dict.get("adm_cd"));
         return content;
     };
 
@@ -106,7 +107,8 @@ public class FirestoreManager {
                 (String) dict.get("auctionEndTime"),
                 (String) dict.get("category"),
                 (String) dict.get("location"),
-                (String) dict.get("latLng"));
+                (String) dict.get("latLng"),
+                (String) dict.get("adm_cd"));
         return auctionContent;
     };
 
@@ -118,7 +120,8 @@ public class FirestoreManager {
                 (String) dict.get("Category"),
                 (ArrayList<String>) dict.get("WordCase"),
                 (String) dict.get("latLng"),
-                (String) dict.get("time"));
+                (String) dict.get("time"),
+                (String) dict.get("adm_cd"));
         return contents;
     };
 

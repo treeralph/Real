@@ -36,11 +36,12 @@ public class AuctionContent extends Content implements Cloneable{
     private String category;
     private String location;
     private String latLng;
+    private String adm_cd;
 
     DateTimeFormatter formatter = new DateTimeFormatterBuilder().appendPattern("yyyyMMddHHmmss").appendValue(ChronoField.MILLI_OF_SECOND, 3).toFormatter();
 
-    public AuctionContent(String title, String content, String uid, String price, String auctionDuration, String category, String location, String latLng) {
-        super(title, content, uid, category, location, price, latLng);
+    public AuctionContent(String title, String content, String uid, String price, String auctionDuration, String category, String location, String latLng, String adm_cd) {
+        super(title, content, uid, category, location, price, latLng, adm_cd);
 
         Title = super.getTitle();
         Content = super.getContent();
@@ -50,6 +51,7 @@ public class AuctionContent extends Content implements Cloneable{
         this.category = super.getCategory();
         this.location = super.getLocation();
         this.latLng = super.getLatLng();
+        this.adm_cd = super.getAdm_cd();
         PriceGapPolicy(price);
 
         AuctionUserList = new ArrayList<String>();
@@ -64,8 +66,8 @@ public class AuctionContent extends Content implements Cloneable{
         AuctionState = AuctionContent.this.AUCTION_STATE_ACQUIRED_CODE;
     }
 
-    public AuctionContent(String title, String content, String uid, String price, String priceGap, String auctionDuration, String auctionState, ArrayList<String> auctionUserList, String time, String auctionEndTime, String category, String location, String latLng) {
-        super(title, content, uid, time, category, location, price, latLng);
+    public AuctionContent(String title, String content, String uid, String price, String priceGap, String auctionDuration, String auctionState, ArrayList<String> auctionUserList, String time, String auctionEndTime, String category, String location, String latLng, String adm_cd) {
+        super(title, content, uid, time, category, location, price, latLng, adm_cd);
 
         Title = super.getTitle();
         Content = super.getContent();
@@ -74,6 +76,7 @@ public class AuctionContent extends Content implements Cloneable{
         Price = super.getPrice();
         this.category = super.getCategory();
         this.location = super.getLocation();
+        this.adm_cd = super.getAdm_cd();
 
         PriceGap = priceGap;
         AuctionUserList = auctionUserList;
@@ -117,6 +120,7 @@ public class AuctionContent extends Content implements Cloneable{
         datum.put("category", category);
         datum.put("location", super.getLocation());
         datum.put("latLng", super.getLatLng());
+        datum.put("adm_cd", super.getAdm_cd());
         return datum;
     }
 
@@ -152,6 +156,7 @@ public class AuctionContent extends Content implements Cloneable{
 
     public void setAuctionUserList(ArrayList<String> auctionUserList) { AuctionUserList = auctionUserList; }
     public void setPrice(String price) { Price = price; }
+
 
 
 }

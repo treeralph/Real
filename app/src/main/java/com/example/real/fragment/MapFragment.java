@@ -73,6 +73,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     MapView mapView;
 
     String focusAddress = "";
+    String focusAdmCd = "";
     LatLng focusLatLng = new LatLng(0, 0);
 
     public MapFragment(Context context, Callback callback, Callback callback1) {
@@ -110,6 +111,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
         });
         mapFragment.getMapAsync(this);
+
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -214,6 +216,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public String getFocusAddress() {
         return focusAddress;
     }
+    public String getFocusAdmCd() { return focusAdmCd; }
     public LatLng getFocusLatLng() { return focusLatLng; }
 
     public View getMapView() {
@@ -318,6 +321,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 Log.w(TAG, "JSON_Test: " + jsonObject.toString());
                 JSONArray jsonResultList = jsonObject.getJSONArray("results");
 
+
+                JSONObject jsonResultForAdmCd = (JSONObject) jsonResultList.get(1);
+                JSONObject jSonForAdmCd = jsonResultForAdmCd.getJSONObject("code");
+                focusAdmCd = (String) jSonForAdmCd.get("id");
+                Log.d(TAG, "focusAdmCd: " + focusAdmCd);
+                
                 JSONObject jsonResult = (JSONObject) jsonResultList.get(jsonResultList.length() - 1);
 
                 String returnValue = "";

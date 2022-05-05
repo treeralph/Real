@@ -27,6 +27,7 @@ public class LocationActivity extends AppCompatActivity {
 
     MapFragment mapFragment;
     String location;
+    String adm_cd;
     LatLng latLng;
 
     @Override
@@ -58,12 +59,15 @@ public class LocationActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         location = mapFragment.getFocusAddress();
+                        adm_cd = mapFragment.getFocusAdmCd();
                         latLng = mapFragment.getFocusLatLng();
 
                         String stringLatLng = String.valueOf(latLng.latitude) + "," + String.valueOf(latLng.longitude);
                         Intent intent = new Intent();
                         intent.putExtra("Location", location);
+                        intent.putExtra("Adm_cd", adm_cd);
                         intent.putExtra("LatLng", stringLatLng);
+
                         setResult(RESULT_OK, intent);
                         finish();
                     }

@@ -62,6 +62,7 @@ public class MakeContentActivity extends AppCompatActivity {
     private final int IMGSELECTINTENTREQUESTCODE = 0;
 
     String latLng;
+    String adm_cd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,7 +143,7 @@ public class MakeContentActivity extends AppCompatActivity {
                     thread = new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            Content content = new Content(editTextTitle.getText().toString(), editTextContent.getText().toString(), user.getUid(), categoryText.getText().toString(), locationText.getText().toString(), editTextPrice.getText().toString(), latLng);
+                            Content content = new Content(editTextTitle.getText().toString(), editTextContent.getText().toString(), user.getUid(), categoryText.getText().toString(), locationText.getText().toString(), editTextPrice.getText().toString(), latLng, adm_cd);
                             firestoreManagerForContent.write(content, "Content", new Callback() {
                                 @Override
                                 public void OnCallback(Object object) {
@@ -154,7 +155,7 @@ public class MakeContentActivity extends AppCompatActivity {
                                     for(String s: contentTitle.split(" ")){
                                         stringList.add(s);
                                     }
-                                    Contents contents = new Contents(contentId, contentType, contentTitle, categoryText.getText().toString(), searchTool.makeCase(stringList), latLng, content.getTime());
+                                    Contents contents = new Contents(contentId, contentType, contentTitle, categoryText.getText().toString(), searchTool.makeCase(stringList), latLng, content.getTime(), adm_cd);
                                     firestoreManagerForContents.write(contents, "Contents", contentId, new Callback() {
                                         @Override
                                         public void OnCallback(Object object) {
@@ -280,6 +281,7 @@ public class MakeContentActivity extends AppCompatActivity {
                 try{
                     String location = data.getStringExtra("Location");
                     latLng = data.getStringExtra("LatLng");
+                    adm_cd = data.getStringExtra("Adm_cd");
                     locationText.setText(location);
 
 

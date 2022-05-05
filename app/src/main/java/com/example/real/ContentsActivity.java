@@ -77,10 +77,6 @@ public class ContentsActivity extends AppCompatActivity {
     DocumentSnapshot LatestDocForPaginate;
     RecyclerViewAdapterForContentsV2 adapter;
 
-
-
-
-
     int flag = 0;
     int expiredFlag = 0; // 만료되지 않은 자료만 보기
 

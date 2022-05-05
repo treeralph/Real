@@ -23,10 +23,11 @@ public class Content extends Data{
     private String location;
     private String latLng;
     private String price;
+    private String adm_cd;
 
 
     // make minSDKversion 21 -> 26 to use LocalDateTime class.
-    public Content(String title, String content, String uid, String category, String location, String price, String latLng) {
+    public Content(String title, String content, String uid, String category, String location, String price, String latLng, String adm_cd) {
 
         // If there exists error here, erase the under and use Remark.
         LocalDateTime dateNow = LocalDateTime.now();
@@ -38,9 +39,10 @@ public class Content extends Data{
         this.location = location;
         this.price = price;
         this.latLng = latLng;
+        this.adm_cd = adm_cd;
     }
 
-    public Content(String title, String content, String uid, String time, String category, String location, String price, String latLng) {
+    public Content(String title, String content, String uid, String time, String category, String location, String price, String latLng, String adm_cd) {
 
         Title = title;
         Content = content;
@@ -50,6 +52,7 @@ public class Content extends Data{
         this.location = location;
         this.price = price;
         this.latLng = latLng;
+        this.adm_cd = adm_cd;
     }
 
 
@@ -65,6 +68,7 @@ public class Content extends Data{
         datum.put("location", location);
         datum.put("latLng", latLng);
         datum.put("price", price);
+        datum.put("adm_cd", adm_cd);
         return datum;
     }
 
@@ -84,5 +88,5 @@ public class Content extends Data{
         return price;
     }
     public String getLatLng() { return latLng; }
-
+    public String getAdm_cd() { return adm_cd; }
 }
