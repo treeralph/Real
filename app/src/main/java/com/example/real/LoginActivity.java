@@ -179,7 +179,7 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, "전화번호를 확인해 주세요", Toast.LENGTH_SHORT).show();
                 }
                 else{
-
+                    Toast.makeText(LoginActivity.this, "인증번호 발신 성공", Toast.LENGTH_SHORT).show();
                     String refinedPhoneNumber = "+82" + phoneNumber.substring(1);
                     startPhoneNumberVerification(refinedPhoneNumber);
                 }
@@ -190,7 +190,14 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Log.w(TAG, "registerButton is clicked");
-                verifyPhoneNumberWithCode(mVerificationId, codeEditText.getText().toString());
+                if(mVerificationId != null && !codeEditText.getText().toString().isEmpty()){
+                    verifyPhoneNumberWithCode(mVerificationId, codeEditText.getText().toString());
+                }else if(codeEditText.getText().toString().isEmpty()){
+                    Toast.makeText(LoginActivity.this, "인증번호를 입력해 주세요", Toast.LENGTH_SHORT).show();
+                }else if(mVerificationId == null){
+                    Toast.makeText(LoginActivity.this, "유효한 접근방식이 아닙니다", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
