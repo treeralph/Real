@@ -285,6 +285,7 @@ public class FirestoreManager {
                     }
                 });
     }
+
     public void readPagination(String collectionPath, @Nullable DocumentSnapshot latestdocument, int numlimit, @Nullable Callback2 InitialCallback, @Nullable Callback2 PaginateCallback){
         // latestitemid = contents.getcontentid
         ArrayList<Data> dataList = new ArrayList<>();

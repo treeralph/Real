@@ -42,7 +42,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.real.adapter.RecyclerViewAdapterForContents;
 import com.example.real.adapter.RecyclerViewAdapterForContentsV2;
 import com.example.real.data.Contents;
+import com.example.real.databasemanager.AssetDatabaseManager;
 import com.example.real.databasemanager.FirestoreManager;
+import com.example.real.databasemanager.InternalDatabaseManager;
 import com.example.real.tool.OnSwipeTouchListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -56,7 +58,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
 
+import io.grpc.Internal;
+
 public class ContentsActivity extends AppCompatActivity {
+
+    private String user_recent_location;
 
     static final int CONTENTACTIVITY = 10;
     static final int CONTENTDELETEDCODE = 2;
@@ -69,6 +75,9 @@ public class ContentsActivity extends AppCompatActivity {
     FirestoreManager manager;
     SwipeRefreshLayout swipeRefreshLayout;
 
+    TextView locationTextView;
+    ImageView changeLocationBtn;
+
     EditText searchText;
     ImageView searchBtn;
     ImageView searchAdditionalBtn;
@@ -76,6 +85,11 @@ public class ContentsActivity extends AppCompatActivity {
     ArrayList<Contents> ContentsList;
     DocumentSnapshot LatestDocForPaginate;
     RecyclerViewAdapterForContentsV2 adapter;
+
+    AssetDatabaseManager assetDatabaseManager;
+    InternalDatabaseManager internalDatabaseManager;
+
+    String adm_cd;
 
     int flag = 0;
     int expiredFlag = 0; // 만료되지 않은 자료만 보기
@@ -107,8 +121,48 @@ public class ContentsActivity extends AppCompatActivity {
         searchText = findViewById(R.id.ContentsActivitySearchEditText);
         searchBtn = findViewById(R.id.ContentsActivitySearchButton);
         searchAdditionalBtn = findViewById(R.id.ContentsActivitySearchAdditionalButton);
+        locationTextView = findViewById(R.id.ContentsActivityLocationTextView);
+        changeLocationBtn = findViewById(R.id.ContentsActivityChangeLocationButton);
 
         manager = new FirestoreManager(ContentsActivity.this, "Contents", user.getUid());
+        assetDatabaseManager = new AssetDatabaseManager(this);
+        internalDatabaseManager = new InternalDatabaseManager(this);
+
+        internalDatabaseManager.read("user_recent_location",
+                new Callback() { // success
+                    @Override
+                    public void OnCallback(Object object) {
+                        user_recent_location = (String) object;
+                        assetDatabaseManager.adm2address(user_recent_location, new Callback() {
+                            @Override
+                            public void OnCallback(Object object) {
+                                String address = (String) object;
+                                locationTextView.setText(address);
+                            }
+                        });
+                    }
+                },
+                new Callback() { // failure
+                    @Override
+                    public void OnCallback(Object object) {
+                        user_recent_location = "4113565000";
+                        assetDatabaseManager.adm2address(user_recent_location, new Callback() {
+                            @Override
+                            public void OnCallback(Object object) {
+                                String address = (String) object;
+                                locationTextView.setText(address);
+                            }
+                        });
+                    }
+                });
+
+        changeLocationBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ContentsActivity.this, LocationActivity.class);
+                startActivityForResult(intent, 1000);
+            }
+        });
 
         searchAdditionalBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -364,6 +418,28 @@ public class ContentsActivity extends AppCompatActivity {
                         recyclerView.setAdapter(adapter);
                     }
                 });
+            }
+        }else if(requestCode == 1000){
+            if(resultCode == RESULT_OK){
+                try{
+                    String location = data.getStringExtra("Location");
+                    adm_cd = data.getStringExtra("Adm_cd");
+                    assetDatabaseManager.adm2address(adm_cd, new Callback() {
+                        @Override
+                        public void OnCallback(Object object) {
+                            String address = (String) object;
+                            locationTextView.setText(address);
+                            internalDatabaseManager.write("user_recent_location", adm_cd, new Callback() {
+                                @Override
+                                public void OnCallback(Object object) {
+
+                                }
+                            });
+                        }
+                    });
+                } catch(Exception e){
+
+                }
             }
         }
     }

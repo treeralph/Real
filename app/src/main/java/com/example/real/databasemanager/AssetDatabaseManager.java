@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.InputStream;
+import java.io.OutputStream;
 
 public class AssetDatabaseManager {
 
@@ -28,7 +29,30 @@ public class AssetDatabaseManager {
         this.assetManager = context.getResources().getAssets();
     }
 
-    public void read(String adm_cd, String option, Callback callback){
+    public void adm2address(String adm_cd, Callback callback){
+
+        InputStream in;
+
+        try{
+            in = assetManager.open("admcd_to_address.json");
+            int size = in.available();
+            byte buffer[] = new byte[size];
+
+            in.read(buffer);
+            String result = new String(buffer, "UTF-8");
+            in.close();
+
+            JSONObject jsonObject = new JSONObject(result);
+            String needs = (String) jsonObject.get(adm_cd);
+
+            callback.OnCallback(needs);
+
+        }catch(Exception e){
+            Log.e(TAG, e.getMessage());
+        }
+    }
+
+    public void read_adm_code(String adm_cd, String option, Callback callback){
 
         InputStream in;
 
@@ -50,6 +74,7 @@ public class AssetDatabaseManager {
             callback.OnCallback(needs);
 
         }catch(Exception e){
+
             Log.e(TAG, e.getMessage());
         }
     }
