@@ -206,11 +206,6 @@ public class RecyclerViewAdapterForMessages extends RecyclerView.Adapter<Recycle
                 Log.d("NOWNOWNOWNOW_VIEWHOLDERTYPE", "null");
                 return null;
         }
-
-        /*
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_item, parent, false);
-        return new messageViewHolder(v);
-         */
     }
 
     @Override

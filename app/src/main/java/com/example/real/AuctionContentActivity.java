@@ -445,13 +445,7 @@ public class AuctionContentActivity extends AppCompatActivity {
                                             Canvas canvas = new Canvas(TopPaddingPaddle);
                                             canvas.drawBitmap(InitialPaddle,matrix,null);
 
-
-
-
-
                                             LatestBidderImageView.setImageBitmap(TopPaddingPaddle);
-
-
                                         }});
                                 }});
                         }});
