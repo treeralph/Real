@@ -336,6 +336,7 @@ public class RecyclerViewAdapterForMessages extends RecyclerView.Adapter<Recycle
                                                                 String payload = aReservedTime + "/" + aLocation + "/true";
                                                                 Message message = new Message(Message.appointmentMessageFlag, fUid, tUid, payload, fToken, tToken, "");
                                                                 realTimeDatabaseManagerForMessage.writeMessage(databasePath, message);
+                                                                Toast.makeText(context, "why doexntwrokasdfkasdf;", Toast.LENGTH_SHORT).show();
 
                                                                 // todo: complement Alarm for appointment and reputation.
                                                                 //realTimeDatabaseManagerForScheduledTask.writeMessage(Alarm.databasePath, new Alarm());
@@ -353,7 +354,7 @@ public class RecyclerViewAdapterForMessages extends RecyclerView.Adapter<Recycle
                         messageList.remove(position);
                         notifyItemRemoved(position);
                         // and then, add item without server to get Appointment
-                        Toast.makeText(context, "asdf", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(context, "asdf", Toast.LENGTH_SHORT).show();
                     }
                 });
                 ap_viewHolder.MessageForAppointmentNegativeBtn.setOnClickListener(new View.OnClickListener() {

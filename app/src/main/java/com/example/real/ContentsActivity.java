@@ -52,6 +52,7 @@ import com.google.api.Distribution;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
@@ -84,15 +85,21 @@ public class ContentsActivity extends AppCompatActivity {
 
     ArrayList<Contents> ContentsList;
     DocumentSnapshot LatestDocForPaginate;
+    Query LatestQuery;
     RecyclerViewAdapterForContentsV2 adapter;
 
     AssetDatabaseManager assetDatabaseManager;
     InternalDatabaseManager internalDatabaseManager;
 
+
     String adm_cd;
 
     int flag = 0;
     int expiredFlag = 0; // 만료되지 않은 자료만 보기
+
+    String option_contenttype = "ANY";
+    boolean option_includeexpired = true;
+    String option_district = "수지구";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,6 +178,119 @@ public class ContentsActivity extends AppCompatActivity {
                         new Callback() {
                             @Override
                             public void OnCallback(Object object) {
+                                flag = 0;
+
+                                option_contenttype = "ANY";
+                                // Clear list
+                                ContentsList.clear();
+                                adapter.notifyDataSetChanged();
+                                // Create Query
+                                LatestQuery = manager.CreatQuery("Contents",null,3,
+                                        option_contenttype,
+                                        option_includeexpired,
+                                        option_district);
+                                /*
+                                manager.PaginationQuery(LatestQuery, new Callback2() {
+                                    @Override
+                                    public void OnCallback(Object object1, Object object2) {
+                                        ArrayList<Contents> templist = (ArrayList<Contents>) object1;
+                                        //Collections.reverse(contentsList);
+                                        LatestDocForPaginate = (DocumentSnapshot) object2;
+                                        Log.d("#temp",String.valueOf(templist.size()));
+                                        ContentsList.addAll(templist);
+                                        adapter.notifyDataSetChanged();
+                                        recyclerView.setAdapter(adapter);
+                                        LatestQuery = manager.CreatQuery("Contents",LatestDocForPaginate,3,
+                                                option_contenttype,
+                                                option_includeexpired,
+                                                option_district);
+                                    }
+                                });
+
+                                 */
+
+                                recyclerView.clearOnScrollListeners();
+                                recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                                    @Override
+                                    public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                                        super.onScrollStateChanged(recyclerView, newState);
+                                        if(!recyclerView.canScrollVertically(1)) {
+                                            manager.PaginationQuery(LatestQuery, new Callback2() {
+                                                @Override
+                                                public void OnCallback(Object object1, Object object2) {
+                                                    ArrayList<Contents> templist = (ArrayList<Contents>) object1;
+                                                    LatestDocForPaginate = (DocumentSnapshot) object2;
+                                                    ContentsList.addAll(templist);
+                                                    adapter.notifyDataSetChanged();
+                                                    LatestQuery = manager.CreatQuery("Contents",LatestDocForPaginate,3,
+                                                            option_contenttype,
+                                                            option_includeexpired,
+                                                            option_district);
+                                                }
+                                            });
+
+                                        }
+                                    }
+                                });
+                                // Read by Query
+                            }
+                        },
+                        new Callback() {
+                            @Override
+                            public void OnCallback(Object object) {
+                                flag = 1;
+                                option_contenttype = "CONTENT";
+                                // Create Query
+                                // Read by Query
+
+                            }
+                        },
+                        new Callback() {
+                            @Override
+                            public void OnCallback(Object object) {
+                                flag = 2;
+                                option_contenttype = "AUCTIONCONTENT";
+                                // Create Query
+                                // Read by Query
+
+                            }
+                        },
+                        new Callback() {
+                            @Override
+                            public void OnCallback(Object object) {
+                                ImageView imageView = (ImageView) object;
+                                switch(expiredFlag){
+                                    case 0: // 만료된 자료까지 보기
+                                        expiredFlag = 1;
+                                        option_includeexpired = true;
+                                        break;
+                                    case 1: // 만료되지 않은 자료만 보기
+                                        expiredFlag = 0;
+                                        option_includeexpired = false;
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                        }, flag, expiredFlag);
+
+                dialog.setCanceledOnTouchOutside(true);
+                dialog.setCancelable(true);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+                layoutParams.gravity = Gravity.RIGHT | Gravity.TOP;
+                dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+                dialog.show();
+            }
+        });
+        /*
+        searchAdditionalBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SearchAdditionalFuntionDialog dialog = new SearchAdditionalFuntionDialog(ContentsActivity.this,
+                        new Callback() {
+                            @Override
+                            public void OnCallback(Object object) {
                                 manager.read("Contents", new Callback() {
                                     @Override
                                     public void OnCallback(Object object) {
@@ -237,6 +357,9 @@ public class ContentsActivity extends AppCompatActivity {
                 dialog.show();
             }
         });
+
+         */
+
 
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -334,6 +457,8 @@ public class ContentsActivity extends AppCompatActivity {
          */
         ContentsList = new ArrayList<>();
         adapter = new RecyclerViewAdapterForContentsV2(ContentsList, ContentsActivity.this);
+
+
         manager.readPagination("Contents", null, 3, new Callback2() {
             @Override
             public void OnCallback(Object object1, Object object2) {
@@ -347,6 +472,7 @@ public class ContentsActivity extends AppCompatActivity {
             }
         }, null);
 
+        /*
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
@@ -367,6 +493,12 @@ public class ContentsActivity extends AppCompatActivity {
                 }
             }
         });
+
+         */
+
+
+
+
 
 
 

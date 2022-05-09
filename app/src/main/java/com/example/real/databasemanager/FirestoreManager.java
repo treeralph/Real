@@ -286,6 +286,96 @@ public class FirestoreManager {
                 });
     }
 
+    // Contents에 expired 추가해야댐(최소한 null이라도 들어있어야됨) & District "구" 추가
+
+    public Query CreatQuery(String collectionPath,@Nullable DocumentSnapshot lastdoc
+                                ,int numlimit, String ContentType, Boolean isincludeexpired, String location){
+
+        CollectionReference ref = db.collection(collectionPath);
+
+        if(lastdoc == null || !lastdoc.exists()){
+            if(ContentType.equals("ANY")){
+                if(isincludeexpired){
+                    Query query = ref.limitToLast(numlimit).orderBy("time"); //.whereEqualTo("District",location)
+                    return query;}
+                else{
+                    Query query = ref.limitToLast(numlimit).whereEqualTo("auctionState","ACQUIRED").whereEqualTo("District",location).orderBy("time");
+                    return query;}
+            }
+            else if(ContentType.equals("CONTENT")){
+                if(isincludeexpired){
+                    Query query = ref.limitToLast(numlimit).whereEqualTo("ContentType","Content").whereEqualTo("District",location).orderBy("time");
+                    return query;}
+                else{
+                    Query query = ref.limitToLast(numlimit).whereEqualTo("ContentType","Content").whereEqualTo("auctionState","ACQUIRED").whereEqualTo("District",location).orderBy("time");
+                    return query;}
+            }
+            else if(ContentType.equals("AUCTIONCONTENT")){
+                if(isincludeexpired){
+                    Query query = ref.limitToLast(numlimit).whereEqualTo("ContentType","AuctionContent").whereEqualTo("District",location).orderBy("time");
+                    return query;}
+                else{
+                    Query query = ref.limitToLast(numlimit).whereEqualTo("ContentType","AuctionContent").whereEqualTo("auctionState","ACQUIRED").whereEqualTo("District",location).orderBy("time");
+                    return query;}
+            }
+            else{Toast.makeText(context, "Wrong ContentType inserted : " + ContentType, Toast.LENGTH_SHORT).show();
+                return null;}
+
+            }
+        else{
+            if(ContentType.equals("ANY")){
+                if(isincludeexpired){
+                    Query query = ref.limitToLast(numlimit).orderBy("time").endBefore(lastdoc); // .whereEqualTo("District",location)
+                    return query;}
+                else{
+                    Query query = ref.limitToLast(numlimit).whereEqualTo("auctionState","ACQUIRED").whereEqualTo("District",location).orderBy("time").endBefore(lastdoc);
+                    return query;}
+            }
+            else if(ContentType.equals("CONTENT")){
+                if(isincludeexpired){
+                    Query query = ref.limitToLast(numlimit).whereEqualTo("ContentType","Content").whereEqualTo("District",location).orderBy("time").endBefore(lastdoc);
+                    return query;}
+                else{
+                    Query query = ref.limitToLast(numlimit).whereEqualTo("ContentType","Content").whereEqualTo("auctionState","ACQUIRED").whereEqualTo("District",location).orderBy("time").endBefore(lastdoc);
+                    return query;}
+            }
+            else if(ContentType.equals("AUCTIONCONTENT")){
+                if(isincludeexpired){
+                    Query query = ref.limitToLast(numlimit).whereEqualTo("ContentType","AuctionContent").whereEqualTo("District",location).orderBy("time").endBefore(lastdoc);
+                    return query;}
+                else{
+                    Query query = ref.limitToLast(numlimit).whereEqualTo("ContentType","AuctionContent").whereEqualTo("auctionState","ACQUIRED").whereEqualTo("District",location).orderBy("time").endBefore(lastdoc);
+                    return query;}
+            }
+            else{Toast.makeText(context, "Wrong ContentType inserted : " + ContentType, Toast.LENGTH_SHORT).show();
+                return null;}
+        }
+    }
+    public void PaginationQuery(@Nullable Query query, Callback2 callback2){
+        if (query != null){
+            ArrayList<Data> dataList = new ArrayList<>();
+
+            query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                    if(!value.isEmpty()){
+                        for(DocumentSnapshot document : value.getDocuments()){
+                            Log.d(TAG, document.getId() + " => " + document.getData());
+                            dataList.add(0,CurrentDataType.Constructor(document.getData()));
+                        }
+                        DocumentSnapshot finaldoc = value.getDocuments().get(0);
+                        Log.d(TAG, " # " + dataList.size());
+                        callback2.OnCallback(dataList,finaldoc);
+                    }else{
+                        Log.d(TAG, "Error getting document: ", error);
+                    }
+                }
+            });
+        }else {
+            Toast.makeText(context, "Empty query inserted", Toast.LENGTH_SHORT).show();
+        }
+
+    }
     public void readPagination(String collectionPath, @Nullable DocumentSnapshot latestdocument, int numlimit, @Nullable Callback2 InitialCallback, @Nullable Callback2 PaginateCallback){
         // latestitemid = contents.getcontentid
         ArrayList<Data> dataList = new ArrayList<>();
