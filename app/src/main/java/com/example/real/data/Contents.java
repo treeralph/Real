@@ -2,6 +2,8 @@ package com.example.real.data;
 
 import android.content.Context;
 
+import com.google.firebase.firestore.GeoPoint;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +18,7 @@ public class Contents extends Data{
     private String latLng;
     private String time;
     private String adm_cd;
+    private GeoPoint geoPoint;
 
 
     public Contents(String contentId, String contentType, String contentTitle, String category, ArrayList<String> wordCase, String latLng, String time, String adm_cd){
@@ -27,6 +30,12 @@ public class Contents extends Data{
         this.latLng = latLng;
         this.time = time;
         this.adm_cd = adm_cd;
+
+        String[] latLng_split = this.latLng.split(",");
+        double lat = Double.parseDouble(latLng_split[0]);
+        double lng = Double.parseDouble(latLng_split[1]);
+
+        geoPoint = new GeoPoint(lat, lng);
     }
 
     @Override
@@ -40,6 +49,7 @@ public class Contents extends Data{
         datum.put("latLng", latLng);
         datum.put("time", time);
         datum.put("adm_cd", adm_cd);
+        datum.put("geoPoint", geoPoint);
         return datum;
     }
 
@@ -91,6 +101,10 @@ public class Contents extends Data{
 
     public String getTime() {
         return time;
+    }
+
+    public GeoPoint getGeoPoint() {
+        return geoPoint;
     }
 }
 

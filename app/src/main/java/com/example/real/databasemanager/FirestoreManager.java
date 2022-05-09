@@ -32,6 +32,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -41,6 +42,7 @@ import com.google.firestore.v1.StructuredQuery;
 import com.google.firestore.v1.TransactionOptions;
 import com.google.firestore.v1.TransactionOptionsOrBuilder;
 import com.google.protobuf.MessageLite;
+import com.naver.maps.geometry.LatLng;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -265,7 +267,7 @@ public class FirestoreManager {
     }
 
     // "readlimit" read # docs on collection order by time
-    public void readlimit(String collectionPath,int numlimit, Callback callback){
+    public void readlimit(String collectionPath, int numlimit, Callback callback){
         ArrayList<Data> dataList = new ArrayList<>();
         CollectionReference ref = db.collection(collectionPath);
         ref.orderBy("time", Query.Direction.DESCENDING).limit(numlimit).get()
@@ -480,6 +482,41 @@ public class FirestoreManager {
                 callback2.OnCallback(null);
             }
         });
+    }
+
+    public void readWithLocation(String path, LatLng latLng, Callback callback){
+
+        ArrayList<Data> dataList = new ArrayList<>();
+
+        double lat = latLng.latitude;
+        double lng = latLng.longitude;
+
+        double threshold = 0.036;
+
+        double lower_lat = lat - threshold;
+        double lower_lng = lng - threshold;
+        double greater_lat = lat + threshold;
+        double greater_lng = lng + threshold;
+
+        GeoPoint lower_geoPoint = new GeoPoint(lower_lat, lower_lng);
+        GeoPoint greater_geoPoint = new GeoPoint(greater_lat, greater_lng);
+
+        CollectionReference ref = db.collection(path);
+        ref.whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint).get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                dataList.add(CurrentDataType.Constructor(document.getData()));
+                            }
+                            callback.OnCallback(dataList);
+                        }else{
+                            Log.e(TAG, "Error");
+                        }
+                    }
+                });
     }
 
 }

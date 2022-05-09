@@ -4,6 +4,8 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import com.google.firebase.firestore.GeoPoint;
+
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -24,7 +26,7 @@ public class Content extends Data{
     private String latLng;
     private String price;
     private String adm_cd;
-
+    private GeoPoint geoPoint;
 
     // make minSDKversion 21 -> 26 to use LocalDateTime class.
     public Content(String title, String content, String uid, String category, String location, String price, String latLng, String adm_cd) {
@@ -40,6 +42,12 @@ public class Content extends Data{
         this.price = price;
         this.latLng = latLng;
         this.adm_cd = adm_cd;
+
+        String[] latLng_split = this.latLng.split(",");
+        double lat = Double.parseDouble(latLng_split[0]);
+        double lng = Double.parseDouble(latLng_split[1]);
+
+        geoPoint = new GeoPoint(lat, lng);
     }
 
     public Content(String title, String content, String uid, String time, String category, String location, String price, String latLng, String adm_cd) {
@@ -53,6 +61,12 @@ public class Content extends Data{
         this.price = price;
         this.latLng = latLng;
         this.adm_cd = adm_cd;
+
+        String[] latLng_split = this.latLng.split(",");
+        double lat = Double.parseDouble(latLng_split[0]);
+        double lng = Double.parseDouble(latLng_split[1]);
+
+        geoPoint = new GeoPoint(lat, lng);
     }
 
 
@@ -69,6 +83,7 @@ public class Content extends Data{
         datum.put("latLng", latLng);
         datum.put("price", price);
         datum.put("adm_cd", adm_cd);
+        datum.put("geoPoint", geoPoint);
         return datum;
     }
 
@@ -89,4 +104,5 @@ public class Content extends Data{
     }
     public String getLatLng() { return latLng; }
     public String getAdm_cd() { return adm_cd; }
+    public GeoPoint getGeoPoint() { return geoPoint; }
 }

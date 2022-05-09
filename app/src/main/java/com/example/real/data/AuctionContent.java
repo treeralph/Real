@@ -2,6 +2,8 @@ package com.example.real.data;
 
 import androidx.annotation.NonNull;
 
+import com.google.firebase.firestore.GeoPoint;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
@@ -37,6 +39,7 @@ public class AuctionContent extends Content implements Cloneable{
     private String location;
     private String latLng;
     private String adm_cd;
+    private GeoPoint geoPoint;
 
     DateTimeFormatter formatter = new DateTimeFormatterBuilder().appendPattern("yyyyMMddHHmmss").appendValue(ChronoField.MILLI_OF_SECOND, 3).toFormatter();
 
@@ -64,6 +67,12 @@ public class AuctionContent extends Content implements Cloneable{
         AuctionEndTime = tempTime2.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
 
         AuctionState = AuctionContent.this.AUCTION_STATE_ACQUIRED_CODE;
+
+        String[] latLng_split = this.latLng.split(",");
+        double lat = Double.parseDouble(latLng_split[0]);
+        double lng = Double.parseDouble(latLng_split[1]);
+
+        geoPoint = new GeoPoint(lat, lng);
     }
 
     public AuctionContent(String title, String content, String uid, String price, String priceGap, String auctionDuration, String auctionState, ArrayList<String> auctionUserList, String time, String auctionEndTime, String category, String location, String latLng, String adm_cd) {
@@ -84,6 +93,12 @@ public class AuctionContent extends Content implements Cloneable{
         AuctionStartTime = Time;
         AuctionEndTime = auctionEndTime;
         AuctionState = auctionState;
+
+        String[] latLng_split = latLng.split(",");
+        double lat = Double.parseDouble(latLng_split[0]);
+        double lng = Double.parseDouble(latLng_split[1]);
+
+        geoPoint = new GeoPoint(lat, lng);
     }
 
     @NonNull
@@ -121,6 +136,7 @@ public class AuctionContent extends Content implements Cloneable{
         datum.put("location", super.getLocation());
         datum.put("latLng", super.getLatLng());
         datum.put("adm_cd", super.getAdm_cd());
+        datum.put("geoPoint", geoPoint);
         return datum;
     }
 
@@ -156,7 +172,4 @@ public class AuctionContent extends Content implements Cloneable{
 
     public void setAuctionUserList(ArrayList<String> auctionUserList) { AuctionUserList = auctionUserList; }
     public void setPrice(String price) { Price = price; }
-
-
-
 }

@@ -67,7 +67,6 @@ public class MakeAuctionContentActivity extends AppCompatActivity {
     String latLng;
     String adm_cd;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

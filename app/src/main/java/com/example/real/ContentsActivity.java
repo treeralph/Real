@@ -53,7 +53,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.naver.maps.geometry.LatLng;
 
+import org.json.JSONArray;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
@@ -63,6 +67,7 @@ import io.grpc.Internal;
 public class ContentsActivity extends AppCompatActivity {
 
     private String user_recent_location;
+    private String user_recent_LatLng;
 
     static final int CONTENTACTIVITY = 10;
     static final int CONTENTDELETEDCODE = 2;
@@ -90,6 +95,7 @@ public class ContentsActivity extends AppCompatActivity {
     InternalDatabaseManager internalDatabaseManager;
 
     String adm_cd;
+    String stringLatLng;
 
     int flag = 0;
     int expiredFlag = 0; // 만료되지 않은 자료만 보기
@@ -112,6 +118,8 @@ public class ContentsActivity extends AppCompatActivity {
 
         }
 
+
+
         recyclerView = findViewById(R.id.ContentsActivityRecyclerViewDesign);
         makeContentBtn = findViewById(R.id.ContentsMakeContentBtnDesign);
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -128,24 +136,55 @@ public class ContentsActivity extends AppCompatActivity {
         assetDatabaseManager = new AssetDatabaseManager(this);
         internalDatabaseManager = new InternalDatabaseManager(this);
 
+        assetDatabaseManager.read_adm_code(user_recent_location, AssetDatabaseManager.KEY_Length_3, new Callback() {
+            @Override
+            public void OnCallback(Object object) {
+                String[] addressList = (String[]) object;
+            }
+        });
+
         internalDatabaseManager.read("user_recent_location",
                 new Callback() { // success
                     @Override
                     public void OnCallback(Object object) {
                         user_recent_location = (String) object;
-                        assetDatabaseManager.adm2address(user_recent_location, new Callback() {
-                            @Override
-                            public void OnCallback(Object object) {
-                                String address = (String) object;
-                                locationTextView.setText(address);
-                            }
-                        });
+                        internalDatabaseManager.read("user_recent_LatLng",
+                                new Callback() {
+                                    @Override
+                                    public void OnCallback(Object object) {
+                                        user_recent_LatLng = (String) object;
+                                        assetDatabaseManager.adm2address(user_recent_location, new Callback() {
+                                            @Override
+                                            public void OnCallback(Object object) {
+                                                String address = (String) object;
+                                                locationTextView.setText(address);
+
+                                            }
+                                        });
+                                    }
+                                },
+                                new Callback() {
+                                    @Override
+                                    public void OnCallback(Object object) {
+                                        user_recent_location = "4113565000";
+                                        user_recent_LatLng = "37.389844,127.0986189";
+                                        assetDatabaseManager.adm2address(user_recent_location, new Callback() {
+                                            @Override
+                                            public void OnCallback(Object object) {
+                                                String address = (String) object;
+                                                locationTextView.setText(address);
+                                            }
+                                        });
+                                    }
+                                });
+
                     }
                 },
                 new Callback() { // failure
                     @Override
                     public void OnCallback(Object object) {
                         user_recent_location = "4113565000";
+                        user_recent_LatLng = "37.389844,127.0986189";
                         assetDatabaseManager.adm2address(user_recent_location, new Callback() {
                             @Override
                             public void OnCallback(Object object) {
@@ -155,6 +194,7 @@ public class ContentsActivity extends AppCompatActivity {
                         });
                     }
                 });
+
 
         changeLocationBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -424,6 +464,7 @@ public class ContentsActivity extends AppCompatActivity {
                 try{
                     String location = data.getStringExtra("Location");
                     adm_cd = data.getStringExtra("Adm_cd");
+                    stringLatLng = data.getStringExtra("LatLng");
                     assetDatabaseManager.adm2address(adm_cd, new Callback() {
                         @Override
                         public void OnCallback(Object object) {
@@ -432,7 +473,31 @@ public class ContentsActivity extends AppCompatActivity {
                             internalDatabaseManager.write("user_recent_location", adm_cd, new Callback() {
                                 @Override
                                 public void OnCallback(Object object) {
+                                    internalDatabaseManager.write("user_recent_LatLng", stringLatLng, new Callback() {
+                                        @Override
+                                        public void OnCallback(Object object) {
 
+                                            String[] temp = stringLatLng.split(",");
+                                            double lat = Double.parseDouble(temp[0]);
+                                            double lng = Double.parseDouble(temp[1]);
+                                            LatLng latLng = new LatLng(lat, lng);
+
+                                            manager.readWithLocation("Contents", latLng, new Callback() {
+                                                @Override
+                                                public void OnCallback(Object object) {
+
+                                                    ArrayList<Contents> contentsArrayList = (ArrayList<Contents>) object;
+
+                                                    TextView textView = findViewById(R.id.locationtestpleasedelete);
+                                                    textView.setText(String.valueOf(latLng.latitude) + "\n" + String.valueOf(latLng.longitude) + "\n");
+                                                    for(Contents contents: contentsArrayList){
+                                                        textView.append(contents.getContentTitle() + "\n");
+                                                    }
+
+                                                }
+                                            });
+                                        }
+                                    });
                                 }
                             });
                         }

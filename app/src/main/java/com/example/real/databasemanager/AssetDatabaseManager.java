@@ -69,7 +69,7 @@ public class AssetDatabaseManager {
 
             JSONObject jsonObject = new JSONObject(result);
             JSONObject adm_cd_pathJson = jsonObject.getJSONObject(adm_cd);
-            JSONArray needs = (JSONArray) adm_cd_pathJson.get(option);
+            String[] needs = (String[]) adm_cd_pathJson.get(option);
 
             callback.OnCallback(needs);
 
