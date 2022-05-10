@@ -76,6 +76,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     String focusAdmCd = "";
     LatLng focusLatLng = new LatLng(0, 0);
 
+    Boolean flag;
+
     public MapFragment(Context context, Callback callback, Callback callback1) {
         this.context = context;
         this.callback = callback;
@@ -187,21 +189,40 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         txtV.setText(textViewText);
                         focusAddress = textViewText;
 
+                        /*
                         Thread thread = new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                requestGeocode(focusAddress, new Callback() {
-                                    @Override
-                                    public void OnCallback(Object object) {
-                                        MyCoordinate result = (MyCoordinate) object;
-                                        Tm128 tm128 = new Tm128(result.x, result.y);
-                                        LatLng latLng = tm128.toLatLng();
-                                        focusLatLng = latLng;
+                                flag = true;
+                                int index = 0;
+                                while(flag) {
+                                    try {
+                                        requestGeocode(focusAddress, new Callback() {
+                                            @Override
+                                            public void OnCallback(Object object) {
+                                                MyCoordinate result = (MyCoordinate) object;
+                                                Log.d(TAG, "result => " + result.toString());
+                                                Tm128 tm128 = new Tm128(result.x, result.y);
+                                                LatLng latLng = tm128.toLatLng();
+                                                focusLatLng = latLng;
+                                                Log.d(TAG, "focusLatLng => " + focusLatLng);
+                                                flag = false;
+                                            }
+                                        });
+                                    } catch(Exception e){
+                                        Log.e(TAG, e.getMessage());
+                                    } finally {
+                                        index += 1;
+                                        if(index >= 10){
+                                            flag = false;
+                                        }
                                     }
-                                });
+                                }
                             }
                         });
                         thread.start();
+
+                         */
 
                         return view;
                     }
@@ -267,6 +288,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 int intX = Integer.parseInt(jsonAddress.get("mapx").toString());
                 int intY = Integer.parseInt(jsonAddress.get("mapy").toString());
                 MyCoordinate myCoordinate = new MyCoordinate(intX, intY);
+
+                Tm128 tm128 = new Tm128(intX, intY);
+                LatLng latLng = tm128.toLatLng();
+                focusLatLng = latLng;
 
                 bufferedReader.close();
                 conn.disconnect();
@@ -416,7 +441,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onMapClick(@NonNull PointF pointF, @NonNull LatLng latLng) {
 
-                marker.setPosition(new LatLng(latLng.latitude, latLng.longitude));
+                LatLng markerLatLng = new LatLng(latLng.latitude, latLng.longitude);
+                focusLatLng = markerLatLng;
+
+                marker.setPosition(markerLatLng);
                 marker.setMap(myNaverMap);
 
                 Thread thread = new Thread(new Runnable() {
@@ -440,6 +468,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         myNaverMap.setOnSymbolClickListener(symbol -> {
             LatLng latLng =  symbol.getPosition();
+            focusLatLng = latLng;
 
             marker.setPosition(new LatLng(latLng.latitude, latLng.longitude));
             marker.setMap(myNaverMap);
