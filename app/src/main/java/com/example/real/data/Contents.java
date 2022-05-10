@@ -19,9 +19,10 @@ public class Contents extends Data{
     private String time;
     private String adm_cd;
     private GeoPoint geoPoint;
+    private String auctionState;
 
 
-    public Contents(String contentId, String contentType, String contentTitle, String category, ArrayList<String> wordCase, String latLng, String time, String adm_cd){
+    public Contents(String contentId, String contentType, String contentTitle, String category, ArrayList<String> wordCase, String latLng, String time, String adm_cd, String auctionState){
         ContentId = contentId;
         ContentType = contentType;
         ContentTitle = contentTitle;
@@ -30,6 +31,7 @@ public class Contents extends Data{
         this.latLng = latLng;
         this.time = time;
         this.adm_cd = adm_cd;
+        this.auctionState = auctionState;
 
         String[] latLng_split = this.latLng.split(",");
         double lat = Double.parseDouble(latLng_split[0]);
@@ -50,6 +52,7 @@ public class Contents extends Data{
         datum.put("time", time);
         datum.put("adm_cd", adm_cd);
         datum.put("geoPoint", geoPoint);
+        datum.put("auctionState", auctionState);
         return datum;
     }
 
@@ -105,6 +108,10 @@ public class Contents extends Data{
 
     public GeoPoint getGeoPoint() {
         return geoPoint;
+    }
+
+    public String getAuctionState() {
+        return auctionState;
     }
 }
 

@@ -169,13 +169,14 @@ public class MakeAuctionContentActivity extends AppCompatActivity {
                                     String contentId = (String)object;
                                     String contentType = auctionContent.getContentType();
                                     String contentTitle = auctionContent.getTitle();
+                                    String auctionState = auctionContent.getAuctionState();
                                     SearchTool searchTool = new SearchTool();
                                     ArrayList<String> stringList = new ArrayList<>();
                                     for(String s: contentTitle.split(" ")){
                                         stringList.add(s);
                                     }
                                     //
-                                    Contents contents = new Contents(contentId, contentType, contentTitle, categoryText.getText().toString(), searchTool.makeCase(stringList), latLng, auctionContent.getTime(), adm_cd);
+                                    Contents contents = new Contents(contentId, contentType, contentTitle, categoryText.getText().toString(), searchTool.makeCase(stringList), latLng, auctionContent.getTime(), adm_cd, auctionState);
                                     firestoreManagerForContents.write(contents, "Contents", contentId, new Callback() {
                                         @Override
                                         public void OnCallback(Object object) {

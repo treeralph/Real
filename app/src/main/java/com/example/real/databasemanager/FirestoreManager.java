@@ -123,7 +123,8 @@ public class FirestoreManager {
                 (ArrayList<String>) dict.get("WordCase"),
                 (String) dict.get("latLng"),
                 (String) dict.get("time"),
-                (String) dict.get("adm_cd"));
+                (String) dict.get("adm_cd"),
+                (String) dict.get("auctionState"));
         return contents;
     };
 
