@@ -69,6 +69,7 @@ public class ContentsActivity extends AppCompatActivity {
 
     private String user_recent_location;
     private String user_recent_LatLng;
+    private LatLng user_recent_LatLng_parsed;
 
     static final int CONTENTACTIVITY = 10;
     static final int CONTENTDELETEDCODE = 2;
@@ -161,6 +162,8 @@ public class ContentsActivity extends AppCompatActivity {
                                     @Override
                                     public void OnCallback(Object object) {
                                         user_recent_LatLng = (String) object;
+                                        String[] temp = user_recent_LatLng.split(",");
+                                        user_recent_LatLng_parsed = new LatLng(Double.parseDouble(temp[0]),Double.parseDouble(temp[1]));
                                         assetDatabaseManager.adm2address(user_recent_location, new Callback() {
                                             @Override
                                             public void OnCallback(Object object) {
@@ -176,6 +179,8 @@ public class ContentsActivity extends AppCompatActivity {
                                     public void OnCallback(Object object) {
                                         user_recent_location = "4113565000";
                                         user_recent_LatLng = "37.389844,127.0986189";
+                                        String[] temp = user_recent_LatLng.split(",");
+                                        user_recent_LatLng_parsed = new LatLng(Double.parseDouble(temp[0]),Double.parseDouble(temp[1]));
                                         assetDatabaseManager.adm2address(user_recent_location, new Callback() {
                                             @Override
                                             public void OnCallback(Object object) {
@@ -193,6 +198,8 @@ public class ContentsActivity extends AppCompatActivity {
                     public void OnCallback(Object object) {
                         user_recent_location = "4113565000";
                         user_recent_LatLng = "37.389844,127.0986189";
+                        String[] temp = user_recent_LatLng.split(",");
+                        user_recent_LatLng_parsed = new LatLng(Double.parseDouble(temp[0]),Double.parseDouble(temp[1]));
                         assetDatabaseManager.adm2address(user_recent_location, new Callback() {
                             @Override
                             public void OnCallback(Object object) {
@@ -223,12 +230,27 @@ public class ContentsActivity extends AppCompatActivity {
                                 option_contenttype = "ANY";
                                 // Clear list
                                 ContentsList.clear();
+                                recyclerView.clearOnScrollListeners();
+                                LatestDocForPaginate = null;
                                 // Create Query
-                                LatestQuery = manager.CreatQuery("Contents",null,3,
-                                        option_contenttype,
-                                        option_includeexpired,
-                                        option_district);
+                                LatestQuery = manager.CreatQuery("Contents",3,user_recent_LatLng_parsed,2
+                                        ,LatestDocForPaginate,option_contenttype,option_includeexpired);
                                 // Read by Query
+                                manager.PaginationQuery(LatestQuery, new Callback2() {
+                                    @Override
+                                    public void OnCallback(Object object1, Object object2) {
+                                        ArrayList<Contents> templist = (ArrayList<Contents>) object1;
+                                        //Collections.reverse(contentsList);
+                                        LatestDocForPaginate = (DocumentSnapshot) object2;
+                                        Log.d("#temp",String.valueOf(templist.size()));
+                                        ContentsList.addAll(templist);
+                                        adapter.notifyDataSetChanged();
+                                        recyclerView.setAdapter(adapter);
+                                        // update query
+                                        LatestQuery = manager.CreatQuery("Contents",3,user_recent_LatLng_parsed,2
+                                                ,LatestDocForPaginate,option_contenttype,option_includeexpired);
+                                    }
+                                });
                             }
                         },
                         new Callback() {
@@ -454,7 +476,8 @@ public class ContentsActivity extends AppCompatActivity {
         ContentsList = new ArrayList<>();
         adapter = new RecyclerViewAdapterForContentsV2(ContentsList, ContentsActivity.this);
 
-
+        LatestQuery =  manager.CreatQuery("Contents",3,user_recent_LatLng_parsed,2
+                ,LatestDocForPaginate,option_contenttype,option_includeexpired);
         manager.readPagination("Contents", null, 3, new Callback2() {
             @Override
             public void OnCallback(Object object1, Object object2) {

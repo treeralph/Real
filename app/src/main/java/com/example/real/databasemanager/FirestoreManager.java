@@ -290,31 +290,7 @@ public class FirestoreManager {
     }
 
 
-    public void PaginationQuery(@Nullable Query query, Callback2 callback2){
-        if (query != null){
-            ArrayList<Data> dataList = new ArrayList<>();
 
-            query.addSnapshotListener(new EventListener<QuerySnapshot>() {
-                @Override
-                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                    if(!value.isEmpty()){
-                        for(DocumentSnapshot document : value.getDocuments()){
-                            Log.d(TAG, document.getId() + " => " + document.getData());
-                            dataList.add(0,CurrentDataType.Constructor(document.getData()));
-                        }
-                        DocumentSnapshot finaldoc = value.getDocuments().get(0);
-                        Log.d(TAG, " # " + dataList.size());
-                        callback2.OnCallback(dataList,finaldoc);
-                    }else{
-                        Log.d(TAG, "Error getting document: ", error);
-                    }
-                }
-            });
-        }else {
-            Toast.makeText(context, "Empty query inserted", Toast.LENGTH_SHORT).show();
-        }
-
-    }
     public void readPagination(String collectionPath, @Nullable DocumentSnapshot latestdocument, int numlimit, @Nullable Callback2 InitialCallback, @Nullable Callback2 PaginateCallback){
         // latestitemid = contents.getcontentid
         ArrayList<Data> dataList = new ArrayList<>();
@@ -546,9 +522,14 @@ public class FirestoreManager {
                 });
     }
 // Contents에 expired 추가해야댐(최소한 null이라도 들어있어야됨) & District "구" 추가
+    public Query CreatQuery(String collectionPath,int numlimit, LatLng latLng, int rectsize, @Nullable DocumentSnapshot lastdoc
+        , String ContentType, Boolean isincludeexpired ){
 
+    }
     public Query CreatQuery(String collectionPath,int numlimit, LatLng latLng, int rectsize, @Nullable DocumentSnapshot lastdoc
             , String ContentType, Boolean isincludeexpired ){
+
+
 
         double threshold = 0.018 * Math.pow(2,rectsize-1);
         double lat = latLng.latitude;
@@ -573,7 +554,7 @@ public class FirestoreManager {
                 else{
                     Query query = ref
                             .orderBy("time").limitToLast(numlimit)
-                            .whereNotEqualTo("AuctionState","EXPIRED")
+                            .whereNotEqualTo("auctionState","EXPIRED")
                             .whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint);
                     return query;}
             }
@@ -586,7 +567,7 @@ public class FirestoreManager {
                 else{
                     Query query = ref
                             .orderBy("time").limitToLast(numlimit).whereEqualTo("ContentType","Content")
-                            .whereNotEqualTo("AuctionState","EXPIRED")
+                            .whereNotEqualTo("auctionState","EXPIRED")
                             .whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint);
                     return query;}
             }
@@ -599,7 +580,7 @@ public class FirestoreManager {
                 else{
                     Query query = ref
                             .orderBy("time").limitToLast(numlimit).whereEqualTo("ContentType","AuctionContent")
-                            .whereNotEqualTo("AuctionState","EXPIRED")
+                            .whereNotEqualTo("auctionState","EXPIRED")
                             .whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint);
                     return query;}
             }
@@ -618,7 +599,7 @@ public class FirestoreManager {
                 else{
                     Query query = ref
                             .orderBy("time").limitToLast(numlimit)
-                            .whereNotEqualTo("AuctionState","EXPIRED")
+                            .whereNotEqualTo("auctionState","EXPIRED")
                             .whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
                             .endBefore(lastdoc);
                     return query;}
@@ -633,7 +614,7 @@ public class FirestoreManager {
                 else{
                     Query query = ref
                             .orderBy("time").limitToLast(numlimit).whereEqualTo("ContentType","Content")
-                            .whereNotEqualTo("AuctionState","EXPIRED")
+                            .whereNotEqualTo("auctionState","EXPIRED")
                             .whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
                             .endBefore(lastdoc);
                     return query;}
@@ -648,7 +629,7 @@ public class FirestoreManager {
                 else{
                     Query query = ref
                             .orderBy("time").limitToLast(numlimit).whereEqualTo("ContentType","AuctionContent")
-                            .whereNotEqualTo("AuctionState","EXPIRED")
+                            .whereNotEqualTo("auctionState","EXPIRED")
                             .whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
                             .endBefore(lastdoc);
                     return query;}
@@ -656,5 +637,30 @@ public class FirestoreManager {
             else{Toast.makeText(context, "Wrong ContentType inserted : " + ContentType, Toast.LENGTH_SHORT).show();
                 return null;}
         }
+    }
+    public void PaginationQuery(@Nullable Query query, Callback2 callback2){
+        if (query != null){
+            ArrayList<Data> dataList = new ArrayList<>();
+
+            query.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                @Override
+                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                    if(!value.isEmpty()){
+                        for(DocumentSnapshot document : value.getDocuments()){
+                            Log.d(TAG, document.getId() + " => " + document.getData());
+                            dataList.add(0,CurrentDataType.Constructor(document.getData()));
+                        }
+                        DocumentSnapshot finaldoc = value.getDocuments().get(0);
+                        Log.d(TAG, " # " + dataList.size());
+                        callback2.OnCallback(dataList,finaldoc);
+                    }else{
+                        Log.d(TAG, "Error getting document: ", error);
+                    }
+                }
+            });
+        }else {
+            Toast.makeText(context, "Empty query inserted", Toast.LENGTH_SHORT).show();
+        }
+
     }
 }
