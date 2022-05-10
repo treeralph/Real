@@ -89,8 +89,7 @@ public class ContentsActivity extends AppCompatActivity {
     ImageView searchAdditionalBtn;
 
     ArrayList<Contents> ContentsList;
-    DocumentSnapshot LatestDocForPaginate;
-    Query LatestQuery;
+
     RecyclerViewAdapterForContentsV2 adapter;
 
     AssetDatabaseManager assetDatabaseManager;
@@ -105,7 +104,9 @@ public class ContentsActivity extends AppCompatActivity {
 
     String option_contenttype = "ANY";
     boolean option_includeexpired = true;
-    String option_district = "수지구";
+    int option_rectsize = 2;
+    DocumentSnapshot LatestDocForPaginate;
+    Query LatestQuery;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -219,59 +220,14 @@ public class ContentsActivity extends AppCompatActivity {
                             @Override
                             public void OnCallback(Object object) {
                                 flag = 0;
-
                                 option_contenttype = "ANY";
                                 // Clear list
                                 ContentsList.clear();
-                                adapter.notifyDataSetChanged();
                                 // Create Query
                                 LatestQuery = manager.CreatQuery("Contents",null,3,
                                         option_contenttype,
                                         option_includeexpired,
                                         option_district);
-                                /*
-                                manager.PaginationQuery(LatestQuery, new Callback2() {
-                                    @Override
-                                    public void OnCallback(Object object1, Object object2) {
-                                        ArrayList<Contents> templist = (ArrayList<Contents>) object1;
-                                        //Collections.reverse(contentsList);
-                                        LatestDocForPaginate = (DocumentSnapshot) object2;
-                                        Log.d("#temp",String.valueOf(templist.size()));
-                                        ContentsList.addAll(templist);
-                                        adapter.notifyDataSetChanged();
-                                        recyclerView.setAdapter(adapter);
-                                        LatestQuery = manager.CreatQuery("Contents",LatestDocForPaginate,3,
-                                                option_contenttype,
-                                                option_includeexpired,
-                                                option_district);
-                                    }
-                                });
-
-                                 */
-
-                                recyclerView.clearOnScrollListeners();
-                                recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                                    @Override
-                                    public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                                        super.onScrollStateChanged(recyclerView, newState);
-                                        if(!recyclerView.canScrollVertically(1)) {
-                                            manager.PaginationQuery(LatestQuery, new Callback2() {
-                                                @Override
-                                                public void OnCallback(Object object1, Object object2) {
-                                                    ArrayList<Contents> templist = (ArrayList<Contents>) object1;
-                                                    LatestDocForPaginate = (DocumentSnapshot) object2;
-                                                    ContentsList.addAll(templist);
-                                                    adapter.notifyDataSetChanged();
-                                                    LatestQuery = manager.CreatQuery("Contents",LatestDocForPaginate,3,
-                                                            option_contenttype,
-                                                            option_includeexpired,
-                                                            option_district);
-                                                }
-                                            });
-
-                                        }
-                                    }
-                                });
                                 // Read by Query
                             }
                         },
