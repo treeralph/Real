@@ -232,6 +232,7 @@ public class ContentsActivity extends AppCompatActivity {
                                 // Clear list
                                 ContentsList.clear();
                                 recyclerView.clearOnScrollListeners();
+                                adapter.notifyDataSetChanged();
                                 LatestDocForPaginate = null;
                                 // Create Query
                                 LatestQuery = manager.CreatQuery("Contents",NumPaginate,user_recent_LatLng_parsed,option_rectsize
@@ -264,7 +265,7 @@ public class ContentsActivity extends AppCompatActivity {
                                                     LatestDocForPaginate = (DocumentSnapshot) object2;
                                                     Log.d("#temp",String.valueOf(templist.size()));
                                                     ContentsList.addAll(templist);
-                                                    adapter.notifyDataSetChanged();
+                                                    adapter.notifyItemRangeInserted(ContentsList.size()-templist.size(), templist.size());
                                                     // update query
                                                     LatestQuery = manager.CreatQuery("Contents",NumPaginate,user_recent_LatLng_parsed,option_rectsize
                                                             ,LatestDocForPaginate,option_contenttype,option_includeexpired);
@@ -283,6 +284,7 @@ public class ContentsActivity extends AppCompatActivity {
                                 // Clear list
                                 ContentsList.clear();
                                 recyclerView.clearOnScrollListeners();
+                                adapter.notifyDataSetChanged();
                                 LatestDocForPaginate = null;
                                 // Create Query
                                 LatestQuery = manager.CreatQuery("Contents",NumPaginate,user_recent_LatLng_parsed,option_rectsize
@@ -315,7 +317,7 @@ public class ContentsActivity extends AppCompatActivity {
                                                     LatestDocForPaginate = (DocumentSnapshot) object2;
                                                     Log.d("#temp",String.valueOf(templist.size()));
                                                     ContentsList.addAll(templist);
-                                                    adapter.notifyDataSetChanged();
+                                                    adapter.notifyItemRangeInserted(ContentsList.size()-templist.size(), templist.size());
                                                     // update query
                                                     LatestQuery = manager.CreatQuery("Contents",NumPaginate,user_recent_LatLng_parsed,option_rectsize
                                                             ,LatestDocForPaginate,option_contenttype,option_includeexpired);
@@ -335,6 +337,7 @@ public class ContentsActivity extends AppCompatActivity {
                                 // Clear list
                                 ContentsList.clear();
                                 recyclerView.clearOnScrollListeners();
+                                adapter.notifyDataSetChanged();
                                 LatestDocForPaginate = null;
                                 // Create Query
                                 LatestQuery = manager.CreatQuery("Contents",NumPaginate,user_recent_LatLng_parsed,option_rectsize
@@ -367,7 +370,7 @@ public class ContentsActivity extends AppCompatActivity {
                                                     LatestDocForPaginate = (DocumentSnapshot) object2;
                                                     Log.d("#temp",String.valueOf(templist.size()));
                                                     ContentsList.addAll(templist);
-                                                    adapter.notifyDataSetChanged();
+                                                    adapter.notifyItemRangeInserted(ContentsList.size()-templist.size(), templist.size());
                                                     // update query
                                                     LatestQuery = manager.CreatQuery("Contents",NumPaginate,user_recent_LatLng_parsed,option_rectsize
                                                             ,LatestDocForPaginate,option_contenttype,option_includeexpired);
@@ -390,6 +393,7 @@ public class ContentsActivity extends AppCompatActivity {
                                         // Clear list
                                         ContentsList.clear();
                                         recyclerView.clearOnScrollListeners();
+                                        adapter.notifyDataSetChanged();
                                         LatestDocForPaginate = null;
                                         // Create Query
                                         LatestQuery = manager.CreatQuery("Contents",NumPaginate,user_recent_LatLng_parsed,option_rectsize
@@ -422,7 +426,7 @@ public class ContentsActivity extends AppCompatActivity {
                                                             LatestDocForPaginate = (DocumentSnapshot) object2;
                                                             Log.d("#temp",String.valueOf(templist.size()));
                                                             ContentsList.addAll(templist);
-                                                            adapter.notifyDataSetChanged();
+                                                            adapter.notifyItemRangeInserted(ContentsList.size()-templist.size(), templist.size());
                                                             // update query
                                                             LatestQuery = manager.CreatQuery("Contents",NumPaginate,user_recent_LatLng_parsed,option_rectsize
                                                                     ,LatestDocForPaginate,option_contenttype,option_includeexpired);
@@ -438,6 +442,7 @@ public class ContentsActivity extends AppCompatActivity {
                                         // Clear list
                                         ContentsList.clear();
                                         recyclerView.clearOnScrollListeners();
+                                        adapter.notifyDataSetChanged();
                                         LatestDocForPaginate = null;
                                         // Create Query
                                         LatestQuery = manager.CreatQuery("Contents",NumPaginate,user_recent_LatLng_parsed,option_rectsize
@@ -470,7 +475,7 @@ public class ContentsActivity extends AppCompatActivity {
                                                             LatestDocForPaginate = (DocumentSnapshot) object2;
                                                             Log.d("#temp",String.valueOf(templist.size()));
                                                             ContentsList.addAll(templist);
-                                                            adapter.notifyDataSetChanged();
+                                                            adapter.notifyItemRangeInserted(ContentsList.size()-templist.size(), templist.size());
                                                             // update query
                                                             LatestQuery = manager.CreatQuery("Contents",NumPaginate,user_recent_LatLng_parsed,option_rectsize
                                                                     ,LatestDocForPaginate,option_contenttype,option_includeexpired);
@@ -701,8 +706,9 @@ public class ContentsActivity extends AppCompatActivity {
                             //Collections.reverse(contentsList);
                             LatestDocForPaginate = (DocumentSnapshot) object2;
                             Log.d("#temp",String.valueOf(templist.size()));
+                            Log.d("#LASTITEM",LatestDocForPaginate.get("ContentTitle").toString());
                             ContentsList.addAll(templist);
-                            adapter.notifyDataSetChanged();
+                            adapter.notifyItemRangeInserted(ContentsList.size()-templist.size(), templist.size());
                             // update query
                             LatestQuery = manager.CreatQuery("Contents",NumPaginate
                                     ,LatestDocForPaginate,option_contenttype,option_includeexpired);
