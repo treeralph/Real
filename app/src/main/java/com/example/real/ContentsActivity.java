@@ -500,82 +500,7 @@ public class ContentsActivity extends AppCompatActivity {
                 dialog.show();
             }
         });
-        /*
-        searchAdditionalBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SearchAdditionalFuntionDialog dialog = new SearchAdditionalFuntionDialog(ContentsActivity.this,
-                        new Callback() {
-                            @Override
-                            public void OnCallback(Object object) {
-                                manager.read("Contents", new Callback() {
-                                    @Override
-                                    public void OnCallback(Object object) {
-                                        ArrayList<Contents> contentsList = (ArrayList<Contents>) object;
-                                        Collections.reverse(contentsList);
-                                        RecyclerViewAdapterForContentsV2 adapter = new RecyclerViewAdapterForContentsV2(contentsList, ContentsActivity.this);
-                                        recyclerView.setAdapter(adapter);
-                                        flag = 0;
-                                    }
-                                });
-                            }
-                        },
-                        new Callback() {
-                            @Override
-                            public void OnCallback(Object object) {
-                                manager.search("/Contents", "ContentType", "Content", new Callback() {
-                                    @Override
-                                    public void OnCallback(Object object) {
-                                        ArrayList<Contents> contentsList = (ArrayList<Contents>) object;
-                                        RecyclerViewAdapterForContentsV2 adapter = new RecyclerViewAdapterForContentsV2(contentsList, ContentsActivity.this);
-                                        recyclerView.setAdapter(adapter);
-                                        flag = 1;
-                                    }
-                                });
-                            }
-                        },
-                        new Callback() {
-                            @Override
-                            public void OnCallback(Object object) {
-                                manager.search("/Contents", "ContentType", "AuctionContent", new Callback() {
-                                    @Override
-                                    public void OnCallback(Object object) {
-                                        ArrayList<Contents> contentsList = (ArrayList<Contents>) object;
-                                        RecyclerViewAdapterForContentsV2 adapter = new RecyclerViewAdapterForContentsV2(contentsList, ContentsActivity.this);
-                                        recyclerView.setAdapter(adapter);
-                                        flag = 2;
-                                    }
-                                });
-                            }
-                        },
-                        new Callback() {
-                            @Override
-                            public void OnCallback(Object object) {
-                                ImageView imageView = (ImageView) object;
-                                switch(expiredFlag){
-                                    case 0: // 만료된 자료까지 보기
-                                        expiredFlag = 1;
-                                        break;
-                                    case 1: // 만료되지 않은 자료만 보기
-                                        expiredFlag = 0;
-                                        break;
-                                    default:
-                                        break;
-                                }
-                            }
-                        }, flag, expiredFlag);
 
-                dialog.setCanceledOnTouchOutside(true);
-                dialog.setCancelable(true);
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
-                layoutParams.gravity = Gravity.RIGHT | Gravity.TOP;
-                dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
-                dialog.show();
-            }
-        });
-
-         */
 
 
         searchBtn.setOnClickListener(new View.OnClickListener() {
@@ -731,18 +656,25 @@ public class ContentsActivity extends AppCompatActivity {
                 //recyclerView.setVisibility(View.VISIBLE);
                 // Set category
                 // Clear & refresh Dataset
-                manager.read("Contents", new Callback() {
+                ContentsList.clear();
+                adapter.notifyDataSetChanged();
+                manager.PaginationQuery(LatestQuery, new Callback2() {
                     @Override
-                    public void OnCallback(Object object) {
-                        ArrayList<Contents> contentsList = (ArrayList<Contents>)object;
+                    public void OnCallback(Object object1, Object object2) {
+                        ArrayList<Contents> templist = (ArrayList<Contents>) object1;
+                        //Collections.reverse(contentsList);
+                        LatestDocForPaginate = (DocumentSnapshot) object2;
+                        Log.d("#temp",String.valueOf(templist.size()));
+                        ContentsList.addAll(templist);
+                        adapter.notifyDataSetChanged();
+                        // update query
+                        LatestQuery = manager.CreatQuery("Contents",NumPaginate,user_recent_LatLng_parsed,option_rectsize
+                                ,LatestDocForPaginate,option_contenttype,option_includeexpired);
 
-                        Collections.reverse(contentsList);
-                        // Actually, we don't clear our dataset but create new adapter with same name
-                        RecyclerViewAdapterForContentsV2 adapter = new RecyclerViewAdapterForContentsV2(contentsList, ContentsActivity.this);
-                        recyclerView.setAdapter(adapter);
-                        swipeRefreshLayout.setRefreshing(false);
+
                     }
                 });
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
 
