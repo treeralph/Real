@@ -522,10 +522,94 @@ public class FirestoreManager {
                 });
     }
 // Contents에 expired 추가해야댐(최소한 null이라도 들어있어야됨) & District "구" 추가
-    public Query CreatQuery(String collectionPath,int numlimit, LatLng latLng, int rectsize, @Nullable DocumentSnapshot lastdoc
+    // No LatLng ver
+    public Query CreatQuery(String collectionPath,int numlimit, @Nullable DocumentSnapshot lastdoc
         , String ContentType, Boolean isincludeexpired ){
+        CollectionReference ref = db.collection(collectionPath);
+        if(lastdoc == null || !lastdoc.exists()){
+            if(ContentType.equals("ANY")){
+                if(isincludeexpired){
+                    Query query = ref
+                            .orderBy("time").limitToLast(numlimit);
+                    return query;}
+                else{
+                    Query query = ref
+                            .orderBy("time").limitToLast(numlimit)
+                            .whereNotEqualTo("auctionState","EXPIRED");
+                    return query;}
+            }
+            else if(ContentType.equals("CONTENT")){
+                if(isincludeexpired){
+                    Query query = ref
+                            .orderBy("time").limitToLast(numlimit).whereEqualTo("ContentType","Content");
+                    return query;}
+                else{
+                    Query query = ref
+                            .orderBy("time").limitToLast(numlimit).whereEqualTo("ContentType","Content")
+                            .whereNotEqualTo("auctionState","EXPIRED");
+                    return query;}
+            }
+            else if(ContentType.equals("AUCTIONCONTENT")){
+                if(isincludeexpired){
+                    Query query = ref
+                            .orderBy("time").limitToLast(numlimit).whereEqualTo("ContentType","AuctionContent");
+                    return query;}
+                else{
+                    Query query = ref
+                            .orderBy("time").limitToLast(numlimit).whereEqualTo("ContentType","AuctionContent")
+                            .whereNotEqualTo("auctionState","EXPIRED");
+                    return query;}
+            }
+            else{Toast.makeText(context, "Wrong ContentType inserted : " + ContentType, Toast.LENGTH_SHORT).show();
+                return null;}
 
+        }
+        else{
+            if(ContentType.equals("ANY")){
+                if(isincludeexpired){
+                    Query query = ref
+                            .orderBy("time").limitToLast(numlimit)
+                            .endBefore(lastdoc);
+                    return query;}
+                else{
+                    Query query = ref
+                            .orderBy("time").limitToLast(numlimit)
+                            .whereNotEqualTo("auctionState","EXPIRED")
+                            .endBefore(lastdoc);
+                    return query;}
+            }
+            else if(ContentType.equals("CONTENT")){
+                if(isincludeexpired){
+                    Query query = ref
+                            .orderBy("time").limitToLast(numlimit).whereEqualTo("ContentType","Content")
+                            .endBefore(lastdoc);
+                    return query;}
+                else{
+                    Query query = ref
+                            .orderBy("time").limitToLast(numlimit).whereEqualTo("ContentType","Content")
+                            .whereNotEqualTo("auctionState","EXPIRED")
+                            .endBefore(lastdoc);
+                    return query;}
+            }
+            else if(ContentType.equals("AUCTIONCONTENT")){
+                if(isincludeexpired){
+                    Query query = ref
+                            .orderBy("time").limitToLast(numlimit).whereEqualTo("ContentType","AuctionContent")
+                            .endBefore(lastdoc);
+                    return query;}
+                else{
+                    Query query = ref
+                            .orderBy("time").limitToLast(numlimit).whereEqualTo("ContentType","AuctionContent")
+                            .whereNotEqualTo("auctionState","EXPIRED")
+                            .endBefore(lastdoc);
+                    return query;}
+            }
+            else{Toast.makeText(context, "Wrong ContentType inserted : " + ContentType, Toast.LENGTH_SHORT).show();
+                return null;}
+        }
     }
+
+    // Latlng ver
     public Query CreatQuery(String collectionPath,int numlimit, LatLng latLng, int rectsize, @Nullable DocumentSnapshot lastdoc
             , String ContentType, Boolean isincludeexpired ){
 
@@ -548,40 +632,50 @@ public class FirestoreManager {
             if(ContentType.equals("ANY")){
                 if(isincludeexpired){
                     Query query = ref
-                            .orderBy("time").limitToLast(numlimit)
-                            .whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint);
+                            .orderBy("geoPoint")
+                            .whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
+                            .orderBy("time").limitToLast(numlimit);
                     return query;}
                 else{
                     Query query = ref
-                            .orderBy("time").limitToLast(numlimit)
+                            .orderBy("geoPoint")
                             .whereNotEqualTo("auctionState","EXPIRED")
-                            .whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint);
+                            .whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
+                            .orderBy("time").limitToLast(numlimit);
                     return query;}
             }
             else if(ContentType.equals("CONTENT")){
                 if(isincludeexpired){
                     Query query = ref
-                            .orderBy("time").limitToLast(numlimit).whereEqualTo("ContentType","Content")
-                            .whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint);
+                            .orderBy("geoPoint")
+                            .whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
+                            .whereEqualTo("ContentType","Content")
+                            .orderBy("time").limitToLast(numlimit);
                     return query;}
                 else{
                     Query query = ref
-                            .orderBy("time").limitToLast(numlimit).whereEqualTo("ContentType","Content")
+                            .orderBy("geoPoint")
                             .whereNotEqualTo("auctionState","EXPIRED")
-                            .whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint);
+                            .whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
+                            .whereEqualTo("ContentType","Content")
+                            .orderBy("time").limitToLast(numlimit);
                     return query;}
             }
             else if(ContentType.equals("AUCTIONCONTENT")){
                 if(isincludeexpired){
                     Query query = ref
-                            .orderBy("time").limitToLast(numlimit).whereEqualTo("ContentType","AuctionContent")
-                            .whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint);
+                            .orderBy("geoPoint")
+                            .whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
+                            .whereEqualTo("ContentType","AuctionContent")
+                            .orderBy("time").limitToLast(numlimit);
                     return query;}
                 else{
                     Query query = ref
-                            .orderBy("time").limitToLast(numlimit).whereEqualTo("ContentType","AuctionContent")
+                            .orderBy("geoPoint")
                             .whereNotEqualTo("auctionState","EXPIRED")
-                            .whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint);
+                            .whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
+                            .whereEqualTo("ContentType","AuctionContent")
+                            .orderBy("time").limitToLast(numlimit);
                     return query;}
             }
             else{Toast.makeText(context, "Wrong ContentType inserted : " + ContentType, Toast.LENGTH_SHORT).show();
@@ -592,46 +686,56 @@ public class FirestoreManager {
             if(ContentType.equals("ANY")){
                 if(isincludeexpired){
                     Query query = ref
-                            .orderBy("time").limitToLast(numlimit)
+                            .orderBy("geoPoint")
                             .whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
-                            .endBefore(lastdoc);
+
+                            .orderBy("time").limitToLast(numlimit).endBefore(lastdoc);
                     return query;}
                 else{
                     Query query = ref
-                            .orderBy("time").limitToLast(numlimit)
+                            .orderBy("geoPoint")
                             .whereNotEqualTo("auctionState","EXPIRED")
                             .whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
-                            .endBefore(lastdoc);
+
+                            .orderBy("time").limitToLast(numlimit).endBefore(lastdoc);
                     return query;}
             }
             else if(ContentType.equals("CONTENT")){
                 if(isincludeexpired){
                     Query query = ref
-                            .orderBy("time").limitToLast(numlimit).whereEqualTo("ContentType","Content")
+                            .orderBy("geoPoint")
                             .whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
-                            .endBefore(lastdoc);
+                            .whereEqualTo("ContentType","Content")
+
+                            .orderBy("time").limitToLast(numlimit).endBefore(lastdoc);
                     return query;}
                 else{
                     Query query = ref
-                            .orderBy("time").limitToLast(numlimit).whereEqualTo("ContentType","Content")
+                            .orderBy("geoPoint")
                             .whereNotEqualTo("auctionState","EXPIRED")
                             .whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
-                            .endBefore(lastdoc);
+                            .whereEqualTo("ContentType","Content")
+
+                            .orderBy("time").limitToLast(numlimit).endBefore(lastdoc);
                     return query;}
             }
             else if(ContentType.equals("AUCTIONCONTENT")){
                 if(isincludeexpired){
                     Query query = ref
-                            .orderBy("time").limitToLast(numlimit).whereEqualTo("ContentType","AuctionContent")
+                            .orderBy("geoPoint")
                             .whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
-                            .endBefore(lastdoc);
+                            .whereEqualTo("ContentType","AuctionContent")
+
+                            .orderBy("time").limitToLast(numlimit).endBefore(lastdoc);
                     return query;}
                 else{
                     Query query = ref
-                            .orderBy("time").limitToLast(numlimit).whereEqualTo("ContentType","AuctionContent")
+                            .orderBy("geoPoint")
                             .whereNotEqualTo("auctionState","EXPIRED")
                             .whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
-                            .endBefore(lastdoc);
+                            .whereEqualTo("ContentType","AuctionContent")
+
+                            .orderBy("time").limitToLast(numlimit).endBefore(lastdoc);
                     return query;}
             }
             else{Toast.makeText(context, "Wrong ContentType inserted : " + ContentType, Toast.LENGTH_SHORT).show();
