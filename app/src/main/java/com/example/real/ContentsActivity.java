@@ -476,7 +476,10 @@ public class ContentsActivity extends AppCompatActivity {
                                     internalDatabaseManager.write("user_recent_LatLng", stringLatLng, new Callback() {
                                         @Override
                                         public void OnCallback(Object object) {
+                                            user_recent_LatLng = stringLatLng;
+                                            user_recent_location = adm_cd;
 
+                                            // todo: for test part
                                             String[] temp = stringLatLng.split(",");
                                             double lat = Double.parseDouble(temp[0]);
                                             double lng = Double.parseDouble(temp[1]);
