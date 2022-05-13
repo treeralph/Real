@@ -54,7 +54,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="20dp"
-                    android:fontFamily="@font/simplehae"
+                    android:fontFamily="@font/simplehae_ed_final"
                     android:text="Content Title"
                     android:textColor="@color/black"
                     android:textSize="30dp"
@@ -65,7 +65,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="20dp"
-                    android:fontFamily="@font/simplehae"
+                    android:fontFamily="@font/simplehae_ed_final"
                     android:gravity="right"
                     android:text="0000.00.00 - 00:00"
                     android:textColor="@color/black"
@@ -92,7 +92,7 @@
                         android:layout_gravity="center"
                         android:layout_marginLeft="15dp"
                         android:layout_weight="1"
-                        android:fontFamily="@font/simplehae"
+                        android:fontFamily="@font/simplehae_ed_final"
                         android:text="UserNickName"
                         android:textColor="@color/black"
                         android:textSize="20dp"
@@ -115,12 +115,16 @@
                     android:textColor="@color/grey"
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="30dp"/>
+
+
+
+
                 <LinearLayout
                     android:id="@+id/AuctionContentActivityLatestLL"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/grey_gradient_color"
                     android:visibility="gone"
+                    android:background="@drawable/grey_gradient_color"
                     android:orientation="vertical">
                     <TextView
                         android:layout_width="match_parent"
@@ -129,10 +133,11 @@
                         android:textColor="@color/black"
                         android:textStyle="bold"
                         android:textSize="25dp"
-                        android:fontFamily="@font/simplehae"
+                        android:fontFamily="@font/simplehae_ed_final"
                         android:layout_marginLeft="20dp"
                         android:layout_marginTop="20dp"
                         android:layout_marginBottom="20dp"/>
+
 
                     <androidx.cardview.widget.CardView
                         android:layout_width="230dp"
@@ -177,7 +182,7 @@
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
                                             android:layout_weight="1"
-                                            android:fontFamily="@font/simplehae"
+                                            android:fontFamily="@font/simplehae_ed_final"
                                             android:gravity="bottom|left"
                                             android:layout_marginBottom="10dp"
                                             android:layout_marginLeft="20dp"
@@ -188,7 +193,7 @@
                                         <TextView
                                             android:layout_width="0dp"
                                             android:layout_height="20dp"
-                                            android:fontFamily="@font/simplehae"
+                                            android:fontFamily="@font/simplehae_ed_final"
                                             android:text="최근입찰자"
                                             android:textColor="@color/black"
                                             android:textSize="20dp" />
@@ -206,7 +211,7 @@
                                             android:layout_width="0dp"
                                             android:layout_height="0dp"
                                             android:layout_weight="1"
-                                            android:fontFamily="@font/simplehae"
+                                            android:fontFamily="@font/simplehae_ed_final"
                                             android:gravity="center|left"
                                             android:text="100,000"
                                             android:textColor="@color/black"
@@ -239,7 +244,7 @@
                             android:textColor="@color/black"
                             android:textStyle="bold"
                             android:textSize="25dp"
-                            android:fontFamily="@font/simplehae"
+                            android:fontFamily="@font/simplehae_ed_final"
                             android:layout_marginLeft="20dp"
                             android:layout_marginTop="20dp"
                             android:layout_marginBottom="10dp"/>
@@ -257,7 +262,7 @@
                                 android:textColor="@color/black"
                                 android:textStyle="bold"
                                 android:textSize="35dp"
-                                android:fontFamily="@font/simplehae"
+                                android:fontFamily="@font/simplehae_ed_final"
                                 android:layout_marginLeft="20dp" />
                             <TextView
                                 android:layout_width="wrap_content"
@@ -266,7 +271,7 @@
                                 android:textColor="@color/black"
                                 android:textStyle="bold"
                                 android:textSize="30dp"
-                                android:fontFamily="@font/simplehae"
+                                android:fontFamily="@font/simplehae_ed_final"
                                 android:layout_marginLeft="0dp" />
                         </LinearLayout>
 
@@ -279,7 +284,7 @@
                             android:textColor="@color/black"
                             android:textStyle="bold"
                             android:textSize="30dp"
-                            android:fontFamily="@font/simplehae"
+                            android:fontFamily="@font/simplehae_ed_final"
                             android:layout_marginLeft="20dp"
                             android:layout_marginTop="10dp"/>
                         <TextView
@@ -290,7 +295,7 @@
                             android:textColor="@color/black"
                             android:textStyle="bold"
                             android:textSize="20dp"
-                            android:fontFamily="@font/simplehae"
+                            android:fontFamily="@font/simplehae_ed_final"
                             android:layout_marginLeft="20dp"
                             android:layout_marginTop="10dp"/>
 
@@ -342,7 +347,7 @@
                         android:textColor="@color/black"
                         android:textStyle="bold"
                         android:textSize="25dp"
-                        android:fontFamily="@font/simplehae"
+                        android:fontFamily="@font/simplehae_ed_final"
                         android:layout_marginLeft="20dp"
                         android:layout_marginTop="20dp"/>
 
@@ -381,7 +386,7 @@
                                 android:background="@color/black"
                                 android:text="Comment"
                                 android:textSize="13dp"
-                                android:fontFamily="@font/simplehae"
+                                android:fontFamily="@font/simplehae_ed_final"
                                 android:textStyle="bold" />
 
 
@@ -406,7 +411,7 @@
                             android:textStyle="bold"
                             android:textSize="25dp"
                             android:background="@color/black"
-                            android:fontFamily="@font/simplehae"/>
+                            android:fontFamily="@font/simplehae_ed_final"/>
                     </androidx.cardview.widget.CardView>
 
                     <Button
@@ -444,7 +449,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-                    android:fontFamily="@font/simplehae"
+                    android:fontFamily="@font/simplehae_ed_final"
                     android:gravity="center"
                     android:text="Contents"
                     android:textColor="@color/black"
@@ -471,7 +476,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-                    android:fontFamily="@font/simplehae"
+                    android:fontFamily="@font/simplehae_ed_final"
                     android:gravity="center"
                     android:text="User"
                     android:textColor="@color/black"
@@ -515,7 +520,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-                    android:fontFamily="@font/simplehae"
+                    android:fontFamily="@font/simplehae_ed_final"
                     android:gravity="center"
                     android:text="Message"
                     android:textColor="@color/black"
@@ -542,7 +547,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-                    android:fontFamily="@font/simplehae"
+                    android:fontFamily="@font/simplehae_ed_final"
                     android:gravity="center"
                     android:text="Modify"
                     android:textColor="@color/black"

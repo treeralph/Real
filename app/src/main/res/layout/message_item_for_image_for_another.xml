@@ -58,7 +58,7 @@
             android:text="0000.00.00 - 00:00"
             android:textSize="10dp"
             android:textColor="@color/black"
-            android:fontFamily="@font/simplehae"/>
+            android:fontFamily="@font/simplehae_ed_final"/>
 
     </LinearLayout>
 </RelativeLayout>

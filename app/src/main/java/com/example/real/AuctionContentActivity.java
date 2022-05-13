@@ -429,6 +429,7 @@ public class AuctionContentActivity extends AppCompatActivity {
                                 @Override
                                 public void OnCallback(Object object) {
                                     List<Bitmap> bitmapList = (List<Bitmap>) object;
+
                                     LatestBidderImageView.post(new Runnable() {
                                         @Override
                                         public void run() {
@@ -447,6 +448,72 @@ public class AuctionContentActivity extends AppCompatActivity {
 
                                             LatestBidderImageView.setImageBitmap(TopPaddingPaddle);
                                         }});
+
+                                    // todo: test start
+
+                                    ImageView imageViewForTest_1 = findViewById(R.id.designTestForBidder1);
+                                    ImageView imageViewForTest_2 = findViewById(R.id.designTestForBidder2);
+                                    ImageView imageViewForTest_3 = findViewById(R.id.designTestForBidder3);
+
+                                    imageViewForTest_1.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+
+                                            imageViewForTest_1.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                                            int Paddle_Size_x = imageViewForTest_1.getWidth();
+                                            createPaddle = new CreatePaddle(AuctionContentActivity.this, user.getUid());
+                                            Bitmap InitialPaddle = createPaddle.createPaddle(bitmapList.get(0),bitmapList.get(1),bitmapList.get(2),Paddle_Size_x, 30);
+                                            //LatestBidderImageView.setAdjustViewBounds(true);
+
+                                            Matrix matrix = new Matrix();
+                                            matrix.postTranslate(0,50);
+                                            Bitmap TopPaddingPaddle = Bitmap.createBitmap(InitialPaddle.getWidth(), InitialPaddle.getHeight(), Bitmap.Config.ARGB_8888);
+                                            Canvas canvas = new Canvas(TopPaddingPaddle);
+                                            canvas.drawBitmap(InitialPaddle,matrix,null);
+
+                                            imageViewForTest_1.setImageBitmap(TopPaddingPaddle);
+                                        }});
+                                    imageViewForTest_2.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+
+                                            imageViewForTest_2.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                                            int Paddle_Size_x = imageViewForTest_2.getWidth();
+                                            createPaddle = new CreatePaddle(AuctionContentActivity.this, user.getUid());
+                                            Bitmap InitialPaddle = createPaddle.createPaddle(bitmapList.get(0),bitmapList.get(1),bitmapList.get(2),Paddle_Size_x, 30);
+                                            //LatestBidderImageView.setAdjustViewBounds(true);
+
+                                            Matrix matrix = new Matrix();
+                                            matrix.postTranslate(0,50);
+                                            Bitmap TopPaddingPaddle = Bitmap.createBitmap(InitialPaddle.getWidth(), InitialPaddle.getHeight(), Bitmap.Config.ARGB_8888);
+                                            Canvas canvas = new Canvas(TopPaddingPaddle);
+                                            canvas.drawBitmap(InitialPaddle,matrix,null);
+
+                                            imageViewForTest_2.setImageBitmap(TopPaddingPaddle);
+                                        }});
+                                    imageViewForTest_3.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+
+                                            imageViewForTest_3.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                                            int Paddle_Size_x = imageViewForTest_3.getWidth();
+                                            createPaddle = new CreatePaddle(AuctionContentActivity.this, user.getUid());
+                                            Bitmap InitialPaddle = createPaddle.createPaddle(bitmapList.get(0),bitmapList.get(1),bitmapList.get(2),Paddle_Size_x, 30);
+                                            //LatestBidderImageView.setAdjustViewBounds(true);
+
+                                            Matrix matrix = new Matrix();
+                                            matrix.postTranslate(0,50);
+                                            Bitmap TopPaddingPaddle = Bitmap.createBitmap(InitialPaddle.getWidth(), InitialPaddle.getHeight(), Bitmap.Config.ARGB_8888);
+                                            Canvas canvas = new Canvas(TopPaddingPaddle);
+                                            canvas.drawBitmap(InitialPaddle,matrix,null);
+
+                                            imageViewForTest_3.setImageBitmap(TopPaddingPaddle);
+                                        }});
+
+                                    // todo: test end
+
+
+
                                 }});
                         }});
                 }}});

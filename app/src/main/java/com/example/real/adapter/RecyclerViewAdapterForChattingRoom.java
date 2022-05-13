@@ -207,8 +207,6 @@ public class RecyclerViewAdapterForChattingRoom extends RecyclerView.Adapter<Rec
             chattingRoomItemUserProfileImageView = itemView.findViewById(R.id.ChattingRoomItemUserProfileImageViewDesign);
             chattingRoomItemClientUserNickName = itemView.findViewById(R.id.ChattingRoomItemUserNickNameTextViewDesign);
             chattingRoomItemContentMoreInfoTextView = itemView.findViewById(R.id.ChattingRoomItemMoreInfoTextViewDesign);
-            chattingRoomItemMoveContentButton = itemView.findViewById(R.id.ChattingRoomItemMoveContentImageViewDesign);
-            chattingRoomItemMoveUserProfileButton = itemView.findViewById(R.id.ChattingRoomItemMoveUserProfileViewImageView);
         }
     }
 }

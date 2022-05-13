@@ -64,11 +64,10 @@ public class UserhistoryActivity extends AppCompatActivity {
     int NUM_COMMENTS;
     int NUM_LOVERS;
     int NUM_EARNED;
+
     ActivityResultLauncher<Intent> resultLauncher;
     FirebaseStorage tempstorage;
     StorageReference tempref;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,9 +76,7 @@ public class UserhistoryActivity extends AppCompatActivity {
 
         // XML VARIABLES
         ImageView userprofileimg = (ImageView) findViewById(R.id.UserhistoryProfileimg);
-        ImageView setuserprofileimg = (ImageView) findViewById(R.id.UserhistoryActivitySetUserProfileImg);
         TextView userprofilenickname = (TextView) findViewById(R.id.UserhistoryUserNickname);
-        ImageView setuserprofilenickname = (ImageView) findViewById(R.id.UserhistoryActivitySetUserProfileNickname);
         TextView NumContents = (TextView) findViewById(R.id.UserhistoryNumContents);
         TextView NumComments = (TextView) findViewById(R.id.UserhistoryNumComments);
         TextView NUMLovers = (TextView) findViewById(R.id.UserhistoryNumLovers);
@@ -376,46 +373,6 @@ public class UserhistoryActivity extends AppCompatActivity {
                 }
             }
         });
-
-        setuserprofilenickname.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CustomDialogForSetUserNickname dialog = new CustomDialogForSetUserNickname(UserhistoryActivity.this);
-                dialog.setDialogListener(new CustomDialogForSetUserNickname.CustomDialogListener() {
-                    @Override
-                    public void onPositiveClicked(String Nickname) {
-                        userprofilenickname.setText(Nickname);
-                        firestoreManagerForUserProfile.update("UserProfile", user.getUid(), "nickname", Nickname, new Callback() {
-                            @Override
-                            public void OnCallback(Object object) {
-
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onNegativeClicked() {
-
-                    }
-                });
-                dialog.show();
-
-
-            }
-        });
-        setuserprofileimg.setVisibility(View.GONE);
-        setuserprofileimg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.putExtra("CallType",0215);
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                resultLauncher.launch(intent);
-            }
-        });
-        setuserprofilenickname.setVisibility(View.GONE);
-
 
         resultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),

@@ -42,7 +42,7 @@
                         android:textColor="@color/black"
                         android:textSize="25dp"
                         android:textStyle="bold"
-                        android:fontFamily="@font/simplehae"
+                        android:fontFamily="@font/simplehae_ed_final"
                         android:gravity="center"
                         android:layout_gravity="center"/>
                 </FrameLayout>
@@ -64,7 +64,7 @@
                         android:textColor="@color/black"
                         android:textSize="30dp"
                         android:textStyle="bold"
-                        android:fontFamily="@font/simplehae"/>
+                        android:fontFamily="@font/simplehae_ed_final"/>
                 </FrameLayout>
                 <EditText
                     android:id="@+id/makeContentDescriptionEditTextDesign"
@@ -79,7 +79,7 @@
                     android:textColor="@color/black"
                     android:textSize="20dp"
                     android:textStyle="bold"
-                    android:fontFamily="@font/simplehae"/>
+                    android:fontFamily="@font/simplehae_ed_final"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -95,7 +95,7 @@
                         android:textColor="@color/black"
                         android:textStyle="bold"
                         android:textSize="20dp"
-                        android:fontFamily="@font/simplehae"/>
+                        android:fontFamily="@font/simplehae_ed_final"/>
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -110,7 +110,7 @@
                             android:text="Price :"
                             android:textColor="@color/black"
                             android:textSize="20dp"
-                            android:fontFamily="@font/simplehae"/>
+                            android:fontFamily="@font/simplehae_ed_final"/>
                         <EditText
                             android:id="@+id/makeContentPriceEditTextDesign"
                             android:layout_width="match_parent"
@@ -120,7 +120,7 @@
                             android:textColorHint="@color/grey"
                             android:textColor="@color/black"
                             android:textSize="20dp"
-                            android:fontFamily="@font/simplehae"
+                            android:fontFamily="@font/simplehae_ed_final"
                             android:inputType="number"
                             android:digits="0123456789"
                             android:layout_weight="1"
@@ -141,7 +141,7 @@
                             android:text="Category :"
                             android:textColor="@color/black"
                             android:textSize="20dp"
-                            android:fontFamily="@font/simplehae"/>
+                            android:fontFamily="@font/simplehae_ed_final"/>
                         <TextView
                             android:id="@+id/makeContentCategoryTextView"
                             android:layout_width="match_parent"
@@ -151,7 +151,7 @@
                             android:textColorHint="@color/grey"
                             android:textColor="@color/black"
                             android:textSize="20dp"
-                            android:fontFamily="@font/simplehae"
+                            android:fontFamily="@font/simplehae_ed_final"
                             android:inputType="number"
                             android:digits="0123456789"
                             android:layout_weight="1"
@@ -172,7 +172,7 @@
                             android:text="Location :"
                             android:textColor="@color/black"
                             android:textSize="20dp"
-                            android:fontFamily="@font/simplehae"/>
+                            android:fontFamily="@font/simplehae_ed_final"/>
                         <TextView
                             android:id="@+id/makeContentLocationTextView"
                             android:layout_width="match_parent"
@@ -182,7 +182,7 @@
                             android:textColorHint="@color/grey"
                             android:textColor="@color/black"
                             android:textSize="20dp"
-                            android:fontFamily="@font/simplehae"
+                            android:fontFamily="@font/simplehae_ed_final"
                             android:inputType="number"
                             android:digits="0123456789"
                             android:layout_weight="1"
@@ -210,7 +210,7 @@
                 android:textColor="@color/white"
                 android:textSize="20dp"
                 android:textStyle="bold"
-                android:fontFamily="@font/simplehae"
+                android:fontFamily="@font/simplehae_ed_final"
                 android:gravity="center"/>
 
         </androidx.cardview.widget.CardView>

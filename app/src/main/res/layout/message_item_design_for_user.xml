@@ -28,7 +28,7 @@
             android:text="0000.00.00 - 00:00"
             android:textSize="10dp"
             android:textColor="@color/black"
-            android:fontFamily="@font/simplehae"/>
+            android:fontFamily="@font/simplehae_ed_final"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -68,7 +68,7 @@
                         android:layout_marginRight="4dp"
                         android:layout_marginBottom="5dp"
                         android:maxWidth="200dp"
-                        android:fontFamily="@font/simplehae"
+                        android:fontFamily="@font/simplehae_ed_final"
                         android:text="How was it going?"
                         android:textSize="18dp"
                         android:textColor="@color/black"

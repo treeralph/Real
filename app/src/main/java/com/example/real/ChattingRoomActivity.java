@@ -101,7 +101,7 @@ public class ChattingRoomActivity extends AppCompatActivity {
     public void onBackPressed() {
         ActivityManager activityManager = (ActivityManager) getApplication().getSystemService( Activity.ACTIVITY_SERVICE );
         ActivityManager.RunningTaskInfo task = activityManager.getRunningTasks( 10 ).get(0);
-        Log.d("TOPTOPTOP", task.toString());
+        Log.d(TAG, task.toString());
         if(task.numActivities == 1){
 
             Dialog dialog = new Dialog(this);

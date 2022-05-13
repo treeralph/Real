@@ -191,7 +191,6 @@ public class ContentsActivity extends AppCompatActivity {
                                         });
                                     }
                                 });
-
                     }
                 },
                 new Callback() { // failure
