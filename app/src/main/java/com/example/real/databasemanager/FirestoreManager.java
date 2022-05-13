@@ -739,7 +739,7 @@ public class FirestoreManager {
 
     // searchText ver
     public Query CreatQuery(String collectionPath,int numlimit, LatLng latLng, int rectsize, @Nullable DocumentSnapshot lastdoc
-            , String ContentType, Boolean isincludeexpired, ArrayList<String> searchArray){
+            , String ContentType, Boolean isincludeexpired,@Nullable ArrayList<String> searchArray){
 
         List<String> exclusivestate = Arrays.asList("nonAuction","ACQUIRED");
 
@@ -752,117 +752,217 @@ public class FirestoreManager {
         double greater_lng = lng + threshold;
         GeoPoint lower_geoPoint = new GeoPoint(lower_lat, lower_lng);
         GeoPoint greater_geoPoint = new GeoPoint(greater_lat, greater_lng);
-
-
-
         CollectionReference ref = db.collection(collectionPath);
-        if(lastdoc == null || !lastdoc.exists()){
-            if(ContentType.equals("ANY")){
-                if(isincludeexpired){
-                    Query query = ref
-                            .whereArrayContainsAny("WordCase",searchArray)
-                            .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
-                            .orderBy("time").limitToLast(numlimit);
-                    return query;}
-                else{
-                    Query query = ref
-                            .whereArrayContainsAny("WordCase",searchArray)
-                            .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
-                            .orderBy("auctionState").whereIn("auctionState",exclusivestate)
-                            .orderBy("time").limitToLast(numlimit);
-                    return query;}
-            }
-            else if(ContentType.equals("CONTENT")){
-                if(isincludeexpired){
-                    Query query = ref
-                            .whereArrayContainsAny("WordCase",searchArray)
-                            .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
-                            .orderBy("ContentType").whereEqualTo("ContentType","Content")
-                            .orderBy("time").limitToLast(numlimit);
-                    return query;}
-                else{
-                    Query query = ref
-                            .whereArrayContainsAny("WordCase",searchArray)
-                            .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
-                            .orderBy("ContentType").whereEqualTo("ContentType","Content")
-                            .orderBy("auctionState").whereIn("auctionState",exclusivestate)
-                            .orderBy("time").limitToLast(numlimit);
-                    return query;}
-            }
-            else if(ContentType.equals("AUCTIONCONTENT")){
-                if(isincludeexpired){
-                    Query query = ref
-                            .whereArrayContainsAny("WordCase",searchArray)
-                            .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
-                            .orderBy("ContentType").whereEqualTo("ContentType","AuctionContent")
-                            .orderBy("time").limitToLast(numlimit);
-                    return query;}
-                else{
-                    Query query = ref
-                            .whereArrayContainsAny("WordCase",searchArray)
-                            .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
-                            .orderBy("ContentType").whereEqualTo("ContentType","AuctionContent")
-                            .orderBy("auctionState").whereIn("auctionState",exclusivestate)
-                            .orderBy("time").limitToLast(numlimit);
-                    return query;}
-            }
-            else{Toast.makeText(context, "Wrong ContentType inserted : " + ContentType, Toast.LENGTH_SHORT).show();
-                return null;}
 
+        if(searchArray == null){
+            if(lastdoc == null || !lastdoc.exists()){
+                if(ContentType.equals("ANY")){
+                    if(isincludeexpired){
+                        Query query = ref
+                                .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
+                                .orderBy("time").limitToLast(numlimit);
+                        return query;}
+                    else{
+                        Query query = ref
+                                .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
+                                .orderBy("auctionState").whereEqualTo("auctionState","ACQUIRED")
+                                .orderBy("time").limitToLast(numlimit);
+                        return query;}
+                }
+                else if(ContentType.equals("CONTENT")){
+                    if(isincludeexpired){
+                        Query query = ref
+                                .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
+                                .orderBy("ContentType").whereEqualTo("ContentType","Content")
+                                .orderBy("time").limitToLast(numlimit);
+                        return query;}
+                    else{
+                        Query query = ref
+                                .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
+                                .orderBy("ContentType").whereEqualTo("ContentType","Content")
+                                .orderBy("auctionState").whereEqualTo("auctionState","ACQUIRED")
+                                .orderBy("time").limitToLast(numlimit);
+                        return query;}
+                }
+                else if(ContentType.equals("AUCTIONCONTENT")){
+                    if(isincludeexpired){
+                        Query query = ref
+                                .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
+                                .orderBy("ContentType").whereEqualTo("ContentType","AuctionContent")
+                                .orderBy("time").limitToLast(numlimit);
+                        return query;}
+                    else{
+                        Query query = ref
+                                .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
+                                .orderBy("ContentType").whereEqualTo("ContentType","AuctionContent")
+                                .orderBy("auctionState").whereEqualTo("auctionState","ACQUIRED")
+                                .orderBy("time").limitToLast(numlimit);
+                        return query;}
+                }
+                else{Toast.makeText(context, "Wrong ContentType inserted : " + ContentType, Toast.LENGTH_SHORT).show();
+                    return null;}
+
+            }
+            else{
+                if(ContentType.equals("ANY")){
+                    if(isincludeexpired){
+                        Query query = ref
+                                .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
+                                .orderBy("time").limitToLast(numlimit).endBefore(lastdoc);
+                        return query;}
+                    else{
+                        Query query = ref
+                                .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
+                                .orderBy("auctionState").whereEqualTo("auctionState","ACQUIRED")
+                                .orderBy("time").limitToLast(numlimit).endBefore(lastdoc);
+                        return query;}
+                }
+                else if(ContentType.equals("CONTENT")){
+                    if(isincludeexpired){
+                        Query query = ref
+                                .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
+                                .orderBy("ContentType").whereEqualTo("ContentType","Content")
+                                .orderBy("time").limitToLast(numlimit).endBefore(lastdoc);
+                        return query;}
+                    else{
+                        Query query = ref
+                                .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
+                                .orderBy("ContentType").whereEqualTo("ContentType","Content")
+                                .orderBy("auctionState").whereEqualTo("auctionState","ACQUIRED")
+                                .orderBy("time").limitToLast(numlimit).endBefore(lastdoc);
+                        return query;}
+                }
+                else if(ContentType.equals("AUCTIONCONTENT")){
+                    if(isincludeexpired){
+                        Query query = ref
+                                .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
+                                .orderBy("ContentType").whereEqualTo("ContentType","AuctionContent")
+                                .orderBy("time").limitToLast(numlimit).endBefore(lastdoc);
+                        return query;}
+                    else{
+                        Query query = ref
+                                .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
+                                .orderBy("ContentType").whereEqualTo("ContentType","AuctionContent")
+                                .orderBy("auctionState").whereEqualTo("auctionState","ACQUIRED")
+                                .orderBy("time").limitToLast(numlimit).endBefore(lastdoc);
+                        return query;}
+                }
+                else{Toast.makeText(context, "Wrong ContentType inserted : " + ContentType, Toast.LENGTH_SHORT).show();
+                    return null;}
+            }
         }
-        else{
-            if(ContentType.equals("ANY")){
-                if(isincludeexpired){
-                    Query query = ref
-                            .whereArrayContainsAny("WordCase",searchArray)
-                            .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
-                            .orderBy("time").limitToLast(numlimit).endBefore(lastdoc);
-                    return query;}
-                else{
-                    Query query = ref
-                            .whereArrayContainsAny("WordCase",searchArray)
-                            .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
-                            .orderBy("auctionState").whereIn("auctionState",exclusivestate)
-                            .orderBy("time").limitToLast(numlimit).endBefore(lastdoc);
-                    return query;}
+        else {
+            if(lastdoc == null || !lastdoc.exists()){
+                if(ContentType.equals("ANY")){
+                    if(isincludeexpired){
+                        Query query = ref
+                                .whereArrayContainsAny("WordCase",searchArray)
+                                .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
+                                .orderBy("time").limitToLast(numlimit);
+                        return query;}
+                    else{
+                        Query query = ref
+                                .whereArrayContainsAny("WordCase",searchArray)
+                                .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
+                                .orderBy("auctionState").whereEqualTo("auctionState","ACQUIRED")
+                                .orderBy("time").limitToLast(numlimit);
+                        return query;}
+                }
+                else if(ContentType.equals("CONTENT")){
+                    if(isincludeexpired){
+                        Query query = ref
+                                .whereArrayContainsAny("WordCase",searchArray)
+                                .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
+                                .orderBy("ContentType").whereEqualTo("ContentType","Content")
+                                .orderBy("time").limitToLast(numlimit);
+                        return query;}
+                    else{
+                        Query query = ref
+                                .whereArrayContainsAny("WordCase",searchArray)
+                                .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
+                                .orderBy("ContentType").whereEqualTo("ContentType","Content")
+                                .orderBy("auctionState").whereEqualTo("auctionState","ACQUIRED")
+                                .orderBy("time").limitToLast(numlimit);
+                        return query;}
+                }
+                else if(ContentType.equals("AUCTIONCONTENT")){
+                    if(isincludeexpired){
+                        Query query = ref
+                                .whereArrayContainsAny("WordCase",searchArray)
+                                .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
+                                .orderBy("ContentType").whereEqualTo("ContentType","AuctionContent")
+                                .orderBy("time").limitToLast(numlimit);
+                        return query;}
+                    else{
+                        Query query = ref
+                                .whereArrayContainsAny("WordCase",searchArray)
+                                .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
+                                .orderBy("ContentType").whereEqualTo("ContentType","AuctionContent")
+                                .orderBy("auctionState").whereEqualTo("auctionState","ACQUIRED")
+                                .orderBy("time").limitToLast(numlimit);
+                        return query;}
+                }
+                else{Toast.makeText(context, "Wrong ContentType inserted : " + ContentType, Toast.LENGTH_SHORT).show();
+                    return null;}
+
             }
-            else if(ContentType.equals("CONTENT")){
-                if(isincludeexpired){
-                    Query query = ref
-                            .whereArrayContainsAny("WordCase",searchArray)
-                            .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
-                            .orderBy("ContentType").whereEqualTo("ContentType","Content")
-                            .orderBy("time").limitToLast(numlimit).endBefore(lastdoc);
-                    return query;}
-                else{
-                    Query query = ref
-                            .whereArrayContainsAny("WordCase",searchArray)
-                            .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
-                            .orderBy("ContentType").whereEqualTo("ContentType","Content")
-                            .orderBy("auctionState").whereIn("auctionState",exclusivestate)
-                            .orderBy("time").limitToLast(numlimit).endBefore(lastdoc);
-                    return query;}
+            else{
+                if(ContentType.equals("ANY")){
+                    if(isincludeexpired){
+                        Query query = ref
+                                .whereArrayContainsAny("WordCase",searchArray)
+                                .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
+                                .orderBy("time").limitToLast(numlimit).endBefore(lastdoc);
+                        return query;}
+                    else{
+                        Query query = ref
+                                .whereArrayContainsAny("WordCase",searchArray)
+                                .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
+                                .orderBy("auctionState").whereEqualTo("auctionState","ACQUIRED")
+                                .orderBy("time").limitToLast(numlimit).endBefore(lastdoc);
+                        return query;}
+                }
+                else if(ContentType.equals("CONTENT")){
+                    if(isincludeexpired){
+                        Query query = ref
+                                .whereArrayContainsAny("WordCase",searchArray)
+                                .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
+                                .orderBy("ContentType").whereEqualTo("ContentType","Content")
+                                .orderBy("time").limitToLast(numlimit).endBefore(lastdoc);
+                        return query;}
+                    else{
+                        Query query = ref
+                                .whereArrayContainsAny("WordCase",searchArray)
+                                .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
+                                .orderBy("ContentType").whereEqualTo("ContentType","Content")
+                                .orderBy("auctionState").whereEqualTo("auctionState","ACQUIRED")
+                                .orderBy("time").limitToLast(numlimit).endBefore(lastdoc);
+                        return query;}
+                }
+                else if(ContentType.equals("AUCTIONCONTENT")){
+                    if(isincludeexpired){
+                        Query query = ref
+                                .whereArrayContainsAny("WordCase",searchArray)
+                                .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
+                                .orderBy("ContentType").whereEqualTo("ContentType","AuctionContent")
+                                .orderBy("time").limitToLast(numlimit).endBefore(lastdoc);
+                        return query;}
+                    else{
+                        Query query = ref
+                                .whereArrayContainsAny("WordCase",searchArray)
+                                .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
+                                .orderBy("ContentType").whereEqualTo("ContentType","AuctionContent")
+                                .orderBy("auctionState").whereEqualTo("auctionState","ACQUIRED")
+                                .orderBy("time").limitToLast(numlimit).endBefore(lastdoc);
+                        return query;}
+                }
+                else{Toast.makeText(context, "Wrong ContentType inserted : " + ContentType, Toast.LENGTH_SHORT).show();
+                    return null;}
             }
-            else if(ContentType.equals("AUCTIONCONTENT")){
-                if(isincludeexpired){
-                    Query query = ref
-                            .whereArrayContainsAny("WordCase",searchArray)
-                            .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
-                            .orderBy("ContentType").whereEqualTo("ContentType","AuctionContent")
-                            .orderBy("time").limitToLast(numlimit).endBefore(lastdoc);
-                    return query;}
-                else{
-                    Query query = ref
-                            .whereArrayContainsAny("WordCase",searchArray)
-                            .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
-                            .orderBy("ContentType").whereEqualTo("ContentType","AuctionContent")
-                            .orderBy("auctionState").whereIn("auctionState",exclusivestate)
-                            .orderBy("time").limitToLast(numlimit).endBefore(lastdoc);
-                    return query;}
-            }
-            else{Toast.makeText(context, "Wrong ContentType inserted : " + ContentType, Toast.LENGTH_SHORT).show();
-                return null;}
         }
+
+
+
     }
     public void PaginationQuery(@Nullable Query query, Callback2 callback2){
         if (query != null){
