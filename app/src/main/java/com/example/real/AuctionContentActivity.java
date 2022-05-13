@@ -398,7 +398,7 @@ public class AuctionContentActivity extends AppCompatActivity {
             }
         });
 
-
+        // hello
         // Bidder Latest Read
         realTimeDatabaseManagerForLatestBidder.readBidderLooper(contentId, new Callback() {
             @Override
