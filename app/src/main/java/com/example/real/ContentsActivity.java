@@ -18,6 +18,7 @@ import android.transition.Transition;
 import android.util.Log;
 import android.util.Pair;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -533,6 +534,19 @@ public class ContentsActivity extends AppCompatActivity {
         });
 
          */
+
+        searchText.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                // If the event is a key-down event on the "enter" button
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    // 엔터 -> 검색버튼으로 치환
+                    searchBtn.performClick();
+                    return true;
+                }
+                return false;
+            }
+        });
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -544,6 +558,11 @@ public class ContentsActivity extends AppCompatActivity {
                 String[] searchWordList = searchText.getText().toString().split(" ");
                 for(String s: searchWordList){
                     searchArray.add(s);
+                }
+
+
+                if(searchText.getText().toString().isEmpty()){
+                    searchArray = null;
                 }
                 LatestQuery = manager.CreatQuery("Contents",NumPaginate,user_recent_LatLng_parsed,option_rectsize
                         ,null, option_contenttype, option_includeexpired, searchArray);
