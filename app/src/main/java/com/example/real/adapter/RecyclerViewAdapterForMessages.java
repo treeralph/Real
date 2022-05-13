@@ -293,6 +293,60 @@ public class RecyclerViewAdapterForMessages extends RecyclerView.Adapter<Recycle
                             tUid = userUID;
                             fUid = contentUID;
                         }
+
+                        firestoreManagerForUserProfile.read("UserProfile", tUid, new Callback() {
+                            @Override
+                            public void OnCallback(Object object) {
+                                UserProfile tempUserProfile = (UserProfile) object;
+                                String tToken = tempUserProfile.getDeviceToken();
+                                ArrayList<String> ChattingRoomID_t = tempUserProfile.getChattingRoomID();
+
+                                firestoreManagerForUserProfile.read("UserProfile", fUid, new Callback() {
+                                    @Override
+                                    public void OnCallback(Object object) {
+                                        UserProfile tempUserProfile = (UserProfile) object;
+                                        String fToken = tempUserProfile.getDeviceToken();
+                                        ArrayList<String> ChattingRoomID_f = tempUserProfile.getChattingRoomID();
+
+                                        String payload = aReservedTime + "/" + aLocation + "/true";
+                                        Message message = new Message(Message.appointmentMessageFlag, fUid, tUid, payload, fToken, tToken, "");
+                                        realTimeDatabaseManagerForMessage.writeMessage(databasePath, message);
+
+                                        if (ChattingRoomID_t.contains(databasePath) == false) {
+                                            ChattingRoomID_t.add(databasePath);
+                                            firestoreManagerForUserProfile.update("UserProfile", tUid, "ChattingRoomID", ChattingRoomID_t, new Callback() {
+                                                @Override
+                                                public void OnCallback(Object object) {
+                                                    int LogMessage = (int) object;
+                                                    if (LogMessage == 0) {
+                                                        Log.d(TAG, "ISSUCCESSFUL");
+                                                    } else {
+                                                        Log.d(TAG, "ISFAILURE");
+                                                    }
+
+                                                    if (ChattingRoomID_f.contains(databasePath) == false) {
+                                                        ChattingRoomID_f.add(databasePath);
+                                                        firestoreManagerForUserProfile.update("UserProfile", fUid, "ChattingRoomID", ChattingRoomID_f, new Callback() {
+                                                            @Override
+                                                            public void OnCallback(Object object) {
+                                                                int LogMessage = (int) object;
+                                                                if (LogMessage == 0) {
+                                                                    Log.d(TAG, "ISSUCCESSFUL");
+                                                                } else {
+                                                                    Log.d(TAG, "ISFAILURE");
+                                                                }
+                                                            }
+                                                        });
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+                                });
+                            }
+                        });
+
+                        /*
                         firestoreManagerForUserProfile.read("UserProfile", tUid, new Callback() {
                             @Override
                             public void OnCallback(Object object) {
@@ -333,8 +387,6 @@ public class RecyclerViewAdapterForMessages extends RecyclerView.Adapter<Recycle
                                                                 realTimeDatabaseManagerForMessage.writeMessage(databasePath, message);
                                                                 Toast.makeText(context, "why doexntwrokasdfkasdf;", Toast.LENGTH_SHORT).show();
 
-                                                                // todo: complement Alarm for appointment and reputation.
-                                                                //realTimeDatabaseManagerForScheduledTask.writeMessage(Alarm.databasePath, new Alarm());
                                                             }
                                                         });
                                                     }
@@ -345,6 +397,8 @@ public class RecyclerViewAdapterForMessages extends RecyclerView.Adapter<Recycle
                                 }
                             }
                         });
+
+                         */
                         // and then, delete this item from recyclerview
                         messageList.remove(position);
                         notifyItemRemoved(position);

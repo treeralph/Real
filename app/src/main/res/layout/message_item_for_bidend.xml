@@ -41,7 +41,7 @@
                         android:id="@+id/messageItemForBidEndBidPriceTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/simplehae"
+                        android:fontFamily="@font/simplehae_ed_final"
                         android:gravity="center"
                         android:text="BID PRICE"
                         android:textStyle="bold"

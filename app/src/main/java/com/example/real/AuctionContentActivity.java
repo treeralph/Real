@@ -398,7 +398,7 @@ public class AuctionContentActivity extends AppCompatActivity {
             }
         });
 
-
+        // hello
         // Bidder Latest Read
         realTimeDatabaseManagerForLatestBidder.readBidderLooper(contentId, new Callback() {
             @Override
@@ -429,6 +429,7 @@ public class AuctionContentActivity extends AppCompatActivity {
                                 @Override
                                 public void OnCallback(Object object) {
                                     List<Bitmap> bitmapList = (List<Bitmap>) object;
+
                                     LatestBidderImageView.post(new Runnable() {
                                         @Override
                                         public void run() {

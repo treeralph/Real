@@ -44,7 +44,7 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
                         android:textColor="@color/black"
-                        android:fontFamily="@font/simplehae"
+                        android:fontFamily="@font/simplehae_ed_final"
                         android:text="SEND IMAGE"
                         android:textStyle="bold"
                         android:textSize="30dp"
@@ -87,7 +87,7 @@
                 android:textSize="30dp"
                 android:textColor="@color/black"
                 android:textStyle="bold"
-                android:fontFamily="@font/simplehae"/>
+                android:fontFamily="@font/simplehae_ed_final"/>
 
         </FrameLayout>
     </LinearLayout>

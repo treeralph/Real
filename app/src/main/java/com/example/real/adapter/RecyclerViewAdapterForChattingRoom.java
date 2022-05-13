@@ -95,21 +95,6 @@ public class RecyclerViewAdapterForChattingRoom extends RecyclerView.Adapter<Rec
             }
         });
 
-
-        myViewHolder.chattingRoomItemMoveContentButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
-        myViewHolder.chattingRoomItemMoveUserProfileButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
         // todo: how to handle asynchronous in try/catch statement.
         firestoreManagerForContent.read("Content", contentId, new Callback() {
             @Override
@@ -207,8 +192,6 @@ public class RecyclerViewAdapterForChattingRoom extends RecyclerView.Adapter<Rec
             chattingRoomItemUserProfileImageView = itemView.findViewById(R.id.ChattingRoomItemUserProfileImageViewDesign);
             chattingRoomItemClientUserNickName = itemView.findViewById(R.id.ChattingRoomItemUserNickNameTextViewDesign);
             chattingRoomItemContentMoreInfoTextView = itemView.findViewById(R.id.ChattingRoomItemMoreInfoTextViewDesign);
-            chattingRoomItemMoveContentButton = itemView.findViewById(R.id.ChattingRoomItemMoveContentImageViewDesign);
-            chattingRoomItemMoveUserProfileButton = itemView.findViewById(R.id.ChattingRoomItemMoveUserProfileViewImageView);
         }
     }
 }

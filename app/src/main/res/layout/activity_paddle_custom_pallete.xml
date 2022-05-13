@@ -59,7 +59,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/simplehae"
+                android:fontFamily="@font/simplehae_ed_final"
                 android:gravity="center"
                 android:text="Not Color But Img"
                 android:textColor="@color/white"

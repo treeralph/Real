@@ -33,7 +33,7 @@
                 android:textColorHint="@color/black"
                 android:textSize="20dp"
                 android:textColor="@color/black"
-                android:fontFamily="@font/simplehae"
+                android:fontFamily="@font/simplehae_ed_final"
                 android:textStyle="bold"/>
             <ImageView
                 android:id="@+id/ContentsActivityChangeLocationButton"
@@ -62,7 +62,7 @@
                 android:textColorHint="@color/black"
                 android:textSize="20dp"
                 android:textColor="@color/red"
-                android:fontFamily="@font/simplehae"
+                android:fontFamily="@font/simplehae_ed_final"
                 android:textStyle="bold"/>
 
         </LinearLayout>
@@ -86,7 +86,7 @@
                 android:textColorHint="@color/black"
                 android:textSize="20dp"
                 android:textColor="@color/black"
-                android:fontFamily="@font/simplehae"
+                android:fontFamily="@font/simplehae_ed_final"
                 android:textStyle="bold"
                 android:layout_weight="1"/>
 
@@ -157,7 +157,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-                    android:fontFamily="@font/simplehae"
+                    android:fontFamily="@font/simplehae_ed_final"
                     android:gravity="center"
                     android:text="Contents"
                     android:textColor="@color/black"
@@ -184,7 +184,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-                    android:fontFamily="@font/simplehae"
+                    android:fontFamily="@font/simplehae_ed_final"
                     android:gravity="center"
                     android:text="User"
                     android:textColor="@color/black"
@@ -229,7 +229,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-                    android:fontFamily="@font/simplehae"
+                    android:fontFamily="@font/simplehae_ed_final"
                     android:gravity="center"
                     android:text="Message"
                     android:textColor="@color/black"
@@ -256,7 +256,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-                    android:fontFamily="@font/simplehae"
+                    android:fontFamily="@font/simplehae_ed_final"
                     android:gravity="center"
                     android:text="Edit"
                     android:textColor="@color/black"

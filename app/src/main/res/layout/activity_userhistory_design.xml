@@ -32,17 +32,7 @@
                         android:layout_height="340dp"
                         android:scaleType="centerCrop"
                         android:src="@drawable/push_img" />
-                    <ImageView
-                        android:id="@+id/UserhistoryActivitySetUserProfileImg"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:src="@drawable/edit_grey_g"
-                        android:layout_gravity="bottom|right"
-                        android:layout_marginBottom="15dp"
-                        android:layout_marginRight="15dp"/>
                 </FrameLayout>
-
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="120dp"
@@ -60,20 +50,13 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="45dp"
-                            android:fontFamily="@font/simplehae"
+                            android:fontFamily="@font/simplehae_ed_final"
                             android:gravity="center"
-                            android:text="박강혁씨발새끼"
+                            android:text="NICKNAME"
                             android:textColor="@color/white"
                             android:textSize="30dp"
                             android:textStyle="bold"
                             android:layout_weight="1"/>
-                        <ImageView
-                            android:id="@+id/UserhistoryActivitySetUserProfileNickname"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:src="@drawable/edit_white"
-                            android:layout_gravity="bottom|right"
-                            android:layout_marginRight="15dp"/>
 
                     </LinearLayout>
 
@@ -91,7 +74,6 @@
                         android:textStyle="bold" />
                     -->
                 </LinearLayout>
-                <!-- ㅄ색기 간략 이력 -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="110dp"
@@ -110,7 +92,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="33dp"
-                            android:fontFamily="@font/simplehae"
+                            android:fontFamily="@font/simplehae_ed_final"
                             android:gravity="center"
                             android:text="0"
                             android:textColor="@color/black"
@@ -120,7 +102,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/simplehae"
+                            android:fontFamily="@font/simplehae_ed_final"
                             android:gravity="center"
                             android:text="earning"
                             android:textColor="@color/black"
@@ -139,7 +121,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="33dp"
-                            android:fontFamily="@font/simplehae"
+                            android:fontFamily="@font/simplehae_ed_final"
                             android:gravity="center"
                             android:text="0"
                             android:textColor="@color/black"
@@ -149,7 +131,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/simplehae"
+                            android:fontFamily="@font/simplehae_ed_final"
                             android:gravity="center"
                             android:text="trash"
                             android:textColor="@color/black"
@@ -168,7 +150,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="33dp"
-                            android:fontFamily="@font/simplehae"
+                            android:fontFamily="@font/simplehae_ed_final"
                             android:gravity="center"
                             android:text="0"
                             android:textColor="@color/black"
@@ -178,7 +160,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/simplehae"
+                            android:fontFamily="@font/simplehae_ed_final"
                             android:gravity="center"
                             android:text="comments"
                             android:textColor="@color/black"
@@ -207,7 +189,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="33dp"
-                        android:fontFamily="@font/simplehae"
+                        android:fontFamily="@font/simplehae_ed_final"
                         android:gravity="center"
                         android:text="0"
                         android:textColor="@color/black"
@@ -217,7 +199,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/simplehae"
+                        android:fontFamily="@font/simplehae_ed_final"
                         android:gravity="center"
                         android:text="Lovers"
                         android:textColor="@color/black"
@@ -261,7 +243,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-                    android:fontFamily="@font/simplehae"
+                    android:fontFamily="@font/simplehae_ed_final"
                     android:gravity="center"
                     android:text="Contents"
                     android:textColor="@color/black"
@@ -287,7 +269,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-                    android:fontFamily="@font/simplehae"
+                    android:fontFamily="@font/simplehae_ed_final"
                     android:gravity="center"
                     android:text="User"
                     android:textColor="@color/black"
@@ -331,7 +313,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-                    android:fontFamily="@font/simplehae"
+                    android:fontFamily="@font/simplehae_ed_final"
                     android:gravity="center"
                     android:text="Message"
                     android:textColor="@color/black"
@@ -358,7 +340,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-                    android:fontFamily="@font/simplehae"
+                    android:fontFamily="@font/simplehae_ed_final"
                     android:gravity="center"
                     android:text="Profile"
                     android:textColor="@color/black"
