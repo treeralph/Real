@@ -104,6 +104,7 @@ public class ContentsActivity extends AppCompatActivity {
     int expiredFlag = 0; // 만료되지 않은 자료만 보기
 
     int NumPaginate = 5;
+    ArrayList<String> searchArray = new ArrayList<>();
     String option_contenttype = "ANY";
     boolean option_includeexpired = true;
     int option_rectsize = 2;
@@ -503,6 +504,7 @@ public class ContentsActivity extends AppCompatActivity {
 
 
 
+        /*
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -527,6 +529,69 @@ public class ContentsActivity extends AppCompatActivity {
                         }
                     });
                 }
+
+            }
+        });
+
+         */
+        searchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Contentlist Clear & Scrolllistener Clear & SearchArray Clear
+                ContentsList.clear();
+                recyclerView.clearOnScrollListeners();
+                searchArray.clear();
+                // Create Query with ST & LAT & OPTIONS
+                String[] searchWordList = searchText.getText().toString().split(" ");
+                for(String s: searchWordList){
+                    searchArray.add(s);
+                }
+                LatestQuery = manager.CreatQuery("Contents",NumPaginate,user_recent_LatLng_parsed,option_rectsize
+                        ,null, option_contenttype, option_includeexpired, searchArray);
+                // Ready By Query & Create Pagination Query
+
+
+                manager.PaginationQuery(LatestQuery, new Callback2() {
+                    @Override
+                    public void OnCallback(Object object1, Object object2) {
+                        ArrayList<Contents> templist = (ArrayList<Contents>) object1;
+                        //Collections.reverse(contentsList);
+                        LatestDocForPaginate = (DocumentSnapshot) object2;
+                        Log.d("#temp",String.valueOf(templist.size()));
+                        ContentsList.addAll(templist);
+                        adapter.notifyDataSetChanged();
+                        // update query
+                        LatestQuery = manager.CreatQuery("Contents",NumPaginate,user_recent_LatLng_parsed,option_rectsize
+                                ,LatestDocForPaginate,option_contenttype,option_includeexpired, searchArray);
+                        Log.d("#num : ",  String.valueOf(NumPaginate));
+                        Log.d("#latlng", user_recent_LatLng_parsed.toString());
+                        Log.d("#rectsize", String.valueOf(option_rectsize));
+                        Log.d("#lastPage", LatestDocForPaginate.toString());
+
+                    }
+                });
+                recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                    @Override
+                    public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                        super.onScrollStateChanged(recyclerView, newState);
+                        if(!recyclerView.canScrollVertically(1)) {
+                            manager.PaginationQuery(LatestQuery, new Callback2() {
+                                @Override
+                                public void OnCallback(Object object1, Object object2) {
+                                    ArrayList<Contents> templist = (ArrayList<Contents>) object1;
+                                    //Collections.reverse(contentsList);
+                                    LatestDocForPaginate = (DocumentSnapshot) object2;
+                                    Log.d("#temp",String.valueOf(templist.size()));
+                                    ContentsList.addAll(templist);
+                                    adapter.notifyItemRangeInserted(ContentsList.size()-templist.size(), templist.size());
+                                    // update query
+                                    LatestQuery = manager.CreatQuery("Contents",NumPaginate,user_recent_LatLng_parsed,option_rectsize
+                                            ,LatestDocForPaginate,option_contenttype,option_includeexpired, searchArray);
+                                }
+                            });
+                        }
+                    }
+                });
 
             }
         });
@@ -657,24 +722,105 @@ public class ContentsActivity extends AppCompatActivity {
                 // Set category
                 // Clear & refresh Dataset
                 ContentsList.clear();
-                adapter.notifyDataSetChanged();
-                manager.PaginationQuery(LatestQuery, new Callback2() {
-                    @Override
-                    public void OnCallback(Object object1, Object object2) {
-                        ArrayList<Contents> templist = (ArrayList<Contents>) object1;
-                        //Collections.reverse(contentsList);
-                        LatestDocForPaginate = (DocumentSnapshot) object2;
-                        Log.d("#temp",String.valueOf(templist.size()));
-                        ContentsList.addAll(templist);
-                        adapter.notifyDataSetChanged();
-                        // update query
-                        LatestQuery = manager.CreatQuery("Contents",NumPaginate,user_recent_LatLng_parsed,option_rectsize
-                                ,LatestDocForPaginate,option_contenttype,option_includeexpired);
+                recyclerView.clearOnScrollListeners();
+
+                if(searchArray.size() == 0){
+                    LatestQuery = manager.CreatQuery("Contents",NumPaginate,user_recent_LatLng_parsed,option_rectsize
+                            ,null,option_contenttype,option_includeexpired);
+
+                    manager.PaginationQuery(LatestQuery, new Callback2() {
+                        @Override
+                        public void OnCallback(Object object1, Object object2) {
+                            ArrayList<Contents> templist = (ArrayList<Contents>) object1;
+                            //Collections.reverse(contentsList);
+                            LatestDocForPaginate = (DocumentSnapshot) object2;
+                            Log.d("#temp",String.valueOf(templist.size()));
+                            ContentsList.addAll(templist);
+                            adapter.notifyDataSetChanged();
+                            // update query
+                            LatestQuery = manager.CreatQuery("Contents",NumPaginate,user_recent_LatLng_parsed,option_rectsize
+                                    ,LatestDocForPaginate,option_contenttype,option_includeexpired);
+                            Log.d("#num : ",  String.valueOf(NumPaginate));
+                            Log.d("#latlng", user_recent_LatLng_parsed.toString());
+                            Log.d("#rectsize", String.valueOf(option_rectsize));
+                            Log.d("#lastPage", LatestDocForPaginate.toString());
 
 
-                    }
-                });
-                swipeRefreshLayout.setRefreshing(false);
+                            swipeRefreshLayout.setRefreshing(false);
+                        }
+                    });
+                    recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                        @Override
+                        public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                            super.onScrollStateChanged(recyclerView, newState);
+                            if(!recyclerView.canScrollVertically(1)) {
+                                manager.PaginationQuery(LatestQuery, new Callback2() {
+                                    @Override
+                                    public void OnCallback(Object object1, Object object2) {
+                                        ArrayList<Contents> templist = (ArrayList<Contents>) object1;
+                                        //Collections.reverse(contentsList);
+                                        LatestDocForPaginate = (DocumentSnapshot) object2;
+                                        Log.d("#temp",String.valueOf(templist.size()));
+                                        ContentsList.addAll(templist);
+                                        adapter.notifyItemRangeInserted(ContentsList.size()-templist.size(), templist.size());
+                                        // update query
+                                        LatestQuery = manager.CreatQuery("Contents",NumPaginate,user_recent_LatLng_parsed,option_rectsize
+                                                ,LatestDocForPaginate,option_contenttype,option_includeexpired);
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }else{
+                    LatestQuery = manager.CreatQuery("Contents",NumPaginate,user_recent_LatLng_parsed,option_rectsize
+                            ,null,option_contenttype,option_includeexpired, searchArray);
+
+                    manager.PaginationQuery(LatestQuery, new Callback2() {
+                        @Override
+                        public void OnCallback(Object object1, Object object2) {
+                            ArrayList<Contents> templist = (ArrayList<Contents>) object1;
+                            //Collections.reverse(contentsList);
+                            LatestDocForPaginate = (DocumentSnapshot) object2;
+                            Log.d("#temp",String.valueOf(templist.size()));
+                            ContentsList.addAll(templist);
+                            adapter.notifyDataSetChanged();
+                            // update query
+                            LatestQuery = manager.CreatQuery("Contents",NumPaginate,user_recent_LatLng_parsed,option_rectsize
+                                    ,LatestDocForPaginate,option_contenttype,option_includeexpired, searchArray);
+                            Log.d("#num : ",  String.valueOf(NumPaginate));
+                            Log.d("#latlng", user_recent_LatLng_parsed.toString());
+                            Log.d("#rectsize", String.valueOf(option_rectsize));
+                            Log.d("#lastPage", LatestDocForPaginate.toString());
+
+
+                            swipeRefreshLayout.setRefreshing(false);
+                        }
+                    });
+                    recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                        @Override
+                        public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                            super.onScrollStateChanged(recyclerView, newState);
+                            if(!recyclerView.canScrollVertically(1)) {
+                                manager.PaginationQuery(LatestQuery, new Callback2() {
+                                    @Override
+                                    public void OnCallback(Object object1, Object object2) {
+                                        ArrayList<Contents> templist = (ArrayList<Contents>) object1;
+                                        //Collections.reverse(contentsList);
+                                        LatestDocForPaginate = (DocumentSnapshot) object2;
+                                        Log.d("#temp",String.valueOf(templist.size()));
+                                        ContentsList.addAll(templist);
+                                        adapter.notifyItemRangeInserted(ContentsList.size()-templist.size(), templist.size());
+                                        // update query
+                                        LatestQuery = manager.CreatQuery("Contents",NumPaginate,user_recent_LatLng_parsed,option_rectsize
+                                                ,LatestDocForPaginate,option_contenttype,option_includeexpired, searchArray);
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+
+
             }
         });
 

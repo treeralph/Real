@@ -522,7 +522,7 @@ public class FirestoreManager {
                     }
                 });
     }
-// Contents에 expired 추가해야댐(최소한 null이라도 들어있어야됨) & District "구" 추가
+
     // No LatLng ver
     public Query CreatQuery(String collectionPath,int numlimit, @Nullable DocumentSnapshot lastdoc
         , String ContentType, Boolean isincludeexpired ){
@@ -736,6 +736,134 @@ public class FirestoreManager {
                 return null;}
         }
     }
+
+    // searchText ver
+    public Query CreatQuery(String collectionPath,int numlimit, LatLng latLng, int rectsize, @Nullable DocumentSnapshot lastdoc
+            , String ContentType, Boolean isincludeexpired, ArrayList<String> searchArray){
+
+        List<String> exclusivestate = Arrays.asList("nonAuction","ACQUIRED");
+
+        double threshold = 0.018 * Math.pow(2,rectsize-1);
+        double lat = latLng.latitude;
+        double lng = latLng.longitude;
+        double lower_lat = lat - threshold;
+        double lower_lng = lng - threshold;
+        double greater_lat = lat + threshold;
+        double greater_lng = lng + threshold;
+        GeoPoint lower_geoPoint = new GeoPoint(lower_lat, lower_lng);
+        GeoPoint greater_geoPoint = new GeoPoint(greater_lat, greater_lng);
+
+
+
+        CollectionReference ref = db.collection(collectionPath);
+        if(lastdoc == null || !lastdoc.exists()){
+            if(ContentType.equals("ANY")){
+                if(isincludeexpired){
+                    Query query = ref
+                            .whereArrayContainsAny("WordCase",searchArray)
+                            .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
+                            .orderBy("time").limitToLast(numlimit);
+                    return query;}
+                else{
+                    Query query = ref
+                            .whereArrayContainsAny("WordCase",searchArray)
+                            .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
+                            .orderBy("auctionState").whereIn("auctionState",exclusivestate)
+                            .orderBy("time").limitToLast(numlimit);
+                    return query;}
+            }
+            else if(ContentType.equals("CONTENT")){
+                if(isincludeexpired){
+                    Query query = ref
+                            .whereArrayContainsAny("WordCase",searchArray)
+                            .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
+                            .orderBy("ContentType").whereEqualTo("ContentType","Content")
+                            .orderBy("time").limitToLast(numlimit);
+                    return query;}
+                else{
+                    Query query = ref
+                            .whereArrayContainsAny("WordCase",searchArray)
+                            .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
+                            .orderBy("ContentType").whereEqualTo("ContentType","Content")
+                            .orderBy("auctionState").whereIn("auctionState",exclusivestate)
+                            .orderBy("time").limitToLast(numlimit);
+                    return query;}
+            }
+            else if(ContentType.equals("AUCTIONCONTENT")){
+                if(isincludeexpired){
+                    Query query = ref
+                            .whereArrayContainsAny("WordCase",searchArray)
+                            .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
+                            .orderBy("ContentType").whereEqualTo("ContentType","AuctionContent")
+                            .orderBy("time").limitToLast(numlimit);
+                    return query;}
+                else{
+                    Query query = ref
+                            .whereArrayContainsAny("WordCase",searchArray)
+                            .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
+                            .orderBy("ContentType").whereEqualTo("ContentType","AuctionContent")
+                            .orderBy("auctionState").whereIn("auctionState",exclusivestate)
+                            .orderBy("time").limitToLast(numlimit);
+                    return query;}
+            }
+            else{Toast.makeText(context, "Wrong ContentType inserted : " + ContentType, Toast.LENGTH_SHORT).show();
+                return null;}
+
+        }
+        else{
+            if(ContentType.equals("ANY")){
+                if(isincludeexpired){
+                    Query query = ref
+                            .whereArrayContainsAny("WordCase",searchArray)
+                            .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
+                            .orderBy("time").limitToLast(numlimit).endBefore(lastdoc);
+                    return query;}
+                else{
+                    Query query = ref
+                            .whereArrayContainsAny("WordCase",searchArray)
+                            .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
+                            .orderBy("auctionState").whereIn("auctionState",exclusivestate)
+                            .orderBy("time").limitToLast(numlimit).endBefore(lastdoc);
+                    return query;}
+            }
+            else if(ContentType.equals("CONTENT")){
+                if(isincludeexpired){
+                    Query query = ref
+                            .whereArrayContainsAny("WordCase",searchArray)
+                            .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
+                            .orderBy("ContentType").whereEqualTo("ContentType","Content")
+                            .orderBy("time").limitToLast(numlimit).endBefore(lastdoc);
+                    return query;}
+                else{
+                    Query query = ref
+                            .whereArrayContainsAny("WordCase",searchArray)
+                            .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
+                            .orderBy("ContentType").whereEqualTo("ContentType","Content")
+                            .orderBy("auctionState").whereIn("auctionState",exclusivestate)
+                            .orderBy("time").limitToLast(numlimit).endBefore(lastdoc);
+                    return query;}
+            }
+            else if(ContentType.equals("AUCTIONCONTENT")){
+                if(isincludeexpired){
+                    Query query = ref
+                            .whereArrayContainsAny("WordCase",searchArray)
+                            .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
+                            .orderBy("ContentType").whereEqualTo("ContentType","AuctionContent")
+                            .orderBy("time").limitToLast(numlimit).endBefore(lastdoc);
+                    return query;}
+                else{
+                    Query query = ref
+                            .whereArrayContainsAny("WordCase",searchArray)
+                            .orderBy("geoPoint").whereGreaterThanOrEqualTo("geoPoint", lower_geoPoint).whereLessThanOrEqualTo("geoPoint", greater_geoPoint)
+                            .orderBy("ContentType").whereEqualTo("ContentType","AuctionContent")
+                            .orderBy("auctionState").whereIn("auctionState",exclusivestate)
+                            .orderBy("time").limitToLast(numlimit).endBefore(lastdoc);
+                    return query;}
+            }
+            else{Toast.makeText(context, "Wrong ContentType inserted : " + ContentType, Toast.LENGTH_SHORT).show();
+                return null;}
+        }
+    }
     public void PaginationQuery(@Nullable Query query, Callback2 callback2){
         if (query != null){
             ArrayList<Data> dataList = new ArrayList<>();
@@ -763,4 +891,5 @@ public class FirestoreManager {
         }
 
     }
+
 }
