@@ -13,9 +13,9 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:weightSum="1">
-        <!-- ㅄ색기 정보 -->
 
         <ScrollView
+            android:id="@+id/UserhistoryActivityScrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1">
@@ -49,10 +49,9 @@
                             android:id="@+id/UserhistoryUserNickname"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="45dp"
                             android:fontFamily="@font/simplehae_ed_final"
                             android:gravity="center"
-                            android:text="NICKNAME"
+                            android:text="수입: 125,000"
                             android:textColor="@color/white"
                             android:textSize="30dp"
                             android:textStyle="bold"
@@ -77,13 +76,14 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="110dp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:background="@drawable/bottomlineborder">
 
                     <LinearLayout
                         android:id="@+id/UserhistoryBtnEarned"
                         android:layout_width="0dp"
                         android:layout_height="110dp"
-                        android:layout_weight="1.8"
+                        android:layout_weight="1.6"
                         android:orientation="vertical">
 
                         <TextView

@@ -41,6 +41,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.real.adapter.RecyclerViewAdapterForContents;
 import com.example.real.adapter.RecyclerViewAdapterForContentsV2;
+import com.example.real.data.Content;
 import com.example.real.data.Contents;
 import com.example.real.databasemanager.AssetDatabaseManager;
 import com.example.real.databasemanager.FirestoreManager;

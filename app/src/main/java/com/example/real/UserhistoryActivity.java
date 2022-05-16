@@ -29,6 +29,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -75,6 +76,8 @@ public class UserhistoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_userhistory_design);
 
         // XML VARIABLES
+        ScrollView scrollView = (ScrollView) findViewById(R.id.UserhistoryActivityScrollView);
+
         ImageView userprofileimg = (ImageView) findViewById(R.id.UserhistoryProfileimg);
         TextView userprofilenickname = (TextView) findViewById(R.id.UserhistoryUserNickname);
         TextView NumContents = (TextView) findViewById(R.id.UserhistoryNumContents);
@@ -82,9 +85,9 @@ public class UserhistoryActivity extends AppCompatActivity {
         TextView NUMLovers = (TextView) findViewById(R.id.UserhistoryNumLovers);
         TextView NumEarned = (TextView) findViewById(R.id.UserhistoryNumEarned); 
 
-        LinearLayout ContentsBtn = (LinearLayout) findViewById(R.id.UserhistoryBtnContents);
-        LinearLayout EarnedBtn = (LinearLayout) findViewById(R.id.UserhistoryBtnEarned);
-        LinearLayout CommentsBtn = (LinearLayout) findViewById(R.id.UserhistoryBtnComments);
+        LinearLayout ContentsBtn = (LinearLayout) findViewById(R.id.UserhistoryBtnContents); //
+        LinearLayout EarnedBtn = (LinearLayout) findViewById(R.id.UserhistoryBtnEarned); //
+        LinearLayout CommentsBtn = (LinearLayout) findViewById(R.id.UserhistoryBtnComments); //
         LinearLayout LoversBtn = (LinearLayout) findViewById(R.id.UserhistoryBtnLovers);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.UserhistoryRecyclerViewDesign);
@@ -290,6 +293,8 @@ public class UserhistoryActivity extends AppCompatActivity {
         EarnedBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                scrollView.fullScroll(View.FOCUS_DOWN);
+
                 if (LIST_DATASET.equals(LIST_Earned)){
                     LIST_DATASET.clear();
                     AdapterForHistory.notifyDataSetChanged();
@@ -312,6 +317,8 @@ public class UserhistoryActivity extends AppCompatActivity {
         ContentsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                scrollView.fullScroll(View.FOCUS_DOWN);
+
                 if (LIST_DATASET.equals(LIST_ContentsMerged)){
                     LIST_DATASET.clear();
                     AdapterForHistory.notifyDataSetChanged();
@@ -335,6 +342,8 @@ public class UserhistoryActivity extends AppCompatActivity {
         CommentsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                scrollView.fullScroll(View.FOCUS_DOWN);
+
                 if (LIST_DATASET.equals(LIST_Comments)){
                     LIST_DATASET.clear();
                     AdapterForHistory.notifyDataSetChanged();

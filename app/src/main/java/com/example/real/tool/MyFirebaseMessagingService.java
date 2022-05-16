@@ -19,6 +19,7 @@ import com.example.real.ChattingActivity;
 import com.example.real.ContentActivity;
 import com.example.real.PeekUserProfileActivity;
 import com.example.real.R;
+import com.example.real.ReputationActivity;
 import com.example.real.data.UserProfile;
 import com.example.real.databasemanager.FirestoreManager;
 import com.google.firebase.auth.FirebaseAuth;
@@ -297,8 +298,32 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         .setContentIntent(resultPendingIntent)
                         .setAutoCancel(true);
                 NotificationManagerCompat.from(this).notify(1, notification.build());
-            }
-            else{
+            } else if(dFlag.equals("endNotice")){
+
+                Log.d("FCM_Service", "ScheduledAlarm/endNotice");
+
+                String tempTitle = "아주마켙";
+                String tempBody = "거래 어떠셨나요?";
+
+                Intent intent = new Intent(this, ReputationActivity.class);
+                intent.putExtra("contentId", descriptionSplit[1]);
+                intent.putExtra("user1", descriptionSplit[2]);
+                intent.putExtra("user2", descriptionSplit[3]);
+
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+                stackBuilder.addNextIntentWithParentStack(intent);
+                PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                NotificationCompat.Builder notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+                        .setContentTitle(tempTitle)
+                        .setContentText(tempBody)
+                        .setSmallIcon(R.drawable.push_img)
+                        .setContentIntent(resultPendingIntent)
+                        .setAutoCancel(true);
+                NotificationManagerCompat.from(this).notify(1, notification.build());
+            } else{
 
             }
 
