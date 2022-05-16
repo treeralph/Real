@@ -61,7 +61,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/simplehae_ed_final"
                 android:gravity="center"
-                android:text="Not Color But Img"
+                android:text="이미지 설정"
                 android:textColor="@color/white"
                 android:textSize="30dp"
                 android:textStyle="bold" />

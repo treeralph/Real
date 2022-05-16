@@ -978,6 +978,7 @@ public class FirestoreManager {
                             Log.d(TAG, document.getId() + " => " + document.getData());
                             dataList.add(0,CurrentDataType.Constructor(document.getData()));
                         }
+
                         DocumentSnapshot finaldoc = value.getDocuments().get(0);
                         Log.d(TAG, " # " + dataList.size());
                         callback2.OnCallback(dataList,finaldoc);
