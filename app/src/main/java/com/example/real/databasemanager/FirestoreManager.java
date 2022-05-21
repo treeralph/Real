@@ -44,8 +44,14 @@ import com.google.firestore.v1.TransactionOptionsOrBuilder;
 import com.google.protobuf.MessageLite;
 import com.naver.maps.geometry.LatLng;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -978,6 +984,28 @@ public class FirestoreManager {
                             Log.d(TAG, document.getId() + " => " + document.getData());
                             dataList.add(0,CurrentDataType.Constructor(document.getData()));
                         }
+
+                        Collections.sort(dataList, new Comparator<Data>() {
+                            @Override
+                            public int compare(Data o1, Data o2) {
+                                String w1 = (String) o1.DataOut().get("time");
+                                String w2 = (String) o2.DataOut().get("time");
+
+
+                                DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+                                        .appendPattern("yyyyMMddHHmmss").appendValue(ChronoField.MILLI_OF_SECOND, 3).toFormatter();
+                                LocalDateTime t1 = LocalDateTime.parse(w1,formatter);
+                                LocalDateTime t2 = LocalDateTime.parse(w2,formatter);
+
+
+                                if(t1.isAfter(t2)){
+                                    return -1;
+                                }else if (t1.isBefore(t2)){
+                                    return 1;
+                                }
+                                return 0;
+                            }
+                        });
 
                         DocumentSnapshot finaldoc = value.getDocuments().get(0);
                         Log.d(TAG, " # " + dataList.size());
